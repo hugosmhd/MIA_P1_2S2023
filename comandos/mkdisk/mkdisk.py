@@ -64,7 +64,7 @@ class mkdisk:
             structs.Partition()
         ]
         for i, particion in enumerate(particiones_iniciales):
-            disco_mbr.partitions[i] = particion
+            disco_mbr.mbr_partitions[i] = particion
 
         print(ctypes.sizeof(disco_mbr))
         file.seek(0)
@@ -87,7 +87,8 @@ class mkdisk:
             print(f"Signature: {mbr.mbr_dsk_signature}")
             print(f"Fit: {mbr.dsk_fit.decode()}")
 
-            for i, particion in enumerate(mbr.partitions):
+            for i, particion in enumerate(mbr.mbr_partitions):
+                print("------------------------------------------")
                 print(f"Partición {i + 1}:")
                 print("Estado:", particion.part_status.decode())
                 print("Tipo:", particion.part_type.decode())
@@ -95,7 +96,6 @@ class mkdisk:
                 print("Inicio:", particion.part_start)
                 print("Tamaño:", particion.part_s)
                 print("Nombre:", particion.part_name)
-                print()
 
                 # file.seek(0)
                 # datos_mbr = file.read(struct.calcsize(structs.size_mbr()))
