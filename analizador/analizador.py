@@ -94,26 +94,101 @@ def leer_script(path):
 # mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
 # fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1 -type=E -fit=FF
 # fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Logic1 -type=L
-# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
 # fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition2
 # fdisk -size=9 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3
-# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition4
+# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition4
+# fdisk -delete=full -name=Partition2 -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
+# fdisk -delete=full -name=Partition6 -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
+# fdisk -size=6 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition5
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition6
+# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition7
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3 -add=-3 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition5 -add=1 -unit=M
+
+# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -fit=WF
+# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Extended1 -type=E -fit=FF
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Logic1 -type=L
+# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition1
+# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition2
+# fdisk -size=9 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition3
+# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition4
+# fdisk -delete=full -name=Partition2 -path="/home/hugosmh/Documentos/Discos/disco3.dsk"
+# fdisk -delete=full -name=Partition4 -path="/home/hugosmh/Documentos/Discos/disco3.dsk"
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition5
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition6
+
+# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -fit=BF
+# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Extended1 -type=E -fit=FF
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Logic1 -type=L
+# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition1
+# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition2
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition3
+# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition4
+# fdisk -delete=full -name=Partition1 -path="/home/hugosmh/Documentos/Discos/disco4.dsk"
+# fdisk -delete=full -name=Partition3 -path="/home/hugosmh/Documentos/Discos/disco4.dsk"
+# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition5
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition6
 
 # mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk"
-# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition1
-# fdisk -size=10 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Extended1 -type=E -fit=FF
-# fdisk -size=4 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic1 -type=L
-# fdisk -size=5 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic2 -type=L
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic3 -type=L
+# fdisk -size=25 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Extended1 -type=E -fit=FF
 # fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition2
+# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic1 -type=L
+# fdisk -size=6 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic2 -type=L
+# fdisk -size=3 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic3 -type=L
+# fdisk -size=9 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic4 -type=L
+# fdisk -size=4 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic5 -type=L
+# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
+# fdisk -size=4 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic5 -type=L
 # fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
-# fdisk -delete=full -name=Logic1 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
 # fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
 # fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition2 -add=1 -unit=M
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition1 -add=1 -unit=M
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic3 -add=-1 -unit=M
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic1 -add=1 -unit=M
+
+
+# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk"
+# fdisk -size=25 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Extended1 -type=E -fit=WF
+# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic1 -type=L
+# fdisk -size=6 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic2 -type=L
+# fdisk -size=3 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic3 -type=L
+# fdisk -size=9 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic4 -type=L
+# fdisk -size=4 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic5 -type=L
+# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
+# fdisk -delete=full -name=Logic1 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
+# fdisk -size=4 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic5 -type=L
+# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Partition2
+# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
+# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
+# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Partition2 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Partition1 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic3 -add=-1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic1 -add=1 -unit=M
+
+# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk"
+# fdisk -size=25 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Extended1 -type=E -fit=BF
+# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic1 -type=L
+# fdisk -size=6 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic2 -type=L
+# fdisk -size=3 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic3 -type=L
+# fdisk -size=9 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic4 -type=L
+# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic5 -type=L
+# fdisk -size=25 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic6 -type=L
+# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
+# fdisk -delete=full -name=Logic1 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
+# fdisk -size=4 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic5 -type=L
+# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition2
+# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Extended1
+# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
+# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
+# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition2 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition1 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic3 -add=-1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic1 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic73 -add=-1 -unit=K
 def analizar_mkdisk(parametros):
     disco = mkdisk()
     i = 0

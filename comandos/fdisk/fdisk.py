@@ -57,6 +57,7 @@ def imprimir_particiones(path):
 
                 while True:
                     if tmp.part_next == -1:
+                        print("Rompeeeeeee")
                         break
                     
                     print("**** EBR ****")
@@ -173,23 +174,26 @@ def posicionar_particion(mbr, size, used, new_partition):
                 # ordenar_particiones(mbr)
                 mbr = ordenar_particiones(mbr)
                 return mbr
-        elif mbr.dsk_fit == 'B':
+        elif mbr.dsk_fit == b'B':
             if espacioAntes >= size and (espacioActual == 0 or espacioActual > espacioAntes):
                 new_partition.part_start = baseAntes
                 espacioActual = espacioAntes
             elif espacioDespues >= size and (espacioActual == 0 or espacioActual > espacioDespues):
                 new_partition.part_start = baseDespues
                 espacioActual = espacioDespues
-        elif mbr.dsk_fit == 'W':
+        elif mbr.dsk_fit == b'W':
             if espacioAntes >= size and (espacioActual == 0 or espacioActual < espacioAntes):
                 new_partition.part_start = baseAntes
                 espacioActual = espacioAntes
             elif espacioDespues >= size and (espacioActual == 0 or espacioActual < espacioDespues):
                 new_partition.part_start = baseDespues
                 espacioActual = espacioDespues
-    
+
+    # No hay suficiente espacio por lo tanto se retorna false
+    if new_partition.part_start == -1:
+        return None
     mbr.mbr_partitions[used] = new_partition
-    # mbr = ordenar_particiones(mbr)
+    mbr = ordenar_particiones(mbr)
     return mbr
 
 def retornar_extendida(mbr):
@@ -334,7 +338,7 @@ def add_partition(name, path, add):
                 file.write(ctypes.string_at(ctypes.byref(mbr), ctypes.sizeof(mbr)))
                 file.close()
                 print(f"Se agrego espacio correctamente a la particion {name}")
-                imprimir_particiones(path)
+                # imprimir_particiones(path)
                 return
             else:
                 print(f"No hay suficiente espacio para agregar a la particion {name}")
@@ -347,7 +351,7 @@ def add_partition(name, path, add):
                 file.write(ctypes.string_at(ctypes.byref(mbr), ctypes.sizeof(mbr)))
                 file.close()
                 print(f"Se quito espacio correctamente a la particion {name}")
-                imprimir_particiones(path)
+                # imprimir_particiones(path)
                 return
             else:
                 print(f"No se puede eliminar esa cantidad de espacio a la particion {name}")
@@ -384,25 +388,23 @@ def add_partition(name, path, add):
                 file.write(ctypes.string_at(ctypes.byref(particion), ctypes.sizeof(particion)))
                 file.close()
                 print("Se agregó espacio correctamente a la partición", name)
-                imprimir_particiones(path)  # You'll need to define this function
+                # imprimir_particiones(path)  # You'll need to define this function
                 return
             else:
                 print("No hay suficiente espacio para agregar a la partición", name)
         else:
-            if(particion.part_s - ctypes.sizeof(mbr) > add):
+            if(particion.part_s - ctypes.sizeof(particion) > add):
                 particion.part_s += add
-                mbr.mbr_partitions[i] = particion
+                # mbr.mbr_partitions[i] = particion
                 file = open(path, 'rb+')
-                file.seek(0)
-                file.write(ctypes.string_at(ctypes.byref(mbr), ctypes.sizeof(mbr)))
+                file.seek(particion.part_start)
+                file.write(ctypes.string_at(ctypes.byref(particion), ctypes.sizeof(particion)))
                 file.close()
                 print(f"Se quito espacio correctamente a la particion {name}")
-                imprimir_particiones(path)
+                # imprimir_particiones(path)
                 return
             else:
                 print(f"No se puede eliminar esa cantidad de espacio a la particion {name}")
-
-    
 
 def make_primaria(name, path, size, fit, type_char):
     mbr = structs.MBR()
@@ -424,9 +426,11 @@ def make_primaria(name, path, size, fit, type_char):
     elif type_char == 'E' and extendida == 1:
         print("No se puede crear más de una partición extendida")
         return
-    # elif exist_partition(path, name, mbr):
-    #     print("Ya existe una partición con ese nombre")
-    #     return
+
+    tipo, particion, i = exist_partition(path, name, mbr)
+    if tipo == 'PE' or tipo == 'L':
+        print("Ya existe una partición con ese nombre")
+        return
 
     nueva_particion = structs.Partition()
     nueva_particion.part_status = b'A'
@@ -436,7 +440,10 @@ def make_primaria(name, path, size, fit, type_char):
     nueva_particion.part_name = name.encode('utf-8')[:16].ljust(16, b'\0')
 
     nuevo_mbr = posicionar_particion(mbr, size, usadas, nueva_particion)
-
+    if nuevo_mbr == None:
+        print("Espacio insuficiente para agregar la particion")
+        imprimir_particiones(path)
+        return
     with open(path, "rb+") as file:
         file.seek(0)
         file.write(ctypes.string_at(ctypes.byref(nuevo_mbr), ctypes.sizeof(nuevo_mbr)))
@@ -455,9 +462,11 @@ def make_logica(name, path, size, fit):
         contenido_binario = file.read(ctypes.sizeof(mbr))
     ctypes.memmove(ctypes.byref(mbr), contenido_binario, ctypes.sizeof(mbr))
 
-    # if exist_partition(path, name, mbr):
-    #     print("Ya existe una partición con ese nombre")
-    #     return
+    tipo, particion, i = exist_partition(path, name, mbr)
+    if tipo == 'PE' or tipo == 'L':
+        print("Ya existe una partición con ese nombre")
+        return
+
     extended = retornar_extendida(mbr)
     if not extended:
         print("No existe ninguna partición extendida para crear una lógica")
@@ -539,25 +548,25 @@ def make_logica(name, path, size, fit):
                 nlogic.part_start = baseAntes
                 espacioActual = espacioAntes
                 isWriteBefore = True
-                partSaveBefore = partitionBefore
+                partSaveBefore = crear_clone_ebr(partitionBefore)
             elif espacioDespues >= size and (espacioActual == 0 or espacioActual > espacioDespues):
                 nlogic.part_start = baseDespues
                 espacioActual = espacioDespues
                 nlogic.part_next = nlogic.part_start + nlogic.part_s
                 isWriteBefore = False
-                partSaveBefore = partitionBefore
+                partSaveBefore = crear_clone_ebr(partitionBefore)
         elif extended.part_fit == b'W':
             if espacioAntes >= size and (espacioActual == 0 or espacioActual < espacioAntes):
                 nlogic.part_start = baseAntes
                 espacioActual = espacioAntes
                 isWriteBefore = True
-                partSaveBefore = partitionBefore
+                partSaveBefore = crear_clone_ebr(partitionBefore)
             elif espacioDespues >= size and (espacioActual == 0 or espacioActual < espacioDespues):
                 nlogic.part_start = baseDespues
                 espacioActual = espacioDespues
                 nlogic.part_next = nlogic.part_start + nlogic.part_s
                 isWriteBefore = False
-                partSaveBefore = partitionBefore
+                partSaveBefore = crear_clone_ebr(partitionBefore)
 
         if tmp.part_status == b'0' and tmp.part_next == -1:
             break
@@ -568,24 +577,28 @@ def make_logica(name, path, size, fit):
         contenido_binario = file.read(ctypes.sizeof(tmp))
         ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
 
+    if nlogic.part_start == -1:
+        print("Espacio insuficiente para agregar la particion")
+        imprimir_particiones(path)
+        return
 
     if extended.part_fit == b'B' or extended.part_fit == b'W':
         if isWriteBefore:
             if existBefore:
                 nlogic.part_next = partSaveBefore.part_next
                 partSaveBefore.part_next = nlogic.part_start
-                file.seek(partSaveBefore.part_start)
-                file.write(ctypes.string_at(ctypes.byref(partitionBefore), ctypes.sizeof(partitionBefore)))
-                file.seek(nlogic.part_start)
+                file.seek(partSaveBefore.part_start, 0)
+                file.write(ctypes.string_at(ctypes.byref(partSaveBefore), ctypes.sizeof(partSaveBefore)))
+                file.seek(nlogic.part_start, 0)
                 file.write(ctypes.string_at(ctypes.byref(nlogic), ctypes.sizeof(nlogic)))
             else:
                 file.seek(nlogic.part_start)
                 file.write(ctypes.string_at(ctypes.byref(nlogic), ctypes.sizeof(nlogic)))
         else:
-            if existBefore:
+            if existBefore: # revisar que funcione
                 partSaveBefore.part_next = nlogic.part_start
                 file.seek(partSaveBefore.part_start)
-                file.write(ctypes.string_at(ctypes.byref(partitionBefore), ctypes.sizeof(partitionBefore)))
+                file.write(ctypes.string_at(ctypes.byref(partSaveBefore), ctypes.sizeof(partSaveBefore)))
                 file.seek(nlogic.part_start)
                 file.write(ctypes.string_at(ctypes.byref(nlogic), ctypes.sizeof(nlogic)))
                 new_ebr = structs.EBR()
@@ -617,17 +630,19 @@ class fdisk:
         self.add = 0
 
     def crear_fdisk(self):
-        print("FDISK")
+        # print("FDISK")
         self.unit = self.unit.lower()
-        print("UNIT", self.unit)
-        print("TYPE", self.type)
-        print("FIT", self.fit)
-        print("ISADD", self.isAdd)
-        print("SIZE", self.size)
-        print("PATH", self.path)
-        print("NAME", self.name)
-        print("SUPRIM", self.suprim)
-        print("ADD", self.add)
+        # print("UNIT", self.unit)
+        # print("TYPE", self.type)
+        # print("FIT", self.fit)
+        # print("ISADD", self.isAdd)
+        # print("SIZE", self.size)
+        # print("PATH", self.path)
+        # print("NAME", self.name)
+        # print("SUPRIM", self.suprim)
+        # print("ADD", self.add)
+
+
 
         size = 0
         add = 0
@@ -651,6 +666,7 @@ class fdisk:
             return
         elif self.isAdd:
             add_partition(self.name, self.path, add)
+            imprimir_particiones(self.path)
             return
 
         self.fit = self.fit.lower()
