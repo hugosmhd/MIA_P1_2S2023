@@ -2,6 +2,12 @@ import struct
 import ctypes
 
 
+class Mounted():
+    def __init__(self, path, name, id):
+        self.path = path
+        self.name = name
+        self.id = id
+
 class EBR(ctypes.Structure):
     _fields_ = [
         ('part_status', ctypes.c_char),

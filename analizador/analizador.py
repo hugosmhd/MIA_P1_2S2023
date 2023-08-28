@@ -1,5 +1,6 @@
 from comandos.mkdisk.mkdisk import mkdisk
 from comandos.fdisk.fdisk import fdisk
+from comandos.mount.mount import mount
 from comandos.rep.rep import rep
 import structs
 
@@ -25,6 +26,10 @@ def identificar_parametros(comando, parametros):
         analizar_mkdisk(parametros)
     elif(comando == 'fdisk'):
         analizar_fdisk(parametros)
+    elif(comando == 'mount'):
+        analizar_mount(parametros)
+    elif(comando == 'unmount'):
+        analizar_unmount(parametros)
     elif(comando == 'rep'):
         analizar_rep(parametros)
     elif(comando == 'execute'):
@@ -127,6 +132,7 @@ def leer_script(path):
 # fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition4
 # fdisk -delete=full -name=Partition1 -path="/home/hugosmh/Documentos/Discos/disco4.dsk"
 # fdisk -delete=full -name=Partition3 -path="/home/hugosmh/Documentos/Discos/disco4.dsk"
+# mount -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition2
 # fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition5
 # fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition6
 
@@ -189,6 +195,10 @@ def leer_script(path):
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic3 -add=-1 -unit=M
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic1 -add=1 -unit=M
 # fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic73 -add=-1 -unit=K
+# mount -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition2
+# unmount -id=931disco7
+# mount -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic5
+# unmount -id=932disco7
 def analizar_mkdisk(parametros):
     disco = mkdisk()
     i = 0
@@ -232,6 +242,32 @@ def analizar_fdisk(parametros):
             print(f"Parametro no aceptado en 'fdisk': {valor}")
         i += 1
     particion.crear_fdisk()
+
+def analizar_mount(parametros):
+    particion_montar = mount()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            particion_montar.path, i = get_path(i, parametros)
+        elif param.find("-name=") == 0:
+            particion_montar.name = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mount': {valor}")
+        i += 1
+    particion_montar.crear_mount()
+
+def analizar_unmount(parametros):
+    particion_desmontar = mount()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-id=") == 0:
+            particion_desmontar.name = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'unmount': {valor}")
+        i += 1
+    particion_desmontar.crear_unmount()
 
 def analizar_rep(parametros):
     reporte = rep()
