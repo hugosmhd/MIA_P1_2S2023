@@ -6,7 +6,7 @@ import ctypes
 import structs
 from _global._global import particiones_montadas, session_inciada
 from comandos.mount.mount import find_mounted
-from comandos.mkfs.mkfs import join_file, find_file
+from comandos.mkfs.mkfs import join_file, find_file, find_carpeta_archivo
 from comandos.fdisk.fdisk import exist_partition
 
 
@@ -20,7 +20,9 @@ def authenticate(mounted, part_start, user):
     # file.seek(sblock.s_inode_start + (ctypes.sizeof(structs.Inodo)))
     # file.readinto(inodo_archive)
     # file.close()
-    inodo_archivo = find_file(sblock, "/user.txt", mounted.path)
+    session_inciada.mounted = mounted
+    indo_carpeta_archivo = find_carpeta_archivo(sblock, "/", session_inciada)
+    inodo_archivo = find_file(sblock, "/user.txt", mounted.path, indo_carpeta_archivo)
     usuarios = join_file(sblock, inodo_archivo, mounted.path)
     print(usuarios)
     lineas = usuarios.split("\n")

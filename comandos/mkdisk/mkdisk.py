@@ -24,7 +24,7 @@ class mkdisk:
         # print("UNIT", self.unit)
 
         directorio, archivo = os.path.split(disco.path)
-        print(archivo)
+        # print(archivo)
         
         if not os.path.exists(directorio):
             os.makedirs(directorio)

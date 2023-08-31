@@ -108,6 +108,8 @@ def leer_script(path):
     except FileNotFoundError:
         print(f"El script con ruta {path} no existe")
 
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script4.txt
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script5.txt
 
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script1.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script2.txt
@@ -284,9 +286,21 @@ def analizar_mkdir(parametros):
 
 def analizar_rep(parametros):
     reporte = rep()
-    reporte.path = "disco.dsk"
-    reporte.crear_rep(reporte)
-
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            reporte.path, i = get_path(i, parametros)
+        elif param.find("-name=") == 0:
+            reporte.name = get_valor_parametro(param)
+        elif param.find("-id=") == 0:
+            reporte.id = get_valor_parametro(param)
+        elif param.find("-ruta=") == 0:
+            reporte.ruta = get_path(i, parametros)
+        else:
+            print(f"Parametro no aceptado en 'rep': {valor}")
+        i += 1
+    reporte.crear_rep()
 # execute -path=execute.txt
 def analizar_execute(parametros):
     i = 0

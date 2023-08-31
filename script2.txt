@@ -3,3 +3,7 @@ mkfs -type=full -id=931disco2
 login -user=root -pass=123 -id=931disco2
 mkfile -size=128 -path=/b.txt
 mkdir -path=/hola
+mkfile -size=355 -path=/hola/c.txt
+mkfile -size=256 -path=/f.txt
+mkfile -size=63 -path=/hola/r.txt
+rep -name=mbr -path=/home/hugosmh/reportes -id=931disco2

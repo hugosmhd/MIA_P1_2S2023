@@ -46,7 +46,7 @@ def next_first_block(sblock, path_disk):
     file.close()
     return -1
 
-def find_file(super_bloque, path, path_disk):
+def find_file(super_bloque, path, path_disk, inodo):
     read_on_file = -1
     read_on_archive = -1
     
@@ -57,13 +57,13 @@ def find_file(super_bloque, path, path_disk):
     if carpetas[0] != '':
         print("Error archivo no encontrado, verifique su ruta")
         return
-    inodo = structs.Inodo()
+    # inodo = structs.Inodo()
     inodo_archivo = structs.Inodo()
 
     bcarpeta = structs.BloqueCarpeta()
     file = open(path_disk, 'rb')
-    file.seek(super_bloque.s_inode_start)
-    file.readinto(inodo)
+    # file.seek(super_bloque.s_inode_start)
+    # file.readinto(inodo)
     # for i, carpeta in enumerate(carpetas):
     #     print(carpeta, i)
 
@@ -92,6 +92,43 @@ def find_file(super_bloque, path, path_disk):
     return None
 
 def find_carpeta(super_bloque, path, user_session):
+    print("find_carpeta")
+    directorio, carpeta_crear = os.path.split(path)
+    carpetas = directorio.split('/')
+
+    # Verificar que arranque desde la raiz
+    if carpetas[0] != '':
+        print("Error archivo no encontrado, verifique su ruta")
+        return
+
+
+    bcarpeta = structs.BloqueCarpeta()
+    inodo = structs.Inodo()
+    file = open(user_session.mounted.path, 'rb+')
+    file.seek(super_bloque.s_inode_start)
+    file.readinto(inodo)
+
+    if(len(carpetas) != 2 and carpetas[1] != ''):
+        for i, carpeta in enumerate(carpetas):
+            # print(carpeta, i)
+            for b in range(12):
+                if inodo.i_block[b] == -1:
+                    continue
+                read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
+                file.seek(read_on_file)
+                file.readinto(bcarpeta)
+                for j in range(4):
+                    nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                    if nombre_carpeta == carpeta:
+                        read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                        file.seek(read_on_archive)
+                        file.readinto(inodo)
+                        break
+
+    file.close()
+    return inodo
+
+def find_carpeta_archivo(super_bloque, path, user_session):
     print("find_carpeta")
     directorio, archivo = os.path.split(path)
     carpetas = directorio.split('/')
@@ -161,7 +198,7 @@ def join_file(super_bloque, inodo_file, path_disk):
     file.close()
     return txt
 
-def file_link(super_bloque, path, user_session):
+def file_link(super_bloque, path, user_session, inodo):
     # print("file_link")
     read_on_file = -1
     read_on_archive = -1
@@ -175,10 +212,10 @@ def file_link(super_bloque, path, user_session):
         print("Error archivo no encontrado, verifique su ruta")
         return
 
-    inodo = structs.Inodo()
+    # inodo = structs.Inodo()
     file = open(user_session.mounted.path, 'rb+')
-    file.seek(super_bloque.s_inode_start)
-    file.readinto(inodo)
+    # file.seek(super_bloque.s_inode_start)
+    # file.readinto(inodo)
     i = 0
     # for i, carpeta in enumerate(carpetas):
     #     print(carpeta, i)
@@ -282,8 +319,8 @@ def write_file(sblock, inodo_file, txt, user_session):
         sblock.s_free_blocks_count -= 1
 
     # SE ESCRIBE EL NUEVO INODO DEL ARCHIVO
-    print("Se escribe el inodo, ", sblock.s_first_ino)
-    print(inodo_file.i_s)
+    # print("Se escribe el inodo, ", sblock.s_first_ino)
+    # print(inodo_file.i_s)
     write_on_i = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * sblock.s_first_ino)
     file.seek(write_on_i)
     file.write(ctypes.string_at(ctypes.byref(inodo_file), ctypes.sizeof(inodo_file)))
@@ -295,55 +332,12 @@ def write_file(sblock, inodo_file, txt, user_session):
     file.write(ctypes.string_at(ctypes.byref(sblock), ctypes.sizeof(sblock)))
     file.close()
 
-def write_carpeta(sblock, inodo_file, user_session):
-    # print("write_file")
-    # print("Bloque libre:", sblock.s_first_blo)
-    # print("Inodo libre:", sblock.s_first_ino)
-    # segmentSize = 63
-    # totalSegments = len(txt) // segmentSize
-    # if len(txt) % segmentSize != 0:
-    #     totalSegments += 1
-    # print("Total Segments", totalSegments)
-    # block_archive = structs.BloqueArchivo()
-    # write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+def write_carpeta(sblock, inodo_file, carpeta_root, user_session):
     file = open(user_session.mounted.path, "rb+")
-    # write_on_b = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
-    # write_on_i = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * sblock.s_first_ino)
-    # uno = b'1'
-    # iterations_blocks = 12 if totalSegments > 12 else totalSegments
+    write_on_b = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+    file.seek(write_on_b)
+    file.write(ctypes.string_at(ctypes.byref(carpeta_root), ctypes.sizeof(carpeta_root)))
 
-    # for s in range(iterations_blocks):
-    #     if sblock.s_first_blo == -1:
-    #         # Ya no hay suficientes bloques
-    #         print("Ya no hay suficientes bloques")
-    #         file.close()
-    #         return
-
-    #     new_segment = txt[s * segmentSize: (s + 1) * segmentSize]
-    #     # BLOQUE DE ARCHIVO CON EL CONTENIDO
-    #     file_user = structs.BloqueArchivo()
-    #     file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
-    #     # SE ESCRIBE EL BLOQUE DE CONTENIDO
-    #     file.seek(write_on)
-    #     file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
-    #     file.seek(write_on)
-    #     file.readinto(block_archive)
-
-    #     # SE ACTUALIZA EL APUNTADOR DE BLOQUE DEL INODO
-    #     inodo_file.i_block[s] = sblock.s_first_blo
-    #     write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
-    #     file.seek(write_on_b)
-    #     file.write(uno)
-
-    #     # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
-    #     sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
-    #     write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
-    #     # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
-    #     sblock.s_free_blocks_count -= 1
-
-    # SE ESCRIBE EL NUEVO INODO DEL ARCHIVO
-    # print("Se escribe el inodo, ", sblock.s_first_ino)
-    # print(inodo_file.i_s)
     write_on_i = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * sblock.s_first_ino)
     file.seek(write_on_i)
     file.write(ctypes.string_at(ctypes.byref(inodo_file), ctypes.sizeof(inodo_file)))
@@ -351,6 +345,8 @@ def write_carpeta(sblock, inodo_file, user_session):
     # SE ESCRIBE EL NUEVO SUPER BLOQUE
     sblock.s_first_ino = next_first_inodo(sblock, user_session.mounted.path)
     sblock.s_free_inodes_count -= 1
+    sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+    sblock.s_free_blocks_count -= 1
     file.seek(user_session.mounted.part_start)
     file.write(ctypes.string_at(ctypes.byref(sblock), ctypes.sizeof(sblock)))
     file.close()

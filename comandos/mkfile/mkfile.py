@@ -6,7 +6,7 @@ import ctypes
 import structs
 from _global._global import particiones_montadas, session_inciada
 from comandos.mount.mount import find_mounted
-from comandos.mkfs.mkfs import join_file, find_file, file_link, write_file
+from comandos.mkfs.mkfs import join_file, find_file, file_link, write_file, find_carpeta_archivo
 from comandos.fdisk.fdisk import exist_partition
 
 
@@ -60,7 +60,8 @@ class mkfile():
         inodo_file.i_type = b'1'
         inodo_file.i_perm = 0o664
 
-        file_link(sblock, self.path, session_inciada)
+        indo_carpeta_archivo = find_carpeta_archivo(sblock, self.path, session_inciada)
+        file_link(sblock, self.path, session_inciada, indo_carpeta_archivo)
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
         file.seek(session_inciada.mounted.part_start)
@@ -68,8 +69,8 @@ class mkfile():
         file.close()
         write_file(sblock, inodo_file, content, session_inciada)
         # print(self.path)
-        inodo_archivo = find_file(sblock, self.path, session_inciada.mounted.path)
-        print(inodo_archivo.i_s)
+        inodo_archivo = find_file(sblock, self.path, session_inciada.mounted.path, indo_carpeta_archivo)
+        # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
         print("JOIN FILE MKFILE")
         print(txt)
