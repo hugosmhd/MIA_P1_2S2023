@@ -2,11 +2,117 @@ import struct
 import ctypes
 
 
+class SesionUsuario():
+    def __init__(self, credenciales, mounted, is_logged):
+        self.credenciales = credenciales
+        self.mounted = mounted
+        self.is_logged = is_logged
+
 class Mounted():
-    def __init__(self, path, name, id):
+    def __init__(self, path, name, id, part_start):
         self.path = path
         self.name = name
         self.id = id
+        self.part_start = part_start
+
+class Inodo(ctypes.Structure):
+    _fields_ = [
+        ('i_uid', ctypes.c_int),
+        ('i_gid', ctypes.c_int),
+        ('i_s', ctypes.c_int),
+        ('i_atime', ctypes.c_longlong),
+        ('i_ctime', ctypes.c_longlong),
+        ('i_mtime', ctypes.c_longlong),
+        ('i_block', ctypes.c_int * 15),
+        ('i_type', ctypes.c_char),
+        ('i_perm', ctypes.c_int)
+    ]
+
+    def __init__(self):
+        self.i_uid = 0
+        self.i_gid = 0
+        self.i_s = 0
+        self.i_atime = 0
+        self.i_ctime = 0
+        self.i_mtime = 0
+        self.i_block = (ctypes.c_int * 15)(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+        self.i_type = 0
+        self.i_perm = 0
+
+class Content(ctypes.Structure):
+    _fields_ = [
+        ('b_name', ctypes.c_char * 12),
+        ('b_inodo', ctypes.c_int)
+    ]
+
+    def __init__(self):
+        self.b_name = b'\0' * 12
+
+class BloqueCarpeta(ctypes.Structure):
+    _fields_ = [
+        ('b_content', Content * 4),
+    ]
+
+    def __init__(self):
+        self.b_content = (Content * 4)()
+        for i in range(4):
+            self.b_content[i].b_inodo = -1
+
+class BloqueArchivo(ctypes.Structure):
+    _fields_ = [
+        ('b_content', ctypes.c_char * 64),
+    ]
+
+    def __init__(self):
+        self.b_content = b'\0' * 64
+
+class BloqueApuntadores(ctypes.Structure):
+    _fields_ = [
+        ('b_pointers', ctypes.c_int * 16),
+    ]
+
+    def __init__(self):
+        self.b_pointers = -1 * 16
+
+class SuperBloque(ctypes.Structure):
+    _fields_ = [
+        ('s_filesystem_type', ctypes.c_int),
+        ('s_inodes_count', ctypes.c_int),
+        ('s_blocks_count', ctypes.c_int),
+        ('s_free_blocks_count', ctypes.c_int),
+        ('s_free_inodes_count', ctypes.c_int),
+        ('s_mtime', ctypes.c_longlong),
+        ('s_umtime', ctypes.c_longlong),
+        ('s_mnt_count', ctypes.c_int),
+        ('s_magic', ctypes.c_int),
+        ('s_inode_size', ctypes.c_int),
+        ('s_block_size', ctypes.c_int),
+        ('s_first_ino', ctypes.c_int),
+        ('s_first_blo', ctypes.c_int),
+        ('s_bm_inode_start', ctypes.c_int),
+        ('s_bm_block_start', ctypes.c_int),
+        ('s_inode_start', ctypes.c_int),
+        ('s_block_start', ctypes.c_int)
+    ]
+
+    def __init__(self):
+        self.s_filesystem_type = 0
+        self.s_inodes_count = 0
+        self.s_blocks_count = 0
+        self.s_free_blocks_count = 0
+        self.s_free_inodes_count = 0
+        self.s_mtime = 0
+        self.s_umtime = 0
+        self.s_mnt_count = 0
+        self.s_magic = 0
+        self.s_inode_size = 0
+        self.s_block_size = 0
+        self.s_first_ino = 0
+        self.s_first_blo = 0
+        self.s_bm_inode_start = 0
+        self.s_bm_block_start = 0
+        self.s_inode_start = 0
+        self.s_block_start = 0
 
 class EBR(ctypes.Structure):
     _fields_ = [

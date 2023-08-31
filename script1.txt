@@ -1,0 +1,6 @@
+mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
+fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+mkfs -type=full -id=931disco2
+login -user=root -pass=123 -id=931disco2
+mkfile -size=345 -path=/b.txt

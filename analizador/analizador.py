@@ -1,6 +1,10 @@
 from comandos.mkdisk.mkdisk import mkdisk
 from comandos.fdisk.fdisk import fdisk
 from comandos.mount.mount import mount
+from comandos.mkfs.mkfs import mkfs
+from comandos.login.login import login
+from comandos.mkfile.mkfile import mkfile
+from comandos.mkdir.mkdir import mkdir
 from comandos.rep.rep import rep
 import structs
 
@@ -30,6 +34,14 @@ def identificar_parametros(comando, parametros):
         analizar_mount(parametros)
     elif(comando == 'unmount'):
         analizar_unmount(parametros)
+    elif(comando == 'mkfs'):
+        analizar_mkfs(parametros)
+    elif(comando == 'login'):
+        analizar_login(parametros)
+    elif(comando == 'mkfile'):
+        analizar_mkfile(parametros)
+    elif(comando == 'mkdir'):
+        analizar_mkdir(parametros)
     elif(comando == 'rep'):
         analizar_rep(parametros)
     elif(comando == 'execute'):
@@ -96,109 +108,46 @@ def leer_script(path):
     except FileNotFoundError:
         print(f"El script con ruta {path} no existe")
 
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1 -type=E -fit=FF
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Logic1 -type=L
-# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script1.txt
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script2.txt
 # fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition2
 # fdisk -size=9 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3
-# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition4
-# fdisk -delete=full -name=Partition2 -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
-# fdisk -delete=full -name=Partition6 -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
-# fdisk -size=6 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition5
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition6
-# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition7
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3 -add=-3 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition5 -add=1 -unit=M
-
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -fit=WF
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Extended1 -type=E -fit=FF
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Logic1 -type=L
-# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition1
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition2
-# fdisk -size=9 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition3
-# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition4
-# fdisk -delete=full -name=Partition2 -path="/home/hugosmh/Documentos/Discos/disco3.dsk"
-# fdisk -delete=full -name=Partition4 -path="/home/hugosmh/Documentos/Discos/disco3.dsk"
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition5
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition6
-
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -fit=BF
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Extended1 -type=E -fit=FF
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Logic1 -type=L
-# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition1
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition2
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition3
-# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition4
-# fdisk -delete=full -name=Partition1 -path="/home/hugosmh/Documentos/Discos/disco4.dsk"
-# fdisk -delete=full -name=Partition3 -path="/home/hugosmh/Documentos/Discos/disco4.dsk"
-# mount -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition2
-# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition5
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco4.dsk" -name=Partition6
-
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk"
-# fdisk -size=25 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Extended1 -type=E -fit=FF
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition2
-# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic1 -type=L
-# fdisk -size=6 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic2 -type=L
-# fdisk -size=3 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic3 -type=L
-# fdisk -size=9 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic4 -type=L
-# fdisk -size=4 -unit=K -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic5 -type=L
-# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
-# fdisk -size=4 -unit=M -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic5 -type=L
-# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
-# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
-# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco5.dsk
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition2 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition1 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic3 -add=-1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Logic1 -add=1 -unit=M
-
-
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk"
-# fdisk -size=25 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Extended1 -type=E -fit=WF
-# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic1 -type=L
-# fdisk -size=6 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic2 -type=L
-# fdisk -size=3 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic3 -type=L
-# fdisk -size=9 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic4 -type=L
-# fdisk -size=4 -unit=K -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic5 -type=L
-# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
-# fdisk -delete=full -name=Logic1 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
-# fdisk -size=4 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic5 -type=L
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Partition2
-# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
-# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
-# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco6.dsk
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Partition2 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Partition1 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic3 -add=-1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco6.dsk" -name=Logic1 -add=1 -unit=M
-
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk"
-# fdisk -size=25 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Extended1 -type=E -fit=BF
-# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic1 -type=L
-# fdisk -size=6 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic2 -type=L
-# fdisk -size=3 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic3 -type=L
-# fdisk -size=9 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic4 -type=L
-# fdisk -size=2 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic5 -type=L
-# fdisk -size=25 -unit=K -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic6 -type=L
-# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
-# fdisk -delete=full -name=Logic1 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
-# fdisk -size=4 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic5 -type=L
-# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition2
-# fdisk -size=1 -unit=M -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Extended1
-# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
-# fdisk -delete=full -name=Logic2 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
-# fdisk -delete=full -name=Logic3 -path=/home/hugosmh/Documentos/Discos/disco7.dsk
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition2 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition1 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic3 -add=-1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic1 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic73 -add=-1 -unit=K
-# mount -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Partition2
-# unmount -id=931disco7
-# mount -path="/home/hugosmh/Documentos/Discos/disco7.dsk" -name=Logic5
-# unmount -id=932disco7
+# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition4
+# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1 -type=E -fit=FF
+# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Logic1 -type=L
+# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
+# fdisk -delete=full -name=Partition2 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
+# fdisk -delete=full -name=Partition3 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
+# fdisk -delete=full -name=Partition4 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1 -add=1 -unit=M
+# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3 -add=1 -unit=M
+# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition2
+# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3
+# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1
+# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Logic1
+# unmount -id=931disco2
+# unmount -id=933disco2
+# unmount -id=934disco2
+# unmount -id=932disco2
+# mkgrp -name=usuarios
+# mkgrp -name=usuarioa
+# mkgrp -name=usuarioc
+# logout
+# login -user=roots -pass=123 -id=931disco2
+# mkdir -path=/home/user/docs -r
+# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
+# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+# mkfs -type=full -id=931disco2
+# login -user=root -pass=123 -id=931disco2
+# mkfile -size=1827 -path=/b.txt
+# mkfile -size=1764 -path=/a.txt
+# mkfile -size=193 -path=/c.txt
+# mkfile -size=64 -path=/d.txt
+# mkfile -size=65 -path=/e.txt
+# mkfile -size=7 -path=/f.txt
 def analizar_mkdisk(parametros):
     disco = mkdisk()
     i = 0
@@ -268,6 +217,70 @@ def analizar_unmount(parametros):
             print(f"Parametro no aceptado en 'unmount': {valor}")
         i += 1
     particion_desmontar.crear_unmount()
+
+def analizar_mkfs(parametros):
+    formatear_particion = mkfs()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-id=") == 0:
+            formatear_particion.id = get_valor_parametro(param)
+        elif param.find("-type=") == 0:
+            formatear_particion.type = get_valor_parametro(param)
+        elif param.find("-fs=") == 0:
+            formatear_particion.fs = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mkfs': {valor}")
+        i += 1
+    formatear_particion.crear_mkfs()
+
+def analizar_login(parametros):
+    autenticacion = login()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-id=") == 0:
+            autenticacion.id = get_valor_parametro(param)
+        elif param.find("-user=") == 0:
+            autenticacion.user = get_valor_parametro(param)
+        elif param.find("-pass=") == 0:
+            autenticacion.password = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'login': {valor}")
+        i += 1
+    autenticacion.crear_login(autenticacion)
+
+def analizar_mkfile(parametros):
+    archivo = mkfile()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            archivo.path, i = get_path(i, parametros)
+        elif param.find("-r=") == 0:
+            archivo.recursivo = True
+        elif param.find("-size=") == 0:
+            archivo.size = int(get_valor_parametro(param))
+        elif param.find("-cout=") == 0:
+            archivo.cout, i = get_path(i, parametros)
+        else:
+            print(f"Parametro no aceptado en 'mkfile': {valor}")
+        i += 1
+    archivo.crear_mkfile()
+
+def analizar_mkdir(parametros):
+    archivo = mkdir()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            archivo.path, i = get_path(i, parametros)
+        elif param.find("-r=") == 0:
+            archivo.recursivo = True
+        else:
+            print(f"Parametro no aceptado en 'mkdir': {valor}")
+        i += 1
+    archivo.crear_mkdir()
 
 def analizar_rep(parametros):
     reporte = rep()

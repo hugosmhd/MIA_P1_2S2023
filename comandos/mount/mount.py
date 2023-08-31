@@ -18,6 +18,12 @@ def recorrer_montadas():
     for montada in particiones_montadas:
         print(f"\t> Ruta: {montada.path},  Particion: {montada.name},  Id: {montada.id}")
 
+def find_mounted(id_):
+    for montada in particiones_montadas:
+        if(id_ == montada.id):
+            return montada
+    return None
+
 class mount:
     def __init__(self):
         self.path = ""
@@ -45,7 +51,7 @@ class mount:
                 if(number != -1):
                     archivo = os.path.splitext(os.path.basename(self.path))[0]
                     id_ = "93" + str(number) + archivo
-                    new_mount = structs.Mounted(self.path, self.name, id_)
+                    new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start)
                     # print("New mount")
                     # print(new_mount.path)
                     # print(new_mount.name)
@@ -63,7 +69,7 @@ class mount:
             if(number != -1):
                 archivo = os.path.splitext(os.path.basename(self.path))[0]
                 id_ = "93" + str(number) + archivo
-                new_mount = structs.Mounted(self.path, self.name, id_)
+                new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start)
                 # print("New mount")
                 # print(new_mount.path)
                 # print(new_mount.name)
