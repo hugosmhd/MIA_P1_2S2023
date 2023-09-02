@@ -58,10 +58,10 @@ class mkfile():
         inodo_file.i_ctime = int(time.time())
         inodo_file.i_mtime = int(time.time())
         inodo_file.i_type = b'1'
-        inodo_file.i_perm = 0o664
+        inodo_file.i_perm = 664 # 0o664
 
-        indo_carpeta_archivo = find_carpeta_archivo(sblock, self.path, session_inciada)
-        file_link(sblock, self.path, session_inciada, indo_carpeta_archivo)
+        indo_carpeta_archivo, i = find_carpeta_archivo(sblock, self.path, session_inciada)
+        file_link(sblock, self.path, session_inciada, indo_carpeta_archivo, i)
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
         file.seek(session_inciada.mounted.part_start)

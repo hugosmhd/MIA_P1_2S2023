@@ -47,6 +47,7 @@ class Content(ctypes.Structure):
 
     def __init__(self):
         self.b_name = b'\0' * 12
+        self.b_inodo = -1
 
 class BloqueCarpeta(ctypes.Structure):
     _fields_ = [

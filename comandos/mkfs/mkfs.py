@@ -104,12 +104,14 @@ def find_carpeta(super_bloque, path, user_session):
 
     bcarpeta = structs.BloqueCarpeta()
     inodo = structs.Inodo()
+    i_c = 0
+    encontrada = False
     file = open(user_session.mounted.path, 'rb+')
     file.seek(super_bloque.s_inode_start)
     file.readinto(inodo)
 
-    if(len(carpetas) != 2 and carpetas[1] != ''):
-        for i, carpeta in enumerate(carpetas):
+    if(len(carpetas) >= 2 and carpetas[1] != ''):
+        for i, carpeta in enumerate(carpetas, start=1):
             # print(carpeta, i)
             for b in range(12):
                 if inodo.i_block[b] == -1:
@@ -120,18 +122,26 @@ def find_carpeta(super_bloque, path, user_session):
                 for j in range(4):
                     nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
                     if nombre_carpeta == carpeta:
+                        print("Carpeta encontrada jojo encontrado")
                         read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
                         file.seek(read_on_archive)
                         file.readinto(inodo)
+                        i_c = bcarpeta.b_content[j].b_inodo
+                        encontrada = True
                         break
+                if encontrada:
+                    encontrada = False
+                    break
 
     file.close()
-    return inodo
+    print("Holaaaaaaaaaaaaaaaa Adiossssss", i_c)
+    return inodo, i_c
 
 def find_carpeta_archivo(super_bloque, path, user_session):
-    print("find_carpeta")
+    print("find_carpeta_archivo")
     directorio, archivo = os.path.split(path)
     carpetas = directorio.split('/')
+    print(carpetas)
 
     # Verificar que arranque desde la raiz
     if carpetas[0] != '':
@@ -141,13 +151,15 @@ def find_carpeta_archivo(super_bloque, path, user_session):
 
     bcarpeta = structs.BloqueCarpeta()
     inodo = structs.Inodo()
+    i_c = 0
+    encontrada = False
     file = open(user_session.mounted.path, 'rb+')
     file.seek(super_bloque.s_inode_start)
     file.readinto(inodo)
 
-    if(len(carpetas) != 2 and carpetas[1] != ''):
-        for i, carpeta in enumerate(carpetas):
-            # print(carpeta, i)
+    if(len(carpetas) >= 2 and carpetas[1] != ''):
+        for i, carpeta in enumerate(carpetas, start=1):
+            print(carpeta, i)
             for b in range(12):
                 if inodo.i_block[b] == -1:
                     continue
@@ -157,21 +169,27 @@ def find_carpeta_archivo(super_bloque, path, user_session):
                 for j in range(4):
                     nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
                     if nombre_carpeta == carpeta:
-                        # print("Archivo encontrado")
+                        print("Carpeta encontrada jaja encontrado")
                         # print(nombre_carpeta)
                         # print(archivo)
                         read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
                         file.seek(read_on_archive)
                         file.readinto(inodo)
+                        i_c = bcarpeta.b_content[j].b_inodo
+                        encontrada = True
                         break
                         # i = bcarpeta.b_content[j].b_inodo
                         # inodo_actual = inode_archive
                         # file.close()
                         # return inodo
+                if encontrada:
+                    encontrada = False
+                    break
                 
 
     file.close()
-    return inodo
+    print("Holaaaaaaaaaaaaaaaa", i_c)
+    return inodo, i_c
 
 def join_file(super_bloque, inodo_file, path_disk):
     txt = ""
@@ -198,7 +216,7 @@ def join_file(super_bloque, inodo_file, path_disk):
     file.close()
     return txt
 
-def file_link(super_bloque, path, user_session, inodo):
+def file_link(super_bloque, path, user_session, inodo, i):
     # print("file_link")
     read_on_file = -1
     read_on_archive = -1
@@ -216,7 +234,7 @@ def file_link(super_bloque, path, user_session, inodo):
     file = open(user_session.mounted.path, 'rb+')
     # file.seek(super_bloque.s_inode_start)
     # file.readinto(inodo)
-    i = 0
+    # i = 0
     # for i, carpeta in enumerate(carpetas):
     #     print(carpeta, i)
 
@@ -236,14 +254,14 @@ def file_link(super_bloque, path, user_session, inodo):
             file.seek(write_on_block)
             file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
 
-            write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
             inodo.i_block[b] = super_bloque.s_first_blo
+            write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
             file.seek(write_on_inodo)
             file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
 
             write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
             file.seek(write_on_block)
-            file.write(uno)
+            file.write(b'd')
 
             super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
             super_bloque.s_free_blocks_count -= 1
@@ -310,7 +328,7 @@ def write_file(sblock, inodo_file, txt, user_session):
         inodo_file.i_block[s] = sblock.s_first_blo
         write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
         file.seek(write_on_b)
-        file.write(uno)
+        file.write(b'f')
 
         # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
         sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
@@ -324,6 +342,11 @@ def write_file(sblock, inodo_file, txt, user_session):
     write_on_i = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * sblock.s_first_ino)
     file.seek(write_on_i)
     file.write(ctypes.string_at(ctypes.byref(inodo_file), ctypes.sizeof(inodo_file)))
+
+    # SE ACTUALIZA EL BITMAP DE INODOS
+    write_on_i = sblock.s_bm_inode_start + sblock.s_first_ino
+    file.seek(write_on_i)
+    file.write(uno)
 
     # SE ESCRIBE EL NUEVO SUPER BLOQUE
     sblock.s_first_ino = next_first_inodo(sblock, user_session.mounted.path)
@@ -341,6 +364,17 @@ def write_carpeta(sblock, inodo_file, carpeta_root, user_session):
     write_on_i = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * sblock.s_first_ino)
     file.seek(write_on_i)
     file.write(ctypes.string_at(ctypes.byref(inodo_file), ctypes.sizeof(inodo_file)))
+
+    # SE ACTUALIZA EL BITMAP DE INODOS
+    uno = b'1'
+    write_on_i = sblock.s_bm_inode_start + sblock.s_first_ino
+    file.seek(write_on_i)
+    file.write(uno)
+
+    # SE ACTUALIZA EL BITMAP DE INODOS
+    write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
+    file.seek(write_on_b)
+    file.write(b'd')
 
     # SE ESCRIBE EL NUEVO SUPER BLOQUE
     sblock.s_first_ino = next_first_inodo(sblock, user_session.mounted.path)
@@ -442,7 +476,7 @@ def make_ext2(part_size, start, path):
     inodo_file_user.i_ctime = super_bloque.s_umtime
     inodo_file_user.i_mtime = super_bloque.s_umtime
     inodo_file_user.i_type = b'1'
-    inodo_file_user.i_perm = 0o664
+    inodo_file_user.i_perm = 0o664 # 0o664
     inodo_file_user.i_block[0] = 1
 
     file_user = structs.BloqueArchivo()
@@ -457,9 +491,9 @@ def make_ext2(part_size, start, path):
 
     file.seek(super_bloque.s_bm_block_start)
     # BLOQUE CARPETA ROOT
-    file.write(uno)
+    file.write(b'd')
     # BLOQUE ARCHIVO USER.TXT
-    file.write(uno)
+    file.write(b'f')
 
     file.seek(super_bloque.s_inode_start)
     # INODO CARPETA ROOT

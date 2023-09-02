@@ -1,9 +1,10 @@
 mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
 mkfs -type=full -id=931disco2
 login -user=root -pass=123 -id=931disco2
-mkfile -size=128 -path=/b.txt
 mkdir -path=/hola
-mkfile -size=355 -path=/hola/c.txt
-mkfile -size=256 -path=/f.txt
-mkfile -size=63 -path=/hola/r.txt
-rep -name=mbr -path=/home/hugosmh/reportes -id=931disco2
+mkdir -path=/hola/adios
+mkfile -size=24 -path=/hola/r.txt
+mkfile -size=78 -path=/hola/adios/p.txt
+mkdir -path=/hola/adios/hola
+mkfile -size=78 -path=/hola/adios/hola/p.txt
+rep -name=block -path=/home/hugosmh/reportes -id=931disco2

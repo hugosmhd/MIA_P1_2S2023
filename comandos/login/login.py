@@ -21,7 +21,7 @@ def authenticate(mounted, part_start, user):
     # file.readinto(inodo_archive)
     # file.close()
     session_inciada.mounted = mounted
-    indo_carpeta_archivo = find_carpeta_archivo(sblock, "/", session_inciada)
+    indo_carpeta_archivo, i = find_carpeta_archivo(sblock, "/", session_inciada)
     inodo_archivo = find_file(sblock, "/user.txt", mounted.path, indo_carpeta_archivo)
     usuarios = join_file(sblock, inodo_archivo, mounted.path)
     print(usuarios)
