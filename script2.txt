@@ -7,4 +7,6 @@ mkfile -size=24 -path=/hola/r.txt
 mkfile -size=78 -path=/hola/adios/p.txt
 mkdir -path=/hola/adios/hola
 mkfile -size=78 -path=/hola/adios/hola/p.txt
+rep -name=bm_bloc -path=/home/hugosmh/reportes -id=931disco2
+rep -name=bm_inode -path=/home/hugosmh/reportes -id=931disco2
 rep -name=block -path=/home/hugosmh/reportes -id=931disco2

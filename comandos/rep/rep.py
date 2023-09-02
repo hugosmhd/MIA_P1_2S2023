@@ -23,6 +23,10 @@ class rep:
             self.reporte_inode()
         elif(self.name == 'block'):
             self.reporte_block()
+        elif(self.name == 'bm_inode'):
+            self.reporte_bm_inode()
+        elif(self.name == 'bm_bloc'):
+            self.reporte_bm_bloc()
         # try:
         #     with open(rep.path, "rb") as file:
         #         datos_mbr = file.read(struct.calcsize(structs.size_mbr()))
@@ -286,7 +290,6 @@ class rep:
         dot += '</table>>];\n'
         dot += '}'
         print(dot)
-
         
     def reporte_inode(self):
         print("HACER REPORTE INODE")
@@ -485,3 +488,111 @@ class rep:
         dot += '}'
         # print(dot)
         pyperclip.copy(dot)
+
+    def reporte_bm_inode(self):
+        print("HACER REPORTE BM INODE")
+        print(self.name)
+        print(self.path)
+        print(self.id)
+        print(self.ruta)
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        cantidad_inodos = 0
+        read_on = sblock.s_bm_inode_start
+        file.seek(read_on)
+        bit = file.read(1)
+        bits = ""
+        total_activos = 0
+        while cantidad_inodos < sblock.s_inodes_count:
+            if total_activos == 20:
+                bits += "\n"
+            if bit == b'0':
+                bits += "0\t"
+                total_activos += 1
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
+            else:
+                bits += "1\t"
+                
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
+                total_activos += 1
+
+            cantidad_inodos += 1
+            if total_activos != 0 and total_activos == 20:
+                bits += "\n"
+                total_activos = 0
+
+        file.close()
+        archivo = open("mi_archivo.txt", "w")
+        archivo.write(bits)
+        archivo.close()
+    
+    def reporte_bm_bloc(self):
+        print("HACER REPORTE BM BLOCK")
+        print(self.name)
+        print(self.path)
+        print(self.id)
+        print(self.ruta)
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        cantidad_bloques = 0
+        read_on = sblock.s_bm_block_start
+        file.seek(read_on)
+        bit = file.read(1)
+        bits = ""
+        total_activos = 0
+        while cantidad_bloques < sblock.s_inodes_count:
+            if total_activos == 20:
+                bits += "\n"
+            if bit == b'0':
+                bits += "0\t"
+                total_activos += 1
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
+            else:
+                bits += "1\t"
+                
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
+                total_activos += 1
+
+            cantidad_bloques += 1
+            if total_activos != 0 and total_activos == 20:
+                bits += "\n"
+                total_activos = 0
+
+        file.close()
+        archivo = open("mi_archivo2.txt", "w")
+        archivo.write(bits)
+        archivo.close()
