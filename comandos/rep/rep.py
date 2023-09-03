@@ -5,7 +5,9 @@ import ctypes
 import pyperclip
 
 import structs
+from _global._global import particiones_montadas, session_inciada
 from comandos.mount.mount import find_mounted
+from comandos.mkfs.mkfs import join_file, find_file, find_carpeta_archivo
 
 class rep:
     def __init__(self):
@@ -27,19 +29,12 @@ class rep:
             self.reporte_bm_inode()
         elif(self.name == 'bm_bloc'):
             self.reporte_bm_bloc()
-        # try:
-        #     with open(rep.path, "rb") as file:
-        #         datos_mbr = file.read(struct.calcsize(structs.size_mbr()))
-        #         tam, fecha, sig = structs.deserializar_mbr(datos_mbr)
-        #         fecha_hora = datetime.fromtimestamp(fecha)
-
-        #         fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-        #         print(" ----- DATOS DEL MBR ----- ")
-        #         print(f"Tamaño del disco: {tam} bytes")
-        #         print(f"Fecha de creacion del disco: {fecha_formateada}")
-        #         print(f"Signature: {sig}")
-        # except FileNotFoundError:
-        #     print(f"No existe el disco con ruta {rep.path}")
+        elif(self.name == 'tree'):
+            self.reporte_tree()
+        elif(self.name == 'sb'):
+            self.reporte_sb()
+        elif(self.name == 'file'):
+            self.reporte_file()
     
     def reporte_mbr(self):
         print("HACER REPORTE MBR")
@@ -135,7 +130,6 @@ class rep:
         dot += '</TABLE>>];\n'
         dot += '}'
         print(dot)
-
 
     def reporte_disk(self):
         print("HACER REPORTE DISK")
@@ -338,13 +332,6 @@ class rep:
             inodo = structs.Inodo()
             file.seek(read_on_i)
             file.readinto(inodo)
-            # print("*****************************************")
-            # print(f"Inodo {cantidad_inodos}")
-            # print("i_uid", inodo.i_uid)
-            # print("i_gid", inodo.i_gid)
-            # print("i_type", inodo.i_type)
-            # print("i_s", inodo.i_s)
-            # print("i_perm", inodo.i_perm)
             dot += "<TD>\n"
             dot += "    <TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
             dot += f"        <TR><TD colspan='3' BGCOLOR='{'#f1948a' if inodo.i_type == b'0' else '#f4d03f'}'> Inodo {cantidad_inodos} </TD></TR>\n"
@@ -595,4 +582,237 @@ class rep:
         file.close()
         archivo = open("mi_archivo2.txt", "w")
         archivo.write(bits)
+        archivo.close()
+
+    def reporte_tree(self):
+        print("HACER REPORTE TREE")
+        print(self.name)
+        print(self.path)
+        print(self.id)
+        print(self.ruta)
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        cantidad_inodos = 0
+        read_on = sblock.s_bm_inode_start
+        file.seek(read_on)
+        bit = file.read(1)
+
+        dot = 'digraph G {\n'
+        dot += 'overlap=false;'
+        dot += 'ranksep=1;'
+        dot += "graph [\n"
+        dot += '    fontname="Helvetica,Arial,sans-serif"\n'
+        dot += '    rankdir = "LR"\n'
+        dot += "]\n"
+        dot += "node [\n"
+        dot += '    fontname="Helvetica,Arial,sans-serif"\n'
+        dot += "    shape=record\n"
+        dot += "    style=filled\n"
+        dot += "    fillcolor=gray95\n"
+        dot += "]\n"
+        enlaces = ""
+
+        total_activos = 0
+        while cantidad_inodos < sblock.s_inodes_count:
+            if bit == b'0':
+                cantidad_inodos += 1
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
+                continue
+            read_on_i = sblock.s_inode_start + (sblock.s_inode_size * cantidad_inodos)
+            inodo = structs.Inodo()
+            file.seek(read_on_i)
+            file.readinto(inodo)
+            dot += f"inodo_{cantidad_inodos} [\n"
+            dot += "    shape=plain\n"
+            dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+            dot += f"        <tr> <td port='i_e' colspan='2' BGCOLOR='{'#f1948a' if inodo.i_type == b'0' else '#f4d03f'}'> <b>Inodo {cantidad_inodos}</b> </td> </tr>\n"
+            dot += f"        <tr> <td>i_uid</td><td>{inodo.i_uid}</td> </tr>\n"
+            dot += f"        <tr> <td>i_gid</td><td port='ss1'>{inodo.i_gid}</td></tr>\n"
+            dot += f"        <tr> <td>i_s</td><td port='ss2'>{inodo.i_s}</td> </tr>\n"
+            dot += f"        <tr> <td>i_type</td><td port='ss2'>{inodo.i_type.decode()}</td> </tr>\n"
+            dot += f"        <tr> <td>i_perm</td><td port='ss2'>{inodo.i_perm}</td> </tr>\n"
+            fecha_hora = datetime.fromtimestamp(inodo.i_atime)
+            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+            dot += f"        <tr> <td>i_atime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
+            fecha_hora = datetime.fromtimestamp(inodo.i_ctime)
+            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+            dot += f"        <tr> <td>i_ctime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
+            fecha_hora = datetime.fromtimestamp(inodo.i_mtime)
+            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+            dot += f"        <tr> <td>i_ctime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
+            for i in range(15):
+                if inodo.i_block[i] != -1:
+                    dot += f"        <tr> <td port='a_u{inodo.i_block[i]}'>ap{i+1}</td><td port='a_s{inodo.i_block[i]}'>{inodo.i_block[i]}</td> </tr>\n"
+                    enlaces += f"inodo_{cantidad_inodos}:a_s{inodo.i_block[i]} -> bloque_{inodo.i_block[i]}:b_e;\n"
+                else:
+                    dot += f"        <tr> <td>ap{i+1}</td><td>{inodo.i_block[i]}</td> </tr>\n"
+            dot += "    </table>>\n"
+            dot += "]\n"
+            
+            read_on += 1
+            file.seek(read_on)
+            bit = file.read(1)
+            cantidad_inodos += 1
+
+        cantidad_bloques = 0
+        read_on = sblock.s_bm_block_start
+        file.seek(read_on)
+        bit = file.read(1)
+
+        while cantidad_bloques < sblock.s_blocks_count:
+            if bit == b'0':
+                cantidad_bloques += 1
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
+                continue
+            read_on_b = sblock.s_block_start + (sblock.s_block_size * cantidad_bloques)
+            if bit == b'd':
+                bloque_carpeta = structs.BloqueCarpeta()
+                file.seek(read_on_b)
+                file.readinto(bloque_carpeta)
+                dot += f"bloque_{cantidad_bloques} [\n"
+                dot += "    shape=plain\n"
+                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta {cantidad_bloques}</b> </td> </tr>\n"
+                dot += f"       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>"
+                for i in range(4):
+                    if bloque_carpeta.b_content[i].b_inodo != -1 and bloque_carpeta.b_content[i].b_name.decode() != "." and bloque_carpeta.b_content[i].b_name.decode() != "..":
+                        dot += f"    <tr><td port='a_u{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td port='a_s{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
+                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_carpeta.b_content[i].b_inodo} -> inodo_{bloque_carpeta.b_content[i].b_inodo}:i_e;\n"
+                    else:
+                        dot += f"    <tr><td><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
+                dot += "    </table>>\n"
+                dot += "]\n"
+            elif bit == b'f':
+                bloque_archivo = structs.BloqueArchivo()
+                file.seek(read_on_b)
+                file.readinto(bloque_archivo)
+                dot += f"bloque_{cantidad_bloques} [\n"
+                dot += "    shape=plain\n"
+                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                dot += f"        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo {cantidad_bloques}</b> </td> </tr>\n"
+
+                nuevo_texto = ""
+                for i in range(0, len(bloque_archivo.b_content), 16):
+                    nuevo_texto += bloque_archivo.b_content[i:i+16].decode() + "<br/>"
+                if len(bloque_archivo.b_content) > 0:
+                    dot += f"    <tr><td><font point-size='15'>  {nuevo_texto}  </font></td></tr>\n"
+                dot += "    </table>>\n"
+                dot += "]\n"
+            
+            read_on += 1
+            file.seek(read_on)
+            bit = file.read(1)
+            cantidad_bloques += 1
+
+        file.close()
+        dot += enlaces
+        dot += '}'
+        print(dot)
+        pyperclip.copy(dot)
+
+    def reporte_sb(self):
+        print("HACER REPORTE SB")
+        print(self.name)
+        print(self.path)
+        print(self.id)
+        print(self.ruta)
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        dot = 'digraph G {\n'
+        dot += f'label="Reporte del Superbloque";\n'
+        dot += 'labelloc=top;\n'
+        dot += 'edge [ fontname="Courier New", fontsize=20];\n'
+        dot += 'node [ shape="box", fontsize=26];\n'
+        dot += 'n_1 [label=<\n'
+        dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='1'>\n"
+        dot += f"   <TR><TD colspan='2' BGCOLOR='#196f3d'> Reporte de SUPERBLOQUE </TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_filesystem_type</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_filesystem_type}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_inodes_count</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_inodes_count}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_blocks_count</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_blocks_count}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_free_blocks_count</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_free_blocks_count}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_free_inodes_count</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_free_inodes_count}</FONT></TD></TR>\n"
+        fecha_hora = datetime.fromtimestamp(sblock.s_mtime)
+        fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_mtime</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
+        fecha_hora = datetime.fromtimestamp(sblock.s_umtime)
+        fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_umtime</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_mnt_count</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_mnt_count}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_magic</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_magic}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_inode_size</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_inode_size}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_block_size</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_block_size}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_first_ino</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_first_ino}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_first_blo</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_first_blo}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_bm_inode_start</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_bm_inode_start}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_bm_block_start</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_bm_block_start}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD><FONT POINT-SIZE='15'>  <b>s_inode_start</b>  </FONT></TD><TD><FONT POINT-SIZE='15'>{sblock.s_inode_start}</FONT></TD></TR>\n"
+        dot += f"   <TR><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>  <b>s_block_start</b>  </FONT></TD><TD BGCOLOR='#58d68d'><FONT POINT-SIZE='15'>{sblock.s_block_start}</FONT></TD></TR>\n"
+            
+        file.close()
+        dot += '</TABLE>>];\n'
+        dot += '}'
+        print(dot)
+        pyperclip.copy(dot)
+    
+    def reporte_file(self):
+        print("HACER REPORTE FILE")
+        print(self.name)
+        print(self.path)
+        print(self.id)
+        print(self.ruta)
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        indo_carpeta_archivo, i = find_carpeta_archivo(sblock, self.ruta, session_inciada)
+        inodo_archivo = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
+        # print(inodo_archivo.i_s)
+        txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
+        print("JOIN FILE MKFILE")
+        print(txt)
+
+        file.close()
+        archivo = open("mi_archivo3.txt", "w")
+        archivo.write(txt)
         archivo.close()

@@ -296,7 +296,7 @@ def analizar_rep(parametros):
         elif param.find("-id=") == 0:
             reporte.id = get_valor_parametro(param)
         elif param.find("-ruta=") == 0:
-            reporte.ruta = get_path(i, parametros)
+            reporte.ruta, i = get_path(i, parametros)
         else:
             print(f"Parametro no aceptado en 'rep': {valor}")
         i += 1

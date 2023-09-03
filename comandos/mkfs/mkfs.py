@@ -158,8 +158,13 @@ def find_carpeta_archivo(super_bloque, path, user_session):
     file.readinto(inodo)
 
     if(len(carpetas) >= 2 and carpetas[1] != ''):
-        for i, carpeta in enumerate(carpetas, start=1):
-            print(carpeta, i)
+        carpetas = carpetas[1:]
+        for i, carpeta in enumerate(carpetas):
+            print(f"Carpetas en la posición {i}: {carpeta}")
+
+            print("ssssssssssssss")
+            print(carpetas)
+            print("like a little")
             for b in range(12):
                 if inodo.i_block[b] == -1:
                     continue
@@ -169,13 +174,14 @@ def find_carpeta_archivo(super_bloque, path, user_session):
                 for j in range(4):
                     nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
                     if nombre_carpeta == carpeta:
-                        print("Carpeta encontrada jaja encontrado")
+                        print("Carpeta encontrada jaja encontrado", carpeta)
                         # print(nombre_carpeta)
                         # print(archivo)
+                        i_c = bcarpeta.b_content[j].b_inodo
+                        print("i_c", i_c)
                         read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
                         file.seek(read_on_archive)
                         file.readinto(inodo)
-                        i_c = bcarpeta.b_content[j].b_inodo
                         encontrada = True
                         break
                         # i = bcarpeta.b_content[j].b_inodo
