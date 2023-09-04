@@ -48,7 +48,8 @@ class mkdir():
         carpeta_root.b_content[1].b_name = "..".encode('utf-8')[:12].ljust(12, b'\0')
         carpeta_root.b_content[1].b_inodo = 0
 
-        indo_carpeta, i = find_carpeta(sblock, self.path, session_inciada)
+        directorio, carpeta_crear = os.path.split(self.path)
+        indo_carpeta, i = find_carpeta(sblock, directorio, session_inciada)
         file_link(sblock, self.path, session_inciada, indo_carpeta, i)
         file = open(session_inciada.mounted.path, "rb+")
         file.seek(session_inciada.mounted.part_start)

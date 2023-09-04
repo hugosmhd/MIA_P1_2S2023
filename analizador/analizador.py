@@ -3,7 +3,11 @@ from comandos.fdisk.fdisk import fdisk
 from comandos.mount.mount import mount
 from comandos.mkfs.mkfs import mkfs
 from comandos.login.login import login
+from comandos.mkgrp.mkgrp import mkgrp
 from comandos.mkfile.mkfile import mkfile
+from comandos.cat.cat import cat
+from comandos.rename.rename import rename
+from comandos.move.move import move
 from comandos.mkdir.mkdir import mkdir
 from comandos.rep.rep import rep
 import structs
@@ -38,8 +42,20 @@ def identificar_parametros(comando, parametros):
         analizar_mkfs(parametros)
     elif(comando == 'login'):
         analizar_login(parametros)
+    elif(comando == 'logout'):
+        analizar_logout(parametros)
+    elif(comando == 'mkgrp'):
+        analizar_mkgrp(parametros)
+    elif(comando == 'rmgrp'):
+        analizar_rmgrp(parametros)
     elif(comando == 'mkfile'):
         analizar_mkfile(parametros)
+    elif(comando == 'cat'):
+        analizar_cat(parametros)
+    elif(comando == 'rename'):
+        analizar_rename(parametros)
+    elif(comando == 'move'):
+        analizar_move(parametros)
     elif(comando == 'mkdir'):
         analizar_mkdir(parametros)
     elif(comando == 'rep'):
@@ -110,6 +126,7 @@ def leer_script(path):
 
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script4.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script5.txt
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script6.txt
 
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script1.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script2.txt
@@ -252,6 +269,39 @@ def analizar_login(parametros):
         i += 1
     autenticacion.crear_login(autenticacion)
 
+def analizar_logout(parametros):
+    autenticacion = login()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        print(f"Parametro no aceptado en 'logout': {param}")
+        i += 1
+    autenticacion.crear_logout()
+
+def analizar_mkgrp(parametros):
+    new_grp = mkgrp()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-name=") == 0:
+            new_grp.name = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mkgrp': {param}")
+        i += 1
+    new_grp.crear_mkgrp()
+
+def analizar_rmgrp(parametros):
+    new_grp = mkgrp()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-name=") == 0:
+            new_grp.name = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mkgrp': {param}")
+        i += 1
+    new_grp.crear_rmgrp()
+
 def analizar_mkfile(parametros):
     archivo = mkfile()
     i = 0
@@ -269,6 +319,49 @@ def analizar_mkfile(parametros):
             print(f"Parametro no aceptado en 'mkfile': {valor}")
         i += 1
     archivo.crear_mkfile()
+
+def analizar_rename(parametros):
+    archivo_carpeta = rename()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            archivo_carpeta.path, i = get_path(i, parametros)
+        elif param.find("-name=") == 0:
+            archivo_carpeta.name, i = get_path(i, parametros)
+        else:
+            print(f"Parametro no aceptado en 'rename': {valor}")
+        i += 1
+    archivo_carpeta.crear_rename()
+
+def analizar_move(parametros):
+    archivo_carpeta = move()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            archivo_carpeta.path, i = get_path(i, parametros)
+        elif param.find("-destino=") == 0:
+            archivo_carpeta.destino, i = get_path(i, parametros)
+        else:
+            print(f"Parametro no aceptado en 'move': {valor}")
+        i += 1
+    archivo_carpeta.crear_move()
+
+def analizar_cat(parametros):
+    archivo = cat()
+    i = 0
+    num_file = 1
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find(f"-file{num_file}=") == 0:
+            file = get_valor_parametro(param)
+            archivo.files.append(file)
+            num_file += 1
+        else:
+            print(f"Parametro no aceptado en 'cat': {valor}, verifique que siga la secuencia")
+        i += 1
+    archivo.crear_cat()
 
 def analizar_mkdir(parametros):
     archivo = mkdir()

@@ -60,7 +60,8 @@ class mkfile():
         inodo_file.i_type = b'1'
         inodo_file.i_perm = 664 # 0o664
 
-        indo_carpeta_archivo, i = find_carpeta_archivo(sblock, self.path, session_inciada)
+        directorio, archivo_ = os.path.split(self.path)
+        indo_carpeta_archivo, i = find_carpeta_archivo(sblock, directorio, session_inciada)
         file_link(sblock, self.path, session_inciada, indo_carpeta_archivo, i)
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
@@ -69,7 +70,7 @@ class mkfile():
         file.close()
         write_file(sblock, inodo_file, content, session_inciada)
         # print(self.path)
-        inodo_archivo = find_file(sblock, self.path, session_inciada.mounted.path, indo_carpeta_archivo)
+        inodo_archivo, i_f = find_file(sblock, self.path, session_inciada.mounted.path, indo_carpeta_archivo)
         # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
         print("JOIN FILE MKFILE")

@@ -9,5 +9,13 @@ mkdir -path=/hola/adios/hola
 mkfile -size=78 -path=/hola/adios/hola/p.txt
 mkfile -size=488 -path=/record.txt
 mkfile -size=148 -path=/prueba.txt
-rep -name=tree -path=/home/hugosmh/reportes -id=931disco2
-rep -name=file -path=/home/hugosmh/reportes -id=931disco2 -ruta=/record.txt
+rename -path=/hola/adios -name="rename"
+rename -path=/hola/r.txt -name="z.txt"
+mkdir -path=/home
+mkdir -path=/home/hugosmhd
+mkdir -path=/home/hugosmhd/chistis
+move -path=/hola/rename -destino="/home/hugosmhd/chistis"
+move -path=/hola/z.txt -destino="/home/hugosmhd/chistis"
+move -path=/record.txt -destino="/home/hugosmhd/chistis"
+mkfile -size=1 -path=/record2.txt
+rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree

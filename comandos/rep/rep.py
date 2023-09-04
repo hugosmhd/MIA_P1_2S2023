@@ -806,7 +806,7 @@ class rep:
         file.readinto(sblock)
 
         indo_carpeta_archivo, i = find_carpeta_archivo(sblock, self.ruta, session_inciada)
-        inodo_archivo = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
+        inodo_archivo, i_f = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
         # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
         print("JOIN FILE MKFILE")

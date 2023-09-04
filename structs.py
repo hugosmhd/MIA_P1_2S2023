@@ -2,6 +2,12 @@ import struct
 import ctypes
 
 
+class User():
+    def __init__(self):
+        self.user_name = ""
+        self.user_password = ""
+        self.group_name = ""
+
 class SesionUsuario():
     def __init__(self, credenciales, mounted, is_logged):
         self.credenciales = credenciales
