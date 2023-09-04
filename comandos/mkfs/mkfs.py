@@ -527,7 +527,7 @@ def write_carpeta(sblock, inodo_file, carpeta_root, user_session):
     file.write(ctypes.string_at(ctypes.byref(sblock), ctypes.sizeof(sblock)))
     file.close()
 
-def crear_grupo_usuario(sblock, data, name_g_u, tipo):
+def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
     indo_carpeta_archivo, i = find_carpeta_archivo(sblock, "/", session_inciada)
     inodo_archivo, i_ino = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
@@ -578,6 +578,8 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo):
     file.close()
     if tipo == 'G':
         groups.append(name_g_u)
+    elif tipo == 'U':
+        users.append(user_actual)
 
     inodo_arch, i_f = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
     txt = join_file(sblock, inodo_arch, session_inciada.mounted.path)
@@ -585,7 +587,7 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo):
     print(txt)
     print(inodo_archivo.i_s)
 
-def remove_grupo_usuario(sblock, data, name_g_u, tipo):
+def remove_grupo_usuario(sblock, data, name_g_u, tipo, index):
     indo_carpeta_archivo, i = find_carpeta_archivo(sblock, "/", session_inciada)
     inodo_archivo, i_ino = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
@@ -597,10 +599,10 @@ def remove_grupo_usuario(sblock, data, name_g_u, tipo):
         if len(linea) > 0 and grupo_usuario[1] == tipo:
         #     grupo_usuario = linea.split(',')
         #     print("buenaaaaaaaas", grupo_usuario[0], grupo_usuario[2])
-            if grupo_usuario[0] != '0' and grupo_usuario[2] == name_g_u:
+            if grupo_usuario[0] != '0' and grupo_usuario[index] == name_g_u:
                 new_txt += f"{data}\n"
                 continue
-            elif grupo_usuario[2] == name_g_u:
+            elif grupo_usuario[index] == name_g_u:
                 print(f"El {'grupo' if tipo == 'G' else 'usuario'} ya ha sido eliminado anteriormente")
                 return
 

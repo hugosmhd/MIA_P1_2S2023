@@ -15,3 +15,5 @@ mkgrp -name=usuarios10
 mkgrp -name=usuarios11
 mkgrp -name=usuarios12
 rmgrp -name=usuarios11
+mkusr -user=user1 -pass=usuario -grp=usuarios
+rmusr -user=user1

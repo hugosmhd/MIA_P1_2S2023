@@ -4,6 +4,7 @@ from comandos.mount.mount import mount
 from comandos.mkfs.mkfs import mkfs
 from comandos.login.login import login
 from comandos.mkgrp.mkgrp import mkgrp
+from comandos.mkusr.mkusr import mkusr
 from comandos.mkfile.mkfile import mkfile
 from comandos.cat.cat import cat
 from comandos.rename.rename import rename
@@ -48,6 +49,10 @@ def identificar_parametros(comando, parametros):
         analizar_mkgrp(parametros)
     elif(comando == 'rmgrp'):
         analizar_rmgrp(parametros)
+    elif(comando == 'mkusr'):
+        analizar_mkusr(parametros)
+    elif(comando == 'rmusr'):
+        analizar_rmusr(parametros)
     elif(comando == 'mkfile'):
         analizar_mkfile(parametros)
     elif(comando == 'cat'):
@@ -301,6 +306,34 @@ def analizar_rmgrp(parametros):
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
     new_grp.crear_rmgrp()
+
+def analizar_mkusr(parametros):
+    new_user = mkusr()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-user=") == 0:
+            new_user.user = get_valor_parametro(param)
+        elif param.find("-pass=") == 0:
+            new_user.password = get_valor_parametro(param)
+        elif param.find("-grp=") == 0:
+            new_user.grp = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mkusr': {param}")
+        i += 1
+    new_user.crear_mkusr()
+
+def analizar_rmusr(parametros):
+    new_user = mkusr()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-user=") == 0:
+            new_user.user = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mkusr': {param}")
+        i += 1
+    new_user.crear_rmusr()
 
 def analizar_mkfile(parametros):
     archivo = mkfile()
