@@ -33,6 +33,8 @@ def identificar_parametros(comando, parametros):
     comando.lower()
     if(comando == 'mkdisk'):
         analizar_mkdisk(parametros)
+    elif(comando == 'rmdisk'):
+        analizar_rmdisk(parametros)
     elif(comando == 'fdisk'):
         analizar_fdisk(parametros)
     elif(comando == 'mount'):
@@ -109,6 +111,8 @@ def get_path(i, parametros):
                 
         if not finalPath:
             i += 1
+    
+    valor = valor.rstrip('/')
     return valor, i
 
 def get_valor_parametro(parametro):
@@ -190,9 +194,24 @@ def analizar_mkdisk(parametros):
             disco.fit = get_valor_parametro(param)
         elif param.find("-unit=") == 0:
             disco.unit = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'mkdisk': {param}")
 
         i += 1
     disco.crear_mkdisk(disco)
+
+def analizar_rmdisk(parametros):
+    disco = mkdisk()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            disco.path, i = get_path(i, parametros)
+        else:
+            print(f"Parametro no aceptado en 'rmdisk': {param}")
+
+        i += 1
+    disco.crear_rmdisk()
 
 def analizar_fdisk(parametros):
     particion = fdisk()
@@ -398,7 +417,7 @@ def analizar_cat(parametros):
     while i < len(parametros):
         param = parametros[i]
         if param.find(f"-file{num_file}=") == 0:
-            file = get_valor_parametro(param)
+            file, i = get_path(i, parametros)
             archivo.files.append(file)
             num_file += 1
         else:

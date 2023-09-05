@@ -21,3 +21,4 @@ move -path=/hola/z.txt -destino="/home/hugosmhd/chistis"
 move -path=/record.txt -destino="/home/hugosmhd/chistis"
 mkfile -size=1 -path=/record2.txt
 rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree
+cat -file1="/user.txt"

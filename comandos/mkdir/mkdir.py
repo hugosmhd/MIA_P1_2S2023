@@ -85,6 +85,16 @@ class mkdir():
         file.readinto(sblock)
         file.close()
 
+        directorio, carpeta_crear = os.path.split(self.path)
+        indo_carpeta, i = find_carpeta(sblock, directorio, session_inciada)
+        if(i == -1):
+            print(f"Error: Ruta especificada '{directorio}' no existe")
+            return
+        inodo_archivo, i_f = find_file(sblock, carpeta_crear, session_inciada.mounted.path, indo_carpeta, False)
+        if(i_f != -1):
+            print(f"Error: Carpeta '{self.path}' ya existe")
+            return
+
         if sblock.s_first_ino == -1:
             # No hay más inodos disponibles, error
             return
@@ -109,8 +119,7 @@ class mkdir():
         carpeta_root.b_content[1].b_name = "..".encode('utf-8')[:12].ljust(12, b'\0')
         carpeta_root.b_content[1].b_inodo = 0
 
-        directorio, carpeta_crear = os.path.split(self.path)
-        indo_carpeta, i = find_carpeta(sblock, directorio, session_inciada)
+        
         file_link(sblock, self.path, session_inciada, indo_carpeta, i)
         file = open(session_inciada.mounted.path, "rb+")
         file.seek(session_inciada.mounted.part_start)

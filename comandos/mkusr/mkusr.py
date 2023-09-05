@@ -18,6 +18,13 @@ class mkusr():
     def crear_mkusr(self):
         print("MAKE MKUSR")
 
+        if not session_inciada.is_logged:
+            print("Error: No se ha iniciado ninguna sesion")
+            return
+        elif session_inciada.is_logged and session_inciada.credenciales.user != 'root':
+            print("Error: El comando 'mkusr' unicamente lo puede hacer un usuario root")
+            return
+
         for user in users:
             if user.user_name == self.user:
                 print("El usuario con ese nombre ya existe")
@@ -48,6 +55,12 @@ class mkusr():
     def crear_rmusr(self):
         print("MAKE RMUSR, ESTE")
 
+        if not session_inciada.is_logged:
+            print("Error: No se ha iniciado ninguna sesion")
+            return
+        elif session_inciada.is_logged and session_inciada.credenciales.user != 'root':
+            print("Error: El comando 'rmusr' unicamente lo puede hacer un usuario root")
+            return
 
         exist = False
         user = None

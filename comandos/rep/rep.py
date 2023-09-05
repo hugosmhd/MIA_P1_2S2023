@@ -806,7 +806,13 @@ class rep:
         file.readinto(sblock)
 
         indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, self.ruta, session_inciada)
+        if(i == -1):
+            print(f"Error: Ruta especificada '{self.ruta}' no existe")
+            return
         inodo_archivo, i_f = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
+        if(i_f == -1):
+            print(f"Error: Ruta especificada '{self.ruta}' no existe")
+            return
         # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
         print("JOIN FILE MKFILE")

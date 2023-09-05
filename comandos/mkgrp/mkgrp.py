@@ -16,6 +16,13 @@ class mkgrp():
     def crear_mkgrp(self):
         print("MAKE MKGRP")
 
+        if not session_inciada.is_logged:
+            print("Error: No se ha iniciado ninguna sesion")
+            return
+        elif session_inciada.is_logged and session_inciada.credenciales.user != 'root':
+            print("Error: El comando 'mkgrp' unicamente lo puede hacer un usuario root")
+            return
+
 
         for group in groups:
             if group == self.name:
@@ -34,6 +41,12 @@ class mkgrp():
     def crear_rmgrp(self):
         print("MAKE RMGRP, ESTE")
 
+        if not session_inciada.is_logged:
+            print("Error: No se ha iniciado ninguna sesion")
+            return
+        elif session_inciada.is_logged and session_inciada.credenciales.user != 'root':
+            print("Error: El comando 'rmgrp' unicamente lo puede hacer un usuario root")
+            return
 
         exist = False
         for group in groups:

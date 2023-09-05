@@ -46,16 +46,15 @@ def next_first_block(sblock, path_disk):
     file.close()
     return -1
 
-def find_file(super_bloque, path, path_disk, inodo):
+def find_file(super_bloque, path, path_disk, inodo, msg = True):
     read_on_file = -1
     read_on_archive = -1
-    
     directorio, archivo = os.path.split(path)
     carpetas = directorio.split('/')
     print(carpetas)
     print(directorio, archivo)
     if carpetas[0] != '':
-        print("Error archivo no encontrado, verifique su ruta")
+        print("Error: Archivo no encontrado, verifique su ruta")
         return
     # inodo = structs.Inodo()
     inodo_archivo = structs.Inodo()
@@ -88,8 +87,9 @@ def find_file(super_bloque, path, path_disk, inodo):
                 return inodo_archivo, bcarpeta.b_content[j].b_inodo
 
     file.close()
-    print("Archivo no encontrado")
-    return None
+    if msg:
+        print("Error: Archivo no encontrado")
+    return inodo_archivo, -1
 
 def find_url(super_bloque, path, user_session):
     print("find_url")
@@ -177,6 +177,7 @@ def find_carpeta(super_bloque, path, user_session):
     inodo = structs.Inodo()
     i_c = 0
     encontrada = False
+    carpeta_encontrada = False
     file = open(user_session.mounted.path, 'rb+')
     file.seek(super_bloque.s_inode_start)
     file.readinto(inodo)
@@ -202,7 +203,10 @@ def find_carpeta(super_bloque, path, user_session):
                         break
                 if encontrada:
                     encontrada = False
+                    carpeta_encontrada = True
                     break
+            if not carpeta_encontrada:
+                return inodo, -1
 
     file.close()
     print("Holaaaaaaaaaaaaaaaa Adiossssss", i_c)
@@ -232,11 +236,6 @@ def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
     if(len(carpetas) >= 2 and carpetas[1] != ''):
         carpetas = carpetas[1:]
         for i, carpeta in enumerate(carpetas):
-            # print(f"Carpetas en la posición {i}: {carpeta}")
-
-            # print("ssssssssssssss")
-            # print(carpetas)
-            # print("like a little")
             for b in range(12):
                 if inodo.i_block[b] == -1:
                     continue
@@ -265,7 +264,7 @@ def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
                     carpeta_encontrada = True
                     break
             if not carpeta_encontrada and not last_file:
-                return inodo, -1, False, None
+                return inodo, -1, False, -1
             elif not carpeta_encontrada and last_file:
                 return inodo, i_c, False, carpetas[i:]
             
@@ -275,7 +274,7 @@ def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
 
     file.close()
     print("Holaaaaaaaaaaaaaaaa", i_c)
-    return inodo, i_c, True, None
+    return inodo, i_c, True, -1
 
 def join_file(super_bloque, inodo_file, path_disk):
     txt = ""
@@ -395,7 +394,7 @@ def file_link(super_bloque, path, user_session, inodo, i):
         if inodo.i_block[b] == -1:
             if super_bloque.s_first_blo == -1:
                 # YA NO HAY MÁS BLOQUES PARA CREAR
-                print("No hay mas bloques desde MKFS")
+                print("Error: No hay mas bloques desde MKFS")
                 return
 
             carpeta = structs.BloqueCarpeta()
@@ -524,7 +523,7 @@ def write_file(sblock, inodo_file, txt, user_session):
     for s in range(iterations_blocks):
         if sblock.s_first_blo == -1:
             # Ya no hay suficientes bloques
-            print("Ya no hay suficientes bloques")
+            print("Error: Ya no hay suficientes bloques")
             file.close()
             return
 
@@ -601,7 +600,13 @@ def write_carpeta(sblock, inodo_file, carpeta_root, user_session):
 
 def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
     indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, "/", session_inciada)
+    if(i == -1):
+        print(f"Error: Ruta especificada '{self.path}' no existe")
+        return
     inodo_archivo, i_ino = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
+    if(i_ino == -1):
+        print(f"Error: Ruta especificada '/user.txt' no existe")
+        return
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
 
     segmentSize = 64
@@ -654,6 +659,9 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
         users.append(user_actual)
 
     inodo_arch, i_f = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
+    if(i_f == -1):
+        print(f"Error: Ruta especificada '/user.txt' no existe")
+        return
     txt = join_file(sblock, inodo_arch, session_inciada.mounted.path)
     print("JOIN FILE MKFILE")
     print(txt)
@@ -661,7 +669,13 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
 
 def remove_grupo_usuario(sblock, data, name_g_u, tipo, index):
     indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, "/", session_inciada)
+    if(i == -1):
+        print(f"Error: Ruta especificada '{self.path}' no existe")
+        return
     inodo_archivo, i_ino = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
+    if(i_ino == -1):
+        print(f"Error: Ruta especificada '/user.txt' no existe")
+        return
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
     lineas = txt.split('\n')
     new_txt = ""
@@ -729,6 +743,9 @@ def remove_grupo_usuario(sblock, data, name_g_u, tipo, index):
     file.close()
 
     inodo_arch, i_f = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
+    if(i_f == -1):
+        print(f"Error: Ruta especificada '/user.txt' no existe")
+        return
     print(inodo_arch.i_block[0])
     print(inodo_arch.i_block[1])
     print(inodo_arch.i_block[2])

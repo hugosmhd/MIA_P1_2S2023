@@ -16,4 +16,11 @@ mkgrp -name=usuarios11
 mkgrp -name=usuarios12
 rmgrp -name=usuarios11
 mkusr -user=user1 -pass=usuario -grp=usuarios
+login -user=user1 -pass=usuario -id=931disco2
 rmusr -user=user1
+mkusr -user=user2 -pass=usuario2 -grp=usuarios
+login -user=user2 -pass=usuario2 -id=931disco2
+mkusr -user=user3 -pass=usuario3 -grp=usuarios
+mkusr -user=user4 -pass=usuario4 -grp=usuarios
+mkusr -user=user5 -pass=usuario5 -grp=usuarios
+mkusr -user=user6 -pass=usuario6 -grp=usuarios

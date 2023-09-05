@@ -22,6 +22,10 @@ class mkfile():
         print("mkfile")
         print(self.size)
 
+        if not session_inciada.is_logged:
+            print("Error: No se ha iniciado ninguna sesion")
+            return
+
         directorio, archivo_ = os.path.split(self.path)
         if self.recursivo:
             file = open(session_inciada.mounted.path, "rb+")
@@ -46,7 +50,7 @@ class mkfile():
                 with open(self.cout, 'r') as archivo:
                     content = archivo.read(self.size) if self.size_activo else archivo.read()
             except FileNotFoundError:
-                print(f"La ruta de cout {self.cout} no existe")
+                print(f"Error: La ruta de cout {self.cout} no existe")
         else:
             iterations_fill = self.size // 10
             for _ in range(iterations_fill):
@@ -61,11 +65,22 @@ class mkfile():
                 num = chr(ord(num) + 1)
 
         # print(content)
-
+        sblock = structs.SuperBloque()
         file = open(session_inciada.mounted.path, "rb+")
         file.seek(session_inciada.mounted.part_start)
         file.readinto(sblock)
         file.close()
+
+        directorio, archivo_ = os.path.split(self.path)
+        # Se verifica que no exista un archivo con el mismo nombre
+        indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
+        if(i == -1):
+            print(f"Error: Ruta especificada '{directorio}' no existe")
+            return
+        inodo_archivo, i_f = find_file(sblock, archivo_, session_inciada.mounted.path, indo_carpeta_archivo, False)
+        if(i_f != -1):
+            print(f"Error: Archivo '{self.path}' ya existe")
+            return
 
         if sblock.s_first_ino == -1:
             # No hay más inodos disponibles, error
@@ -84,17 +99,18 @@ class mkfile():
         inodo_file.i_type = b'1'
         inodo_file.i_perm = 664 # 0o664
 
-        directorio, archivo_ = os.path.split(self.path)
-        indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
         file_link(sblock, self.path, session_inciada, indo_carpeta_archivo, i)
         file = open(session_inciada.mounted.path, "rb+")
-        sblock = structs.SuperBloque()
+        
         file.seek(session_inciada.mounted.part_start)
         file.readinto(sblock)
         file.close()
         write_file(sblock, inodo_file, content, session_inciada)
         # print(self.path)
         inodo_archivo, i_f = find_file(sblock, self.path, session_inciada.mounted.path, indo_carpeta_archivo)
+        if(i_f == -1):
+            print(f"Error: Ruta especificada '{self.path}' no existe")
+            return
         # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
         print("JOIN FILE MKFILE")

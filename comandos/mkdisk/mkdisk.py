@@ -110,3 +110,28 @@ class mkdisk:
                 # print(f"Fit: {fit}")
         except FileNotFoundError:
             pass
+
+    def crear_rmdisk(self):
+        # print("MKDISK")
+        # print("SIZE", self.size)
+        # print("PATH", self.path)
+        # print("NAME", self.name)
+        # print("FIT", self.fit)
+        # print("UNIT", self.unit)
+        directorio, archivo = os.path.split(self.path)
+        # print(archivo)
+        
+        answer = input("¿Está seguro de eliminar el disco? S/N: ")
+        answer = answer.upper()
+
+        if answer == "S":
+            # Reemplaza 'disco->path' con la ruta real del disco
+            try:
+                os.remove(self.path)
+                print("Disco eliminado correctamente")
+            except FileNotFoundError:
+                print("El disco no existe.")
+            except Exception as e:
+                print(f"Error al eliminar el disco: {e}")
+        else:
+            print("Operación cancelada con éxito.")

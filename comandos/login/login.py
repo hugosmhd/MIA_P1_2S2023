@@ -22,7 +22,13 @@ def authenticate(mounted, part_start, user):
     # file.close()
     session_inciada.mounted = mounted
     indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, "/", session_inciada)
+    if(i == -1):
+        print(f"Error: Ruta especificada '/' no existe")
+        return
     inodo_archivo, i_f = find_file(sblock, "/user.txt", mounted.path, indo_carpeta_archivo)
+    if(i_f == -1):
+        print(f"Error: Ruta especificada '/user.txt' no existe")
+        return
     usuarios = join_file(sblock, inodo_archivo, mounted.path)
     print(usuarios)
     lineas = usuarios.split("\n")
@@ -31,6 +37,11 @@ def authenticate(mounted, part_start, user):
         atributos = linea.split(",")
 
         if len(atributos) == 5:
+            user_actual = structs.User()
+            user_actual.user_name = atributos[3]
+            user_actual.user_password = atributos[4]
+            user_actual.group_name = atributos[2]
+            users.append(user_actual)
             if atributos[0] != "0":
                 if atributos[3] == user.user and atributos[4] == user.password:
                     print("Usuario encontrado")
@@ -40,11 +51,6 @@ def authenticate(mounted, part_start, user):
                     print(user.user)
                     print(user.password)
                     print(user.id)
-                    user_actual = structs.User()
-                    user_actual.user_name = atributos[3]
-                    user_actual.user_password = atributos[4]
-                    user_actual.group_name = atributos[2]
-                    users.append(user_actual)
             else:
                 if atributos[3] == user.user and atributos[4] == user.password:
                     print("Error el usuario que busca ha sido eliminado.")
@@ -63,6 +69,10 @@ class login():
 
     def crear_login(self, user):
 
+        if session_inciada.is_logged:
+            print("Error: Actualmente hay una sesion iniciada")
+            return
+
         mounted = find_mounted(self.id)
         if(mounted == None):
             print("ID {self.id} no encontrado, verifique su entrada")
@@ -76,14 +86,6 @@ class login():
         file.close()
         tipo, particion, i = exist_partition(mounted.path, mounted.name, mbr)
         if tipo == 'PE':
-            
-            # print("Superbloque")
-            # print(sblock.s_inodes_count)
-            # print("Inodo Archivo")
-            # print(inodo_archive.i_s)
-            # usuarios = join_file(sblock, inodo_archive, mounted.path)
-            # print(usuarios)
-
             authenticate(mounted, particion.part_start, user)
 
     def crear_logout(self):
