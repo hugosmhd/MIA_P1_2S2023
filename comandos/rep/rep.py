@@ -706,7 +706,7 @@ class rep:
                 dot += f"bloque_{cantidad_bloques} [\n"
                 dot += "    shape=plain\n"
                 dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-                dot += f"        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo {cantidad_bloques}</b> </td> </tr>\n"
+                dot += f"        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo {cantidad_bloques}</b>   </td> </tr>\n"
 
                 nuevo_texto = ""
                 for i in range(0, len(bloque_archivo.b_content), 16):
@@ -805,7 +805,7 @@ class rep:
         file.seek(mounted.part_start)
         file.readinto(sblock)
 
-        indo_carpeta_archivo, i = find_carpeta_archivo(sblock, self.ruta, session_inciada)
+        indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, self.ruta, session_inciada)
         inodo_archivo, i_f = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
         # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)

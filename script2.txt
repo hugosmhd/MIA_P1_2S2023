@@ -1,21 +1,4 @@
 mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
 mkfs -type=full -id=931disco2
 login -user=root -pass=123 -id=931disco2
-mkdir -path=/hola
-mkdir -path=/hola/adios
-mkfile -size=24 -path=/hola/r.txt
-mkfile -size=78 -path=/hola/adios/p.txt
-mkdir -path=/hola/adios/hola
-mkfile -size=78 -path=/hola/adios/hola/p.txt
-mkfile -size=488 -path=/record.txt
-mkfile -size=148 -path=/prueba.txt
-rename -path=/hola/adios -name="rename"
-rename -path=/hola/r.txt -name="z.txt"
-mkdir -path=/home
-mkdir -path=/home/hugosmhd
-mkdir -path=/home/hugosmhd/chistis
-move -path=/hola/rename -destino="/home/hugosmhd/chistis"
-move -path=/hola/z.txt -destino="/home/hugosmhd/chistis"
-move -path=/record.txt -destino="/home/hugosmhd/chistis"
-mkfile -size=1 -path=/record2.txt
-rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree
+mkfile -r -path=/hola/adios/r.txt -cout="/home/hugosmh/Escritorio/pruebas dos tres.txt" -size=341

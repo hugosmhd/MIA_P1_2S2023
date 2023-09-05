@@ -208,7 +208,7 @@ def find_carpeta(super_bloque, path, user_session):
     print("Holaaaaaaaaaaaaaaaa Adiossssss", i_c)
     return inodo, i_c
 
-def find_carpeta_archivo(super_bloque, path, user_session):
+def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
     print("find_carpeta_archivo")
     # directorio, archivo = os.path.split(path)
     carpetas = path.split('/')
@@ -224,6 +224,7 @@ def find_carpeta_archivo(super_bloque, path, user_session):
     inodo = structs.Inodo()
     i_c = 0
     encontrada = False
+    carpeta_encontrada = False
     file = open(user_session.mounted.path, 'rb+')
     file.seek(super_bloque.s_inode_start)
     file.readinto(inodo)
@@ -261,12 +262,20 @@ def find_carpeta_archivo(super_bloque, path, user_session):
                         # return inodo
                 if encontrada:
                     encontrada = False
+                    carpeta_encontrada = True
                     break
+            if not carpeta_encontrada and not last_file:
+                return inodo, -1, False, None
+            elif not carpeta_encontrada and last_file:
+                return inodo, i_c, False, carpetas[i:]
+            
+            carpeta_encontrada = False
+
                 
 
     file.close()
     print("Holaaaaaaaaaaaaaaaa", i_c)
-    return inodo, i_c
+    return inodo, i_c, True, None
 
 def join_file(super_bloque, inodo_file, path_disk):
     txt = ""
@@ -432,6 +441,69 @@ def file_link(super_bloque, path, user_session, inodo, i):
 
     file.close()
 
+def directory_link_r(super_bloque, path, user_session, inodo, i):
+    read_on_file = -1
+    read_on_archive = -1
+    write_on_inodo = -1
+    write_on_block = -1
+    # directorio, archivo = os.path.split(path)
+    # carpetas = directorio.split('/')
+
+    # Verificar que arranque desde la raiz
+    # if carpetas[0] != '':
+    #     print("Error archivo no encontrado, verifique su ruta")
+    #     return
+
+    file = open(user_session.mounted.path, 'rb+')
+
+    bcarpeta = structs.BloqueCarpeta()
+    uno = b'1'
+    for b in range(12):
+        if inodo.i_block[b] == -1:
+            if super_bloque.s_first_blo == -1:
+                # YA NO HAY MÁS BLOQUES PARA CREAR
+                print("No hay mas bloques desde MKFS")
+                return
+
+            carpeta = structs.BloqueCarpeta()
+            carpeta.b_content[0].b_name = path.encode('utf-8')[:12].ljust(12, b'\0')
+            carpeta.b_content[0].b_inodo = super_bloque.s_first_ino
+            write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * super_bloque.s_first_blo)
+            file.seek(write_on_block)
+            file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
+
+            inodo.i_block[b] = super_bloque.s_first_blo
+            write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
+            file.seek(write_on_inodo)
+            file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+
+            write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
+            file.seek(write_on_block)
+            file.write(b'd')
+
+            super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+            super_bloque.s_free_blocks_count -= 1
+            file.seek(user_session.mounted.part_start)
+            file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
+
+            file.close()
+            return
+
+        
+        read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
+        file.seek(read_on_file)
+        file.readinto(bcarpeta)
+        for j in range(4):
+            if bcarpeta.b_content[j].b_inodo == -1:
+                bcarpeta.b_content[j].b_name = path.encode('utf-8')[:12].ljust(12, b'\0')
+                bcarpeta.b_content[j].b_inodo = super_bloque.s_first_ino
+                file.seek(read_on_file)
+                file.write(ctypes.string_at(ctypes.byref(bcarpeta), ctypes.sizeof(bcarpeta)))
+                file.close()
+                return
+
+    file.close()
+
 def write_file(sblock, inodo_file, txt, user_session):
     # print("write_file")
     # print("Bloque libre:", sblock.s_first_blo)
@@ -528,7 +600,7 @@ def write_carpeta(sblock, inodo_file, carpeta_root, user_session):
     file.close()
 
 def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
-    indo_carpeta_archivo, i = find_carpeta_archivo(sblock, "/", session_inciada)
+    indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, "/", session_inciada)
     inodo_archivo, i_ino = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
 
@@ -588,7 +660,7 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
     print(inodo_archivo.i_s)
 
 def remove_grupo_usuario(sblock, data, name_g_u, tipo, index):
-    indo_carpeta_archivo, i = find_carpeta_archivo(sblock, "/", session_inciada)
+    indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, "/", session_inciada)
     inodo_archivo, i_ino = find_file(sblock, "/user.txt", session_inciada.mounted.path, indo_carpeta_archivo)
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
     lineas = txt.split('\n')

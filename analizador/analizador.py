@@ -67,6 +67,8 @@ def identificar_parametros(comando, parametros):
         analizar_rep(parametros)
     elif(comando == 'execute'):
         analizar_execute(parametros)
+    elif(comando == 'pause'):
+        analizar_pause()
     else:
         print("Comando no válido")
 
@@ -75,6 +77,7 @@ def get_path(i, parametros):
     concatenar = False
     comillas = False
     finalPath = False
+    ya_no_entra = True
     posicion = 0
     while i < len(parametros) and not finalPath:
         tmpParam = parametros[i]
@@ -94,11 +97,13 @@ def get_path(i, parametros):
                 finalPath = True
                 caracter = tmpParam[j]
                 valor = valor + caracter
-                
-            if tmpParam[posicion] == '"' and concatenar:
+
+            # print("jaja", tmpParam, posicion)    
+            if ya_no_entra and tmpParam[posicion] == '"' and concatenar:
                 comillas = True
+                ya_no_entra = False
                 
-            if tmpParam[j] == '=':
+            if tmpParam[j] == '=' and not concatenar:
                 concatenar = True
                 posicion = j + 1
                 
@@ -342,15 +347,20 @@ def analizar_mkfile(parametros):
         param = parametros[i]
         if param.find("-path=") == 0:
             archivo.path, i = get_path(i, parametros)
-        elif param.find("-r=") == 0:
+        elif param.find("-r") == 0:
             archivo.recursivo = True
         elif param.find("-size=") == 0:
             archivo.size = int(get_valor_parametro(param))
+            archivo.size_activo = True
         elif param.find("-cout=") == 0:
+            print(parametros)
             archivo.cout, i = get_path(i, parametros)
         else:
-            print(f"Parametro no aceptado en 'mkfile': {valor}")
+            print(f"Parametro no aceptado en 'mkfile': {param}")
         i += 1
+    # print("Termino bien")
+    # print(archivo.path)
+    # print(archivo.cout)
     archivo.crear_mkfile()
 
 def analizar_rename(parametros):
@@ -397,18 +407,21 @@ def analizar_cat(parametros):
     archivo.crear_cat()
 
 def analizar_mkdir(parametros):
-    archivo = mkdir()
+    carpeta = mkdir()
     i = 0
     while i < len(parametros):
         param = parametros[i]
         if param.find("-path=") == 0:
-            archivo.path, i = get_path(i, parametros)
-        elif param.find("-r=") == 0:
-            archivo.recursivo = True
+            carpeta.path, i = get_path(i, parametros)
+        elif param.find("-r") == 0:
+            carpeta.recursivo = True
         else:
             print(f"Parametro no aceptado en 'mkdir': {valor}")
         i += 1
-    archivo.crear_mkdir()
+    carpeta.crear_mkdir()
+
+def analizar_pause():
+    input("Presione ENTER para continuar...")
 
 def analizar_rep(parametros):
     reporte = rep()

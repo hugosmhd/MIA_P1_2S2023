@@ -8,37 +8,61 @@ from _global._global import particiones_montadas, session_inciada
 from comandos.mount.mount import find_mounted
 from comandos.mkfs.mkfs import join_file, find_file, file_link, write_file, find_carpeta_archivo
 from comandos.fdisk.fdisk import exist_partition
-
+from comandos.mkdir.mkdir import crear_mkdir_r
 
 class mkfile():
     def __init__(self):
         self.path = ""
         self.recursivo = False
         self.size = 0
+        self.size_activo = False
         self.cout = ""
 
     def crear_mkfile(self):
         print("mkfile")
         print(self.size)
+
+        directorio, archivo_ = os.path.split(self.path)
+        if self.recursivo:
+            file = open(session_inciada.mounted.path, "rb+")
+            sblock = structs.SuperBloque()
+            file.seek(session_inciada.mounted.part_start)
+            file.readinto(sblock)
+            file.close()
+            indo_carpeta_archivo, i_c, encontrada, carpetas = find_carpeta_archivo(sblock, directorio, session_inciada, True)
+            if not encontrada:
+                print("carpetas_restantes", carpetas)
+                for i, carpeta in enumerate(carpetas):
+                    indo_carpeta_archivo, i_c = crear_mkdir_r(carpeta, indo_carpeta_archivo, i_c)
+
+
+        # -------------------------------------------
         num = '0'
         numbers = "0123456789"
         content = ""
-        iterations_fill = self.size // 10
-        for _ in range(iterations_fill):
-            content += numbers
+        if self.cout != "":
+            try:
 
-        iterations_fill = self.size % 10
-        for _ in range(iterations_fill):
-            content += num
-            if num == '9':
-                num = '0'
-                continue
-            num = chr(ord(num) + 1)
+                with open(self.cout, 'r') as archivo:
+                    content = archivo.read(self.size) if self.size_activo else archivo.read()
+            except FileNotFoundError:
+                print(f"La ruta de cout {self.cout} no existe")
+        else:
+            iterations_fill = self.size // 10
+            for _ in range(iterations_fill):
+                content += numbers
+
+            iterations_fill = self.size % 10
+            for _ in range(iterations_fill):
+                content += num
+                if num == '9':
+                    num = '0'
+                    continue
+                num = chr(ord(num) + 1)
 
         # print(content)
 
         file = open(session_inciada.mounted.path, "rb+")
-        sblock = structs.SuperBloque()
         file.seek(session_inciada.mounted.part_start)
         file.readinto(sblock)
         file.close()
@@ -53,7 +77,7 @@ class mkfile():
         inodo_file = structs.Inodo()
         inodo_file.i_uid = 1
         inodo_file.i_gid = 1
-        inodo_file.i_s = self.size
+        inodo_file.i_s = len(content)
         inodo_file.i_atime = int(time.time())
         inodo_file.i_ctime = int(time.time())
         inodo_file.i_mtime = int(time.time())
@@ -61,7 +85,7 @@ class mkfile():
         inodo_file.i_perm = 664 # 0o664
 
         directorio, archivo_ = os.path.split(self.path)
-        indo_carpeta_archivo, i = find_carpeta_archivo(sblock, directorio, session_inciada)
+        indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
         file_link(sblock, self.path, session_inciada, indo_carpeta_archivo, i)
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()

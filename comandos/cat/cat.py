@@ -25,7 +25,7 @@ class cat():
 
         for archivo in self.files:
             directorio, archivo_ = os.path.split(archivo)
-            indo_carpeta_archivo, i = find_carpeta_archivo(sblock, directorio, session_inciada)
+            indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
             inodo_archivo, i_f = find_file(sblock, archivo, session_inciada.mounted.path, indo_carpeta_archivo)
             txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
             print("JOIN FILE MKFILE CAT")
