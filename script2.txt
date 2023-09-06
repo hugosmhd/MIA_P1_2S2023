@@ -1,12 +1,5 @@
 mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk/" -name=Partition1
 mkfs -type=full -id=931disco2
 login -user=root -pass=123 -id=931disco2
-cat -file1="/user.txt/"
-mkfile -size=24 -path=/hola/r.txt/ -r
-mkfile -size=24 -path=/adios/p.txt/ -r
-mkdir -path=/adios/ -r
-mkdir -path=/home/hugosmhd/reports/ -r
-mkdir -path=/home/hugosmhd/ -r
-mkdir -path=/home/hugosmhd/documents/ -r
-
-rmdisk -path=/home/hugosmh/Disco1.dsk
+mkfile -size=899 -path=/r.txt/
+rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree

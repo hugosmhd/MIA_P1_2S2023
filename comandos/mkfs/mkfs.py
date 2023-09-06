@@ -298,6 +298,30 @@ def join_file(super_bloque, inodo_file, path_disk):
         file.seek(read_on_archive)
         file.readinto(block_archive)
         txt += block_archive.b_content.decode()
+    
+    totalSegments -= 12
+    # print("totalSegments:", totalSegments)
+
+    if totalSegments > 0:
+        if inodo_file.i_block[12] == -1:
+            return txt
+        print("Entra en el bloque simple indirecto")
+
+        iterations_blocks = min(totalSegments, 16)
+        bloque_s_indirecto = structs.BloqueApuntadores()
+
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[12])
+        file.seek(read_on_block)
+        file.readinto(bloque_s_indirecto)
+
+        for b in range(iterations_blocks):
+            if bloque_s_indirecto.b_pointers[b] == -1:
+                break
+
+            read_on_archive = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * bloque_s_indirecto.b_pointers[b])
+            file.seek(read_on_archive)
+            file.readinto(block_archive)
+            txt += block_archive.b_content.decode()
 
     file.close()
     return txt
@@ -549,6 +573,57 @@ def write_file(sblock, inodo_file, txt, user_session):
         # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
         sblock.s_free_blocks_count -= 1
 
+    totalSegments -= 12
+    if totalSegments > 0:
+        if sblock.s_first_blo == -1:
+            # Ya no hay suficientes bloques
+            print("Error: Ya no hay suficientes bloques")
+            file.close()
+            return
+        print("Se escribe el primer bloque indirecto simple")
+        iterations_blocks = 16 if totalSegments > 16 else totalSegments
+        bloque_simple = structs.BloqueApuntadores()
+        inodo_file.i_block[12] = sblock.s_first_blo
+        sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+        # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+        sblock.s_free_blocks_count -= 1
+
+        for s in range(iterations_blocks):
+            if sblock.s_first_blo == -1:
+                # Ya no hay suficientes bloques
+                print("Error: Ya no hay suficientes bloques")
+                file.close()
+                return
+
+            new_segment = txt[(s + 12) * segmentSize : (s + 13) * segmentSize]
+            # BLOQUE DE ARCHIVO CON EL CONTENIDO
+            file_user = structs.BloqueArchivo()
+            file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
+            # SE ESCRIBE EL BLOQUE DE CONTENIDO
+            file.seek(write_on)
+            file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
+
+            # SE ACTUALIZA EL APUNTADOR DE BLOQUE DEL BLOQUE SIMPLE
+            bloque_simple.b_pointers[s] = sblock.s_first_blo
+            write_on_b = sblock.s_bm_block_start + (sblock.s_first_blo)
+            file.seek(write_on_b)
+            file.write(b'f')
+
+            # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
+            sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+            write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+            # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+            sblock.s_free_blocks_count -= 1
+        
+        write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[12])
+        file.seek(write_on)
+        file.write(ctypes.string_at(ctypes.byref(bloque_simple), ctypes.sizeof(bloque_simple)))
+
+        write_on_b = sblock.s_bm_block_start + inodo_file.i_block[12]
+        file.seek(write_on_b)
+        file.write(b's')
+    
     # SE ESCRIBE EL NUEVO INODO DEL ARCHIVO
     # print("Se escribe el inodo, ", sblock.s_first_ino)
     # print(inodo_file.i_s)

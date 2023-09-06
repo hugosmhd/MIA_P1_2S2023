@@ -690,7 +690,7 @@ class rep:
                 dot += "    shape=plain\n"
                 dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
                 dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta {cantidad_bloques}</b> </td> </tr>\n"
-                dot += f"       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>"
+                dot += f"       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>\n"
                 for i in range(4):
                     if bloque_carpeta.b_content[i].b_inodo != -1 and bloque_carpeta.b_content[i].b_name.decode() != "." and bloque_carpeta.b_content[i].b_name.decode() != "..":
                         dot += f"    <tr><td port='a_u{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td port='a_s{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
@@ -713,6 +713,22 @@ class rep:
                     nuevo_texto += bloque_archivo.b_content[i:i+16].decode() + "<br/>"
                 if len(bloque_archivo.b_content) > 0:
                     dot += f"    <tr><td><font point-size='15'>  {nuevo_texto}  </font></td></tr>\n"
+                dot += "    </table>>\n"
+                dot += "]\n"
+            if bit == b's':
+                bloque_apuntador = structs.BloqueApuntadores()
+                file.seek(read_on_b)
+                file.readinto(bloque_apuntador)
+                dot += f"bloque_{cantidad_bloques} [\n"
+                dot += "    shape=plain\n"
+                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#77dd77'> <b>  Bloque Indirecto S {cantidad_bloques}</b>   </td> </tr>\n"
+                for i in range(16):
+                    if bloque_apuntador.b_pointers[i] != -1:
+                        dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
+                    else:
+                        dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
                 dot += "    </table>>\n"
                 dot += "]\n"
             

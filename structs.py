@@ -79,7 +79,7 @@ class BloqueApuntadores(ctypes.Structure):
     ]
 
     def __init__(self):
-        self.b_pointers = -1 * 16
+        self.b_pointers = (ctypes.c_int * 16)(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
 
 class SuperBloque(ctypes.Structure):
     _fields_ = [
