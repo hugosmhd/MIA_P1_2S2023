@@ -46,6 +46,7 @@ def next_first_block(sblock, path_disk):
     file.close()
     return -1
 
+# //////////////////////////////////////
 def find_file(super_bloque, path, path_disk, inodo, msg = True):
     read_on_file = -1
     read_on_archive = -1
@@ -56,15 +57,10 @@ def find_file(super_bloque, path, path_disk, inodo, msg = True):
     if carpetas[0] != '':
         print("Error: Archivo no encontrado, verifique su ruta")
         return
-    # inodo = structs.Inodo()
     inodo_archivo = structs.Inodo()
 
     bcarpeta = structs.BloqueCarpeta()
     file = open(path_disk, 'rb')
-    # file.seek(super_bloque.s_inode_start)
-    # file.readinto(inodo)
-    # for i, carpeta in enumerate(carpetas):
-    #     print(carpeta, i)
 
     for b in range(12):
         if inodo.i_block[b] == -1:
@@ -75,16 +71,103 @@ def find_file(super_bloque, path, path_disk, inodo, msg = True):
         for j in range(4):
             nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
             if nombre_carpeta == archivo:
-                # print("Archivo encontrado")
-                # print(nombre_carpeta)
-                # print(archivo)
                 read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
                 file.seek(read_on_archive)
                 file.readinto(inodo_archivo)
-                # i = bcarpeta.b_content[j].b_inodo
-                # inodo_actual = inode_archive
                 file.close()
                 return inodo_archivo, bcarpeta.b_content[j].b_inodo
+
+    if inodo.i_block[12] != -1:
+        bloque_s_indirecto = structs.BloqueApuntadores()
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+        file.seek(read_on_block)
+        file.readinto(bloque_s_indirecto)
+
+        for s in range(16):
+            if bloque_s_indirecto.b_pointers[s] == -1:
+                break
+
+            read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+            file.seek(read_on_file)
+            file.readinto(bcarpeta)
+
+            for j in range(4):
+                nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                if nombre_carpeta == archivo:
+                    read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                    file.seek(read_on_archive)
+                    file.readinto(inodo_archivo)
+                    file.close()
+                    return inodo_archivo, bcarpeta.b_content[j].b_inodo
+
+    if inodo.i_block[13] != -1:
+        bloque_d_indirecto = structs.BloqueApuntadores()
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+        file.seek(read_on_block)
+        file.readinto(bloque_d_indirecto)
+        for d in range(16):
+            if bloque_d_indirecto.b_pointers[d] == -1:
+                continue
+
+            bloque_s_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+            file.seek(read_on_block)
+            file.readinto(bloque_s_indirecto)
+            for s in range(16):
+                if bloque_s_indirecto.b_pointers[s] == -1:
+                    continue
+
+                read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                file.seek(read_on_file)
+                file.readinto(bcarpeta)
+
+                for j in range(4):
+                    nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                    if nombre_carpeta == archivo:
+                        read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                        file.seek(read_on_archive)
+                        file.readinto(inodo_archivo)
+                        file.close()
+                        return inodo_archivo, bcarpeta.b_content[j].b_inodo
+
+    if inodo.i_block[14] != -1:
+        bloque_t_indirecto = structs.BloqueApuntadores()
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+        file.seek(read_on_block)
+        file.readinto(bloque_t_indirecto)
+
+        for t in range(16):
+            if bloque_t_indirecto.b_pointers[t] == -1:
+                continue
+
+            bloque_d_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_t_indirecto.b_pointers[t])
+            file.seek(read_on_block)
+            file.readinto(bloque_d_indirecto)
+            for d in range(16):
+                if bloque_d_indirecto.b_pointers[d] == -1:
+                    continue
+
+                bloque_s_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+                file.seek(read_on_block)
+                file.readinto(bloque_s_indirecto)
+                for s in range(16):
+                    if bloque_s_indirecto.b_pointers[s] == -1:
+                        continue
+
+                    read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                    file.seek(read_on_file)
+                    file.readinto(bcarpeta)
+
+                    for j in range(4):
+                        nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                        if nombre_carpeta == archivo:
+                            read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                            file.seek(read_on_archive)
+                            file.readinto(inodo_archivo)
+                            file.close()
+                            return inodo_archivo, bcarpeta.b_content[j].b_inodo
 
     file.close()
     if msg:
@@ -149,8 +232,6 @@ def find_url(super_bloque, path, user_session):
             nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
             if nombre_carpeta == carpeta_archivo:
                 print("Archivo Carpeta encontrado")
-                # print(nombre_carpeta)
-                # print(archivo)
                 read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
                 file.seek(read_on_file)
                 file.readinto(bcarpeta_actual)
@@ -159,7 +240,6 @@ def find_url(super_bloque, path, user_session):
                 return bcarpeta_actual, i_c, read_on_file
 
     file.close()
-    print("Hola Adios find_url", i_c)
     return bcarpeta_actual, i_c, -1
 
 def find_carpeta(super_bloque, path, user_session):
@@ -212,9 +292,9 @@ def find_carpeta(super_bloque, path, user_session):
     print("Holaaaaaaaaaaaaaaaa Adiossssss", i_c)
     return inodo, i_c
 
+# //////////////////////////////////////
 def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
     print("find_carpeta_archivo")
-    # directorio, archivo = os.path.split(path)
     carpetas = path.split('/')
     print(carpetas)
 
@@ -239,30 +319,164 @@ def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
             for b in range(12):
                 if inodo.i_block[b] == -1:
                     continue
+
                 read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
                 file.seek(read_on_file)
                 file.readinto(bcarpeta)
+
                 for j in range(4):
                     nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
                     if nombre_carpeta == carpeta:
-                        # print("Carpeta encontrada jaja encontrado", carpeta)
-                        # print(nombre_carpeta)
-                        # print(archivo)
                         i_c = bcarpeta.b_content[j].b_inodo
-                        # print("i_c", i_c)
                         read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
                         file.seek(read_on_archive)
                         file.readinto(inodo)
                         encontrada = True
                         break
-                        # i = bcarpeta.b_content[j].b_inodo
-                        # inodo_actual = inode_archive
-                        # file.close()
-                        # return inodo
+
                 if encontrada:
                     encontrada = False
                     carpeta_encontrada = True
                     break
+
+            if carpeta_encontrada:
+                carpeta_encontrada = False
+                continue
+
+            # Recorrer el bloque indirecto simple
+            if inodo.i_block[12] != -1:
+                bloque_s_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+                file.seek(read_on_block)
+                file.readinto(bloque_s_indirecto)
+
+                for s in range(16):
+                    if bloque_s_indirecto.b_pointers[s] == -1:
+                        continue
+
+                    read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                    file.seek(read_on_file)
+                    file.readinto(bcarpeta)
+
+                    for j in range(4):
+                        nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                        if nombre_carpeta == carpeta:
+                            i_c = bcarpeta.b_content[j].b_inodo
+                            read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                            file.seek(read_on_archive)
+                            file.readinto(inodo)
+                            encontrada = True
+                            break
+
+                    if encontrada:
+                        encontrada = False
+                        carpeta_encontrada = True
+                        break
+
+            if carpeta_encontrada:
+                carpeta_encontrada = False
+                continue
+
+            # Recorrer el bloque indirecto doble
+            if inodo.i_block[13] != -1:
+                bloque_d_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+                file.seek(read_on_block)
+                file.readinto(bloque_d_indirecto)
+                for d in range(16):
+                    if bloque_d_indirecto.b_pointers[d] == -1:
+                        continue
+
+                    bloque_s_indirecto = structs.BloqueApuntadores()
+                    read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+                    file.seek(read_on_block)
+                    file.readinto(bloque_s_indirecto)
+                    for s in range(16):
+                        if bloque_s_indirecto.b_pointers[s] == -1:
+                            continue
+
+                        read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                        file.seek(read_on_file)
+                        file.readinto(bcarpeta)
+
+                        for j in range(4):
+                            nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                            if nombre_carpeta == carpeta:
+                                i_c = bcarpeta.b_content[j].b_inodo
+                                read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                                file.seek(read_on_archive)
+                                file.readinto(inodo)
+                                encontrada = True
+                                break
+
+                        if encontrada:
+                            break
+                    
+                    if encontrada:
+                        encontrada = False
+                        carpeta_encontrada = True
+                        break
+
+            if carpeta_encontrada:
+                carpeta_encontrada = False
+                continue
+
+            # Recorrer el bloque indirecto triple
+            if inodo.i_block[14] != -1:
+                bloque_t_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+                file.seek(read_on_block)
+                file.readinto(bloque_t_indirecto)
+
+                for t in range(16):
+                    if bloque_t_indirecto.b_pointers[t] == -1:
+                        continue
+
+                    bloque_d_indirecto = structs.BloqueApuntadores()
+                    read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_t_indirecto.b_pointers[t])
+                    file.seek(read_on_block)
+                    file.readinto(bloque_d_indirecto)
+                    for d in range(16):
+                        if bloque_d_indirecto.b_pointers[d] == -1:
+                            continue
+
+                        bloque_s_indirecto = structs.BloqueApuntadores()
+                        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+                        file.seek(read_on_block)
+                        file.readinto(bloque_s_indirecto)
+                        for s in range(16):
+                            if bloque_s_indirecto.b_pointers[s] == -1:
+                                continue
+
+                            read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                            file.seek(read_on_file)
+                            file.readinto(bcarpeta)
+
+                            for j in range(4):
+                                nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                                if nombre_carpeta == carpeta:
+                                    i_c = bcarpeta.b_content[j].b_inodo
+                                    read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                                    file.seek(read_on_archive)
+                                    file.readinto(inodo)
+                                    encontrada = True
+                                    break
+
+                            if encontrada:
+                                break
+                        
+                        if encontrada:
+                            break
+
+                    if encontrada:
+                        encontrada = False
+                        carpeta_encontrada = True
+                        break
+
+            if carpeta_encontrada:
+                carpeta_encontrada = False
+                continue
+
             if not carpeta_encontrada and not last_file:
                 return inodo, -1, False, -1
             elif not carpeta_encontrada and last_file:
@@ -273,9 +487,9 @@ def find_carpeta_archivo(super_bloque, path, user_session, last_file = False):
                 
 
     file.close()
-    print("Holaaaaaaaaaaaaaaaa", i_c)
     return inodo, i_c, True, -1
 
+# //////////////////////////////////////
 def join_file(super_bloque, inodo_file, path_disk):
     txt = ""
     read_on_archive = -1
@@ -322,6 +536,91 @@ def join_file(super_bloque, inodo_file, path_disk):
             file.seek(read_on_archive)
             file.readinto(block_archive)
             txt += block_archive.b_content.decode()
+
+    totalSegments -= 16
+
+    if totalSegments > 0:
+        if inodo_file.i_block[13] == -1:
+            return txt
+
+        print("Entra en el bloque doble indirecto")
+
+        iterations_blocks = min(totalSegments, 256)
+        iterations_db = iterations_blocks // 16
+
+        if iterations_blocks % 16 != 0:
+            iterations_db += 1
+
+        bloque_doble = structs.BloqueApuntadores()
+
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[13])
+        file.seek(read_on_block)
+        file.readinto(bloque_doble)
+
+        for d in range(iterations_db):
+            bloque_simple = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+            file.seek(read_on_block)
+            file.readinto(bloque_simple)
+
+            for s in range(16):
+                if bloque_simple.b_pointers[s] == -1:
+                    break
+
+                read_on_archive = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * bloque_simple.b_pointers[s])
+                file.seek(read_on_archive)
+                block_archive = structs.BloqueArchivo()
+                file.readinto(block_archive)
+
+                # print("join file:")
+                txt += block_archive.b_content.decode()
+
+    totalSegments -= 256
+
+    if totalSegments > 0:
+        if inodo_file.i_block[14] == -1:
+            return txt
+
+        print("Entra en el bloque triple indirecto")
+
+        iterations_blocks = min(totalSegments, 4096)
+        iterations_tb = iterations_blocks // 256
+
+        if iterations_blocks % 256 != 0:
+            iterations_tb += 1
+
+        bloque_triple = structs.BloqueApuntadores()
+
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[14])
+        file.seek(read_on_block)
+        file.readinto(bloque_triple)
+
+        for t in range(iterations_tb):
+            bloque_doble = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_triple.b_pointers[t])
+            file.seek(read_on_block)
+            file.readinto(bloque_doble)
+            for d in range(16):
+                if bloque_doble.b_pointers[d] == -1:
+                    break
+
+                bloque_simple = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+                file.seek(read_on_block)
+                file.readinto(bloque_simple)
+
+                for s in range(16):
+                    if bloque_simple.b_pointers[s] == -1:
+                        break
+
+                    read_on_archive = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * bloque_simple.b_pointers[s])
+                    file.seek(read_on_archive)
+                    block_archive = structs.BloqueArchivo()
+                    file.readinto(block_archive)
+
+                    # print("join file:")
+                    txt += block_archive.b_content.decode()
+
 
     file.close()
     return txt
@@ -390,6 +689,7 @@ def file_link_move(super_bloque, name, user_session, inodo, i_o, i_d):
 
     file.close()
 
+# //////////////////////////////////////
 def file_link(super_bloque, path, user_session, inodo, i):
     # print("file_link")
     read_on_file = -1
@@ -406,61 +706,319 @@ def file_link(super_bloque, path, user_session, inodo, i):
 
     # inodo = structs.Inodo()
     file = open(user_session.mounted.path, 'rb+')
-    # file.seek(super_bloque.s_inode_start)
-    # file.readinto(inodo)
-    # i = 0
-    # for i, carpeta in enumerate(carpetas):
-    #     print(carpeta, i)
 
     bcarpeta = structs.BloqueCarpeta()
     uno = b'1'
-    for b in range(12):
-        if inodo.i_block[b] == -1:
-            if super_bloque.s_first_blo == -1:
-                # YA NO HAY MÁS BLOQUES PARA CREAR
-                print("Error: No hay mas bloques desde MKFS")
-                return
+    print("Se recorre bloques directos")
+    # for b in range(12):
+    #     if inodo.i_block[b] == -1:
+    #         if super_bloque.s_first_blo == -1:
+    #             # YA NO HAY MÁS BLOQUES PARA CREAR
+    #             print("Error: No hay mas bloques desde MKFS")
+    #             file.close()
+    #             return
+    #         carpeta = structs.BloqueCarpeta()
+    #         carpeta.b_content[0].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+    #         carpeta.b_content[0].b_inodo = super_bloque.s_first_ino
+    #         write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * super_bloque.s_first_blo)
+    #         file.seek(write_on_block)
+    #         file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
 
-            carpeta = structs.BloqueCarpeta()
-            carpeta.b_content[0].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
-            carpeta.b_content[0].b_inodo = super_bloque.s_first_ino
-            write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * super_bloque.s_first_blo)
-            file.seek(write_on_block)
-            file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
+    #         inodo.i_block[b] = super_bloque.s_first_blo
+    #         write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
+    #         file.seek(write_on_inodo)
+    #         file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
 
-            inodo.i_block[b] = super_bloque.s_first_blo
-            write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
-            file.seek(write_on_inodo)
-            file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+    #         write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
+    #         file.seek(write_on_block)
+    #         file.write(b'd')
 
-            write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
-            file.seek(write_on_block)
-            file.write(b'd')
+    #         super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+    #         super_bloque.s_free_blocks_count -= 1
+    #         file.seek(user_session.mounted.part_start)
+    #         file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
 
+    #         file.close()
+    #         return
+        
+    #     read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
+    #     file.seek(read_on_file)
+    #     file.readinto(bcarpeta)
+    #     for j in range(4):
+    #         if bcarpeta.b_content[j].b_inodo == -1:
+    #             bcarpeta.b_content[j].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+    #             bcarpeta.b_content[j].b_inodo = super_bloque.s_first_ino
+    #             file.seek(read_on_file)
+    #             file.write(ctypes.string_at(ctypes.byref(bcarpeta), ctypes.sizeof(bcarpeta)))
+    #             file.close()
+    #             return
+
+    # print("Se recorre primer bloque indirecto simple")
+    # if inodo.i_block[12] == -1:
+    #     inodo.i_block[12] = super_bloque.s_first_blo
+    #     write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
+    #     file.seek(write_on_inodo)
+    #     file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+
+    #     bloque_s_indirecto = structs.BloqueApuntadores()
+    #     write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+    #     file.seek(write_on_block)
+    #     file.write(ctypes.string_at(ctypes.byref(bloque_s_indirecto), ctypes.sizeof(bloque_s_indirecto)))
+
+    #     write_on_block = super_bloque.s_bm_block_start + inodo.i_block[12]
+    #     file.seek(write_on_block)
+    #     file.write(b's')
+
+    #     super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+    #     super_bloque.s_free_blocks_count -= 1
+
+    # print("Entra en el bloque simple indirecto")
+    # bloque_s_indirecto = structs.BloqueApuntadores()
+
+    # read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+    # file.seek(read_on_block)
+    # file.readinto(bloque_s_indirecto)
+
+    # for b in range(16):
+    #     if bloque_s_indirecto.b_pointers[b] == -1:
+    #         if super_bloque.s_first_blo == -1:
+    #             # YA NO HAY MÁS BLOQUES PARA CREAR
+    #             print("Error: No hay mas bloques desde MKFS")
+    #             file.close()
+    #             return
+
+    #         carpeta = structs.BloqueCarpeta()
+    #         carpeta.b_content[0].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+    #         carpeta.b_content[0].b_inodo = super_bloque.s_first_ino
+    #         write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * super_bloque.s_first_blo)
+    #         file.seek(write_on_block)
+    #         file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
+
+    #         bloque_s_indirecto.b_pointers[b] = super_bloque.s_first_blo
+    #         write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+    #         file.seek(write_on_block)
+    #         file.write(ctypes.string_at(ctypes.byref(bloque_s_indirecto), ctypes.sizeof(bloque_s_indirecto)))
+
+    #         write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
+    #         file.seek(write_on_block)
+    #         file.write(b'd')
+
+    #         super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+    #         super_bloque.s_free_blocks_count -= 1
+    #         file.seek(user_session.mounted.part_start)
+    #         file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
+
+    #         file.close()
+    #         return
+
+    #     read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[b])
+    #     file.seek(read_on_file)
+    #     file.readinto(bcarpeta)
+    #     for j in range(4):
+    #         if bcarpeta.b_content[j].b_inodo == -1:
+    #             bcarpeta.b_content[j].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+    #             bcarpeta.b_content[j].b_inodo = super_bloque.s_first_ino
+    #             file.seek(read_on_file)
+    #             file.write(ctypes.string_at(ctypes.byref(bcarpeta), ctypes.sizeof(bcarpeta)))
+    #             file.close()
+    #             return
+
+    # -----------------------------------------------------------------------------------
+    # print("Se recorre segundo bloque indirecto doble")
+    # if inodo.i_block[13] == -1:
+    #     inodo.i_block[13] = super_bloque.s_first_blo
+    #     write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
+    #     file.seek(write_on_inodo)
+    #     file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+
+    #     bloque_doble = structs.BloqueApuntadores()
+    #     write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+    #     file.seek(write_on_block)
+    #     file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+
+    #     write_on_block = super_bloque.s_bm_block_start + inodo.i_block[13]
+    #     file.seek(write_on_block)
+    #     file.write(b'l')
+
+    #     super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+    #     super_bloque.s_free_blocks_count -= 1
+
+    # print("Entra en el bloque doble indirecto")
+    # bloque_doble = structs.BloqueApuntadores()
+
+    # read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+    # file.seek(read_on_block)
+    # file.readinto(bloque_doble)
+
+    # for d in range(16):
+    #     bloque_simple = structs.BloqueApuntadores()
+    #     if bloque_doble.b_pointers[d] == -1:
+    #         bloque_doble.b_pointers[d] = super_bloque.s_first_blo
+    #         super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+    #         super_bloque.s_free_blocks_count -= 1
+            
+    #         write_on_block = super_bloque.s_bm_block_start + bloque_doble.b_pointers[d]
+    #         file.seek(write_on_block)
+    #         file.write(b's')
+
+    #         write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * inodo.i_block[13])
+    #         file.seek(write_on_block)
+    #         file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+    #     else:
+    #         read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+    #         file.seek(read_on_block)
+    #         file.readinto(bloque_simple)
+
+    #     for s in range(16):
+    #         if bloque_simple.b_pointers[s] == -1:
+    #             if super_bloque.s_first_blo == -1:
+    #                 # YA NO HAY MÁS BLOQUES PARA CREAR
+    #                 print("Error: No hay mas bloques desde MKFS")
+    #                 file.close()
+    #                 return
+
+    #             carpeta = structs.BloqueCarpeta()
+    #             carpeta.b_content[0].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+    #             carpeta.b_content[0].b_inodo = super_bloque.s_first_ino
+    #             write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * super_bloque.s_first_blo)
+    #             file.seek(write_on_block)
+    #             file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
+
+    #             bloque_simple.b_pointers[s] = super_bloque.s_first_blo
+    #             write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+    #             file.seek(write_on_block)
+    #             file.write(ctypes.string_at(ctypes.byref(bloque_simple), ctypes.sizeof(bloque_simple)))
+
+    #             write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
+    #             file.seek(write_on_block)
+    #             file.write(b'd')
+
+    #             super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+    #             super_bloque.s_free_blocks_count -= 1
+    #             file.seek(user_session.mounted.part_start)
+    #             file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
+    #             file.close()
+    #             return
+
+    #         read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_simple.b_pointers[s])
+    #         file.seek(read_on_file)
+    #         file.readinto(bcarpeta)
+    #         for j in range(4):
+    #             if bcarpeta.b_content[j].b_inodo == -1:
+    #                 bcarpeta.b_content[j].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+    #                 bcarpeta.b_content[j].b_inodo = super_bloque.s_first_ino
+    #                 file.seek(read_on_file)
+    #                 file.write(ctypes.string_at(ctypes.byref(bcarpeta), ctypes.sizeof(bcarpeta)))
+    #                 file.close()
+    #                 return
+
+    # -----------------------------------------------------------------------------------
+    print("Se recorre tercer bloque indirecto triple")
+    if inodo.i_block[14] == -1:
+        inodo.i_block[14] = super_bloque.s_first_blo
+        write_on_inodo = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i)
+        file.seek(write_on_inodo)
+        file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+
+        bloque_doble = structs.BloqueApuntadores()
+        write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+        file.seek(write_on_block)
+        file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+
+        write_on_block = super_bloque.s_bm_block_start + inodo.i_block[14]
+        file.seek(write_on_block)
+        file.write(b't')
+
+        super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+        super_bloque.s_free_blocks_count -= 1
+
+    print("Entra en el bloque triple indirecto")
+    bloque_triple = structs.BloqueApuntadores()
+
+    read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+    file.seek(read_on_block)
+    file.readinto(bloque_triple)
+
+    for t in range(16):
+        bloque_doble = structs.BloqueApuntadores()
+        if bloque_triple.b_pointers[t] == -1:
+            bloque_triple.b_pointers[t] = super_bloque.s_first_blo
             super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
             super_bloque.s_free_blocks_count -= 1
-            file.seek(user_session.mounted.part_start)
-            file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
+            
+            write_on_block = super_bloque.s_bm_block_start + bloque_triple.b_pointers[t]
+            file.seek(write_on_block)
+            file.write(b'l')
 
-            file.close()
-            return
+            write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * inodo.i_block[14])
+            file.seek(write_on_block)
+            file.write(ctypes.string_at(ctypes.byref(bloque_triple), ctypes.sizeof(bloque_triple)))
+        else:
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_triple.b_pointers[t])
+            file.seek(read_on_block)
+            file.readinto(bloque_doble)
+        for d in range(16):
+            bloque_simple = structs.BloqueApuntadores()
+            if bloque_doble.b_pointers[d] == -1:
+                bloque_doble.b_pointers[d] = super_bloque.s_first_blo
+                super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+                super_bloque.s_free_blocks_count -= 1
+                
+                write_on_block = super_bloque.s_bm_block_start + bloque_doble.b_pointers[d]
+                file.seek(write_on_block)
+                file.write(b's')
 
-        
-        read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
-        file.seek(read_on_file)
-        file.readinto(bcarpeta)
-        for j in range(4):
-            # print("JAJAJAJAJA")
-            # print(bcarpeta.b_content[j].b_inodo)
-            if bcarpeta.b_content[j].b_inodo == -1:
-                # print(archivo)
-                # print(super_bloque.s_first_ino)
-                bcarpeta.b_content[j].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
-                bcarpeta.b_content[j].b_inodo = super_bloque.s_first_ino
+                write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * bloque_triple.b_pointers[t])
+                file.seek(write_on_block)
+                file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+            else:
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+                file.seek(read_on_block)
+                file.readinto(bloque_simple)
+
+            for s in range(16):
+                if bloque_simple.b_pointers[s] == -1:
+                    if super_bloque.s_first_blo == -1:
+                        # YA NO HAY MÁS BLOQUES PARA CREAR
+                        print("Error: No hay mas bloques desde MKFS")
+                        file.close()
+                        return
+
+                    carpeta = structs.BloqueCarpeta()
+                    carpeta.b_content[0].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+                    carpeta.b_content[0].b_inodo = super_bloque.s_first_ino
+                    write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * super_bloque.s_first_blo)
+                    file.seek(write_on_block)
+                    file.write(ctypes.string_at(ctypes.byref(carpeta), ctypes.sizeof(carpeta)))
+
+                    bloque_simple.b_pointers[s] = super_bloque.s_first_blo
+                    write_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+                    file.seek(write_on_block)
+                    file.write(ctypes.string_at(ctypes.byref(bloque_simple), ctypes.sizeof(bloque_simple)))
+
+                    write_on_block = super_bloque.s_bm_block_start + super_bloque.s_first_blo
+                    file.seek(write_on_block)
+                    file.write(b'd')
+
+                    super_bloque.s_first_blo = next_first_block(super_bloque, user_session.mounted.path)
+                    super_bloque.s_free_blocks_count -= 1
+                    file.seek(user_session.mounted.part_start)
+                    file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
+                    file.close()
+                    return
+
+                read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_simple.b_pointers[s])
                 file.seek(read_on_file)
-                file.write(ctypes.string_at(ctypes.byref(bcarpeta), ctypes.sizeof(bcarpeta)))
-                file.close()
-                return
+                file.readinto(bcarpeta)
+                for j in range(4):
+                    if bcarpeta.b_content[j].b_inodo == -1:
+                        bcarpeta.b_content[j].b_name = archivo.encode('utf-8')[:12].ljust(12, b'\0')
+                        bcarpeta.b_content[j].b_inodo = super_bloque.s_first_ino
+                        file.seek(read_on_file)
+                        file.write(ctypes.string_at(ctypes.byref(bcarpeta), ctypes.sizeof(bcarpeta)))
+                        file.close()
+                        return
+
 
     file.close()
 
@@ -527,6 +1085,7 @@ def directory_link_r(super_bloque, path, user_session, inodo, i):
 
     file.close()
 
+# //////////////////////////////////////
 def write_file(sblock, inodo_file, txt, user_session):
     # print("write_file")
     # print("Bloque libre:", sblock.s_first_blo)
@@ -624,6 +1183,275 @@ def write_file(sblock, inodo_file, txt, user_session):
         file.seek(write_on_b)
         file.write(b's')
     
+    totalSegments -= 16
+    if totalSegments > 0:
+        if sblock.s_first_blo == -1:
+            # Ya no hay suficientes bloques
+            print("Error: Ya no hay suficientes bloques")
+            file.close()
+            return
+        print("Se escribe el segundo bloque indirecto doble")
+        iterations_blocks = 256 if totalSegments > 256 else totalSegments
+        iterations_db = iterations_blocks // 16  # División entera para calcular el número de dobles bloques
+
+        if iterations_blocks % 16 != 0:
+            iterations_db += 1
+        print("iterations_blocks:", iterations_blocks)
+        print("iterations_db:", iterations_db)
+
+        bloque_doble = structs.BloqueApuntadores()
+        inodo_file.i_block[13] = sblock.s_first_blo
+        write_on_db = -1
+        sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        sblock.s_free_blocks_count -= 1
+
+        for d in range(iterations_db):
+            bloque_doble.b_pointers[d] = sblock.s_first_blo
+            sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+            sblock.s_free_blocks_count -= 1
+            write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+            bloque_simple = structs.BloqueApuntadores()
+            for s in range(16):
+                new_segment = txt[(s + 28 + (d * 16)) * segmentSize : (s + 29 + (d * 16)) * segmentSize]
+                file_user = structs.BloqueArchivo()
+                file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
+                # SE ESCRIBE EL BLOQUE DE CONTENIDO
+                file.seek(write_on_db)
+                file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
+
+                # SE ACTUALIZA EL APUNTADOR DE BLOQUE DEL INODO
+                bloque_simple.b_pointers[s] = sblock.s_first_blo
+                write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
+                file.seek(write_on_b)
+                file.write(b'f')
+
+                # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
+                sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+                write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+
+                # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+                sblock.s_free_blocks_count -= 1
+                totalSegments -= 1
+
+                if totalSegments == 0:
+                    break
+
+            write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+            file.seek(write_on)
+            file.write(bloque_simple)
+
+            write_on_b = sblock.s_bm_block_start + bloque_doble.b_pointers[d]
+            file.seek(write_on_b)
+            file.write(b's')
+        
+        write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[13])
+        file.seek(write_on)
+        file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+
+        write_on_b = sblock.s_bm_block_start + inodo_file.i_block[13]
+        file.seek(write_on_b)
+        file.write(b'l')
+        # /////////////////////////////////////////////////////////
+
+        # bloque_simple = structs.BloqueApuntadores()
+        # inodo_file.i_block[12] = sblock.s_first_blo
+        # sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        # write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+        # # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+        # sblock.s_free_blocks_count -= 1
+
+        # for s in range(iterations_blocks):
+        #     if sblock.s_first_blo == -1:
+        #         # Ya no hay suficientes bloques
+        #         print("Error: Ya no hay suficientes bloques")
+        #         file.close()
+        #         return
+
+        #     new_segment = txt[(s + 12) * segmentSize : (s + 13) * segmentSize]
+        #     # BLOQUE DE ARCHIVO CON EL CONTENIDO
+        #     file_user = structs.BloqueArchivo()
+        #     file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
+        #     # SE ESCRIBE EL BLOQUE DE CONTENIDO
+        #     file.seek(write_on)
+        #     file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
+
+        #     # SE ACTUALIZA EL APUNTADOR DE BLOQUE DEL BLOQUE SIMPLE
+        #     bloque_simple.b_pointers[s] = sblock.s_first_blo
+        #     write_on_b = sblock.s_bm_block_start + (sblock.s_first_blo)
+        #     file.seek(write_on_b)
+        #     file.write(b'f')
+
+        #     # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
+        #     sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        #     write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+        #     # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+        #     sblock.s_free_blocks_count -= 1
+        
+        # write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[12])
+        # file.seek(write_on)
+        # file.write(ctypes.string_at(ctypes.byref(bloque_simple), ctypes.sizeof(bloque_simple)))
+
+        # write_on_b = sblock.s_bm_block_start + inodo_file.i_block[12]
+        # file.seek(write_on_b)
+        # file.write(b's')
+
+        # /////////////////////////////////////////////////////////
+    
+    # totalSegments -= 256
+    if totalSegments > 0:
+        if sblock.s_first_blo == -1:
+            # Ya no hay suficientes bloques
+            print("Error: Ya no hay suficientes bloques")
+            file.close()
+            return
+        # 512 bloques
+        # 32256 caracteres
+        print("Se escribe el tercer bloque indirecto tripe")
+        iterations_blocks = 4096 if totalSegments > 4096 else totalSegments
+        iterations_tb = iterations_blocks // 256  # División entera para calcular el número de dobles bloques
+
+        if iterations_blocks % 256 != 0:
+            iterations_tb += 1
+
+        print("iterations_blocks:", iterations_blocks)
+        print("iterations_tb:", iterations_tb)
+
+        bloque_triple = structs.BloqueApuntadores()
+        inodo_file.i_block[14] = sblock.s_first_blo
+        write_on_db = -1
+        sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        sblock.s_free_blocks_count -= 1
+
+        for t in range(iterations_tb):
+            bloque_triple.b_pointers[t] = sblock.s_first_blo
+            sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+            sblock.s_free_blocks_count -= 1
+            write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+            bloque_doble = structs.BloqueApuntadores()
+            for d in range(16):
+                bloque_doble.b_pointers[d] = sblock.s_first_blo
+                sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+                sblock.s_free_blocks_count -= 1
+                write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+                bloque_simple = structs.BloqueApuntadores()
+                for s in range(16):
+                    new_segment = txt[(s + 284 + (d * 16) + (t * 256)) * segmentSize : (s + 285 + (d * 16) + (t * 256)) * segmentSize]
+                    file_user = structs.BloqueArchivo()
+                    file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
+                    # SE ESCRIBE EL BLOQUE DE CONTENIDO
+                    file.seek(write_on_db)
+                    file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
+
+                    # SE ACTUALIZA EL APUNTADOR DE BLOQUE DEL INODO
+                    bloque_simple.b_pointers[s] = sblock.s_first_blo
+                    write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
+                    file.seek(write_on_b)
+                    file.write(b'f')
+
+                    # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
+                    sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+                    write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+
+                    # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+                    sblock.s_free_blocks_count -= 1
+                    totalSegments -= 1
+
+                    if totalSegments == 0:
+                        break
+
+                write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+                file.seek(write_on)
+                file.write(bloque_simple)
+
+                write_on_b = sblock.s_bm_block_start + bloque_doble.b_pointers[d]
+                file.seek(write_on_b)
+                file.write(b's')
+
+                if totalSegments == 0:
+                    break
+        
+            write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_triple.b_pointers[t])
+            file.seek(write_on)
+            file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+
+            write_on_b = sblock.s_bm_block_start + bloque_triple.b_pointers[t]
+            file.seek(write_on_b)
+            file.write(b'l')
+
+        write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[14])
+        file.seek(write_on)
+        file.write(ctypes.string_at(ctypes.byref(bloque_triple), ctypes.sizeof(bloque_triple)))
+
+        write_on_b = sblock.s_bm_block_start + inodo_file.i_block[14]
+        file.seek(write_on_b)
+        file.write(b't')
+
+
+        # /////////////////////////////////////////////////////////
+        # print("Se escribe el tercer bloque indirecto tripe")
+        # iterations_blocks = 4096 if totalSegments > 4096 else totalSegments
+        # iterations_db = iterations_blocks // 16  # División entera para calcular el número de dobles bloques
+
+        # if iterations_blocks % 16 != 0:
+        #     iterations_db += 1
+        # print("iterations_blocks:", iterations_blocks)
+        # print("iterations_db:", iterations_db)
+
+        # bloque_doble = structs.BloqueApuntadores()
+        # inodo_file.i_block[13] = sblock.s_first_blo
+        # write_on_db = -1
+        # sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        # sblock.s_free_blocks_count -= 1
+
+        # for d in range(iterations_db):
+        #     bloque_doble.b_pointers[d] = sblock.s_first_blo
+        #     sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        #     sblock.s_free_blocks_count -= 1
+        #     write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+        #     bloque_simple = structs.BloqueApuntadores()
+        #     for s in range(16):
+        #         new_segment = txt[(s + 28 + (d * 16)) * segmentSize : (s + 29 + (d * 16)) * segmentSize]
+        #         file_user = structs.BloqueArchivo()
+        #         file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
+        #         # SE ESCRIBE EL BLOQUE DE CONTENIDO
+        #         file.seek(write_on_db)
+        #         file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
+
+        #         # SE ACTUALIZA EL APUNTADOR DE BLOQUE DEL INODO
+        #         bloque_simple.b_pointers[s] = sblock.s_first_blo
+        #         write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
+        #         file.seek(write_on_b)
+        #         file.write(b'f')
+
+        #         # SE ACTUALIZA EL APUNTADOR DONDE SE ESCRIBIRÁ EL NUEVO BLOQUE
+        #         sblock.s_first_blo = next_first_block(sblock, user_session.mounted.path)
+        #         write_on_db = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
+
+        #         # SE RESTA LA CANTIDAD DE BLOQUES LIBRES
+        #         sblock.s_free_blocks_count -= 1
+        #         totalSegments -= 1
+
+        #         if totalSegments == 0:
+        #             break
+
+        #     write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_doble.b_pointers[d])
+        #     file.seek(write_on)
+        #     file.write(bloque_simple)
+
+        #     write_on_b = sblock.s_bm_block_start + bloque_doble.b_pointers[d]
+        #     file.seek(write_on_b)
+        #     file.write(b's')
+        
+        # write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo_file.i_block[13])
+        # file.seek(write_on)
+        # file.write(ctypes.string_at(ctypes.byref(bloque_doble), ctypes.sizeof(bloque_doble)))
+
+        # write_on_b = sblock.s_bm_block_start + inodo_file.i_block[13]
+        # file.seek(write_on_b)
+        # file.write(b'l')
+
+        # /////////////////////////////////////////////////////////
+    
     # SE ESCRIBE EL NUEVO INODO DEL ARCHIVO
     # print("Se escribe el inodo, ", sblock.s_first_ino)
     # print(inodo_file.i_s)
@@ -643,6 +1471,7 @@ def write_file(sblock, inodo_file, txt, user_session):
     file.write(ctypes.string_at(ctypes.byref(sblock), ctypes.sizeof(sblock)))
     file.close()
 
+# //////////////////////////////////////
 def write_carpeta(sblock, inodo_file, carpeta_root, user_session):
     file = open(user_session.mounted.path, "rb+")
     write_on_b = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * sblock.s_first_blo)
@@ -685,27 +1514,19 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
     txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
 
     segmentSize = 64
-    # segment_actual = len(txt) // segmentSize
-    # print("segment_actual ", segment_actual)
-    # segment = txt[segment_actual * segmentSize : (segment_actual + 1) * segmentSize]
     txt += data
     totalSegments = (len(txt)) // segmentSize
-    # write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * inodo_archivo.i_block[totalSegments - 1])
     file = open(session_inciada.mounted.path, "rb+")
     write_on_b = None
     write_on_i = None
     totalSegments = (totalSegments + 1) if len(txt) % 64 != 0 else totalSegments
-    # print("totalSegments", totalSegments)
     iterations_blocks = min(totalSegments, 12)
+    
     for s in range(iterations_blocks):
         new_segment = txt[s * segmentSize : (s + 1) * segmentSize]
-        # print("Wola", s)
-        # print("new_segment ", new_segment)
-        # # print(inodo_archivo.i_block[s])
         file_user = structs.BloqueArchivo()
         file_user.b_content = new_segment.encode('utf-8')[:64].ljust(64, b'\0')
         if inodo_archivo.i_block[s] == -1:
-        #     print("Entraaaaaaa", s)
             inodo_archivo.i_block[s] = sblock.s_first_blo
             write_on_b = sblock.s_bm_block_start + sblock.s_first_blo
             file.seek(write_on_b)
@@ -713,12 +1534,10 @@ def crear_grupo_usuario(sblock, data, name_g_u, tipo, user_actual = None):
             sblock.s_first_blo = next_first_block(sblock, session_inciada.mounted.path)
             sblock.s_free_blocks_count -= 1
 
-        # print("ssss", inodo_archivo.i_block[s])    
         print(file_user.b_content)
         write_on = sblock.s_block_start + (ctypes.sizeof(structs.BloqueArchivo) * inodo_archivo.i_block[s])
         file.seek(write_on)
         file.write(file_user)
-        # print("termina")
         
     
     file.seek(session_inciada.mounted.part_start)

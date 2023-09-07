@@ -715,7 +715,7 @@ class rep:
                     dot += f"    <tr><td><font point-size='15'>  {nuevo_texto}  </font></td></tr>\n"
                 dot += "    </table>>\n"
                 dot += "]\n"
-            if bit == b's':
+            elif bit == b's':
                 bloque_apuntador = structs.BloqueApuntadores()
                 file.seek(read_on_b)
                 file.readinto(bloque_apuntador)
@@ -723,6 +723,38 @@ class rep:
                 dot += "    shape=plain\n"
                 dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
                 dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#77dd77'> <b>  Bloque Indirecto S {cantidad_bloques}</b>   </td> </tr>\n"
+                for i in range(16):
+                    if bloque_apuntador.b_pointers[i] != -1:
+                        dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
+                    else:
+                        dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                dot += "    </table>>\n"
+                dot += "]\n"
+            elif bit == b'l':
+                bloque_apuntador = structs.BloqueApuntadores()
+                file.seek(read_on_b)
+                file.readinto(bloque_apuntador)
+                dot += f"bloque_{cantidad_bloques} [\n"
+                dot += "    shape=plain\n"
+                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#fdcae1'> <b>  Bloque Indirecto D {cantidad_bloques}</b>   </td> </tr>\n"
+                for i in range(16):
+                    if bloque_apuntador.b_pointers[i] != -1:
+                        dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
+                    else:
+                        dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                dot += "    </table>>\n"
+                dot += "]\n"
+            elif bit == b't':
+                bloque_apuntador = structs.BloqueApuntadores()
+                file.seek(read_on_b)
+                file.readinto(bloque_apuntador)
+                dot += f"bloque_{cantidad_bloques} [\n"
+                dot += "    shape=plain\n"
+                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#fdcae1'> <b>  Bloque Indirecto T {cantidad_bloques}</b>   </td> </tr>\n"
                 for i in range(16):
                     if bloque_apuntador.b_pointers[i] != -1:
                         dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
@@ -741,6 +773,14 @@ class rep:
         dot += enlaces
         dot += '}'
         print(dot)
+        with open("./rep.dot", "w") as fich:
+            fich.write(dot)
+            fich.close()
+
+        rep_dot = "./rep.dot"
+        rep_pdf = "./rep.pdf"
+        crear_pdf = f"dot -Tpdf {rep_dot} -o {rep_pdf}"
+        os.system(crear_pdf)
         pyperclip.copy(dot)
 
     def reporte_sb(self):

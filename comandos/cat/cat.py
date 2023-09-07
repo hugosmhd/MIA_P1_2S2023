@@ -2,6 +2,7 @@ import os
 import math
 import time
 import ctypes
+import pyperclip
 
 import structs
 from _global._global import particiones_montadas, session_inciada
@@ -37,3 +38,4 @@ class cat():
             txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
             print("JOIN FILE MKFILE CAT")
             print(txt)
+            pyperclip.copy(txt)
