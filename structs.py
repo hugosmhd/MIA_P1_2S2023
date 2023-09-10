@@ -13,13 +13,26 @@ class SesionUsuario():
         self.credenciales = credenciales
         self.mounted = mounted
         self.is_logged = is_logged
+        self.is_recovery = False
 
 class Mounted():
-    def __init__(self, path, name, id, part_start):
+    def __init__(self, path, name, id, part_start, part_s, is_formated = True):
         self.path = path
         self.name = name
         self.id = id
         self.part_start = part_start
+        self.part_s = part_s
+        self.is_formated = is_formated
+
+class Journaling(ctypes.Structure):
+    _fields_ = [
+        ('comando', ctypes.c_char * 100),
+        ('fecha', ctypes.c_longlong)
+    ]
+
+    def __init__(self):
+        self.comando = b'\0'*100
+        self.fecha = 0
 
 class Inodo(ctypes.Structure):
     _fields_ = [

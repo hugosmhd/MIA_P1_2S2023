@@ -24,6 +24,12 @@ def find_mounted(id_):
             return montada
     return None
 
+def find_mounted_rep(name, path):
+    for montada in particiones_montadas:
+        if(name == montada.name and path == montada.path):
+            return True
+    return False
+
 class mount:
     def __init__(self):
         self.path = ""
@@ -51,29 +57,30 @@ class mount:
                 if(number != -1):
                     archivo = os.path.splitext(os.path.basename(self.path))[0]
                     id_ = "93" + str(number) + archivo
-                    new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start)
-                    # print("New mount")
-                    # print(new_mount.path)
-                    # print(new_mount.name)
-                    # print(new_mount.id)
+                    new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start, particion.part_s)
                     particiones_montadas.append(new_mount)
                     recorrer_montadas()
                 else:
                     print(f"La particion {self.name} ya ha sido montada")
                     return
             elif particion.part_type == b'E':
-                print(f"La particion {self.name} no se puede montar porque es una particion extendida")
-                return
+                number = get_number_mount(self.path, self.name)
+                if(number != -1):
+                    archivo = os.path.splitext(os.path.basename(self.path))[0]
+                    id_ = "93" + str(number) + archivo
+                    new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start, particion.part_s, False)
+                    particiones_montadas.append(new_mount)
+                    recorrer_montadas()
+                else:
+                    print(f"La particion {self.name} ya ha sido montada")
+                    return
         else:
             number = get_number_mount(self.path, self.name)
             if(number != -1):
                 archivo = os.path.splitext(os.path.basename(self.path))[0]
                 id_ = "93" + str(number) + archivo
-                new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start)
-                # print("New mount")
-                # print(new_mount.path)
-                # print(new_mount.name)
-                # print(new_mount.id)
+                s_ebr = ctypes.sizeof(structs.EBR)
+                new_mount = structs.Mounted(self.path, self.name, id_, particion.part_start + s_ebr, particion.part_s - s_ebr)
                 particiones_montadas.append(new_mount)
                 recorrer_montadas()
             else:

@@ -10,12 +10,17 @@ from comandos.cat.cat import cat
 from comandos.rename.rename import rename
 from comandos.move.move import move
 from comandos.mkdir.mkdir import mkdir
+from comandos.recovery.recovery import recovery
 from comandos.rep.rep import rep
+from _global._global import comando_actual
 import structs
 
-def analizar(entrada):
+def analizar(entrada, rep_journaling = False):
     # comando = entrada.lower()
     comando = entrada
+    global comando_actual
+    comando_actual.clear()
+    comando_actual.append(comando)
     cmdentrada = comando.split(' ')
     parametros = []
     for i, param in enumerate(cmdentrada):
@@ -25,11 +30,11 @@ def analizar(entrada):
             comando = param
         else:
             parametros.append(param)
-    identificar_parametros(comando, parametros)
-    # print(comando)
-    # print(parametros)
+    instancia = identificar_parametros(comando, parametros, rep_journaling)
+    if rep_journaling:
+        return instancia
         
-def identificar_parametros(comando, parametros):
+def identificar_parametros(comando, parametros, rep_journaling):
     comando.lower()
     if(comando == 'mkdisk'):
         analizar_mkdisk(parametros)
@@ -48,23 +53,43 @@ def identificar_parametros(comando, parametros):
     elif(comando == 'logout'):
         analizar_logout(parametros)
     elif(comando == 'mkgrp'):
-        analizar_mkgrp(parametros)
+        grupo = analizar_mkgrp(parametros, rep_journaling)
+        if rep_journaling:
+            return grupo
     elif(comando == 'rmgrp'):
-        analizar_rmgrp(parametros)
+        grupo = analizar_rmgrp(parametros, rep_journaling)
+        if rep_journaling:
+            return grupo
     elif(comando == 'mkusr'):
-        analizar_mkusr(parametros)
+        usuario = analizar_mkusr(parametros, rep_journaling)
+        if rep_journaling:
+            return usuario
     elif(comando == 'rmusr'):
-        analizar_rmusr(parametros)
+        usuario = analizar_rmusr(parametros, rep_journaling)
+        if rep_journaling:
+            return usuario
     elif(comando == 'mkfile'):
-        analizar_mkfile(parametros)
+        archivo = analizar_mkfile(parametros, rep_journaling)
+        if rep_journaling:
+            return archivo
     elif(comando == 'cat'):
         analizar_cat(parametros)
     elif(comando == 'rename'):
-        analizar_rename(parametros)
+        archivo_carpeta = analizar_rename(parametros, rep_journaling)
+        if rep_journaling:
+            return archivo_carpeta
+    elif(comando == 'recovery'):
+        analizar_recovery(parametros)
+    elif(comando == 'loss'):
+        analizar_loss(parametros)
     elif(comando == 'move'):
-        analizar_move(parametros)
+        archivo_carpeta = analizar_move(parametros, rep_journaling)
+        if rep_journaling:
+            return archivo_carpeta
     elif(comando == 'mkdir'):
-        analizar_mkdir(parametros)
+        carpeta = analizar_mkdir(parametros, rep_journaling)
+        if rep_journaling:
+            return carpeta
     elif(comando == 'rep'):
         analizar_rep(parametros)
     elif(comando == 'execute'):
@@ -138,6 +163,7 @@ def leer_script(path):
     except FileNotFoundError:
         print(f"El script con ruta {path} no existe")
 
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/new_script.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script4.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script5.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script6.txt
@@ -307,7 +333,7 @@ def analizar_logout(parametros):
         i += 1
     autenticacion.crear_logout()
 
-def analizar_mkgrp(parametros):
+def analizar_mkgrp(parametros, rep_journaling = False):
     new_grp = mkgrp()
     i = 0
     while i < len(parametros):
@@ -317,9 +343,13 @@ def analizar_mkgrp(parametros):
         else:
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
+        
+    if rep_journaling:
+        new_grp.tipo = 1
+        return new_grp
     new_grp.crear_mkgrp()
 
-def analizar_rmgrp(parametros):
+def analizar_rmgrp(parametros, rep_journaling = False):
     new_grp = mkgrp()
     i = 0
     while i < len(parametros):
@@ -329,9 +359,14 @@ def analizar_rmgrp(parametros):
         else:
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
+
+    if rep_journaling:
+        new_grp.tipo = 2
+        return new_grp
+
     new_grp.crear_rmgrp()
 
-def analizar_mkusr(parametros):
+def analizar_mkusr(parametros, rep_journaling = False):
     new_user = mkusr()
     i = 0
     while i < len(parametros):
@@ -345,9 +380,13 @@ def analizar_mkusr(parametros):
         else:
             print(f"Parametro no aceptado en 'mkusr': {param}")
         i += 1
+
+    if rep_journaling:
+        new_user.tipo = 1
+        return new_user
     new_user.crear_mkusr()
 
-def analizar_rmusr(parametros):
+def analizar_rmusr(parametros, rep_journaling = False):
     new_user = mkusr()
     i = 0
     while i < len(parametros):
@@ -357,9 +396,14 @@ def analizar_rmusr(parametros):
         else:
             print(f"Parametro no aceptado en 'mkusr': {param}")
         i += 1
+
+    if rep_journaling:
+        new_user.tipo = 2
+        return new_user
+
     new_user.crear_rmusr()
 
-def analizar_mkfile(parametros):
+def analizar_mkfile(parametros, rep_journaling = False):
     archivo = mkfile()
     i = 0
     while i < len(parametros):
@@ -380,9 +424,13 @@ def analizar_mkfile(parametros):
     # print("Termino bien")
     # print(archivo.path)
     # print(archivo.cout)
+    if rep_journaling:
+        # print("archivo jajjaa")
+        # print("El tipo de instancia es yup:", str(type(archivo)))
+        return archivo
     archivo.crear_mkfile()
 
-def analizar_rename(parametros):
+def analizar_rename(parametros, rep_journaling):
     archivo_carpeta = rename()
     i = 0
     while i < len(parametros):
@@ -394,9 +442,13 @@ def analizar_rename(parametros):
         else:
             print(f"Parametro no aceptado en 'rename': {valor}")
         i += 1
+
+    if rep_journaling:
+        return archivo_carpeta
+
     archivo_carpeta.crear_rename()
 
-def analizar_move(parametros):
+def analizar_move(parametros, rep_journaling):
     archivo_carpeta = move()
     i = 0
     while i < len(parametros):
@@ -408,6 +460,10 @@ def analizar_move(parametros):
         else:
             print(f"Parametro no aceptado en 'move': {valor}")
         i += 1
+
+    if rep_journaling:
+        return archivo_carpeta
+
     archivo_carpeta.crear_move()
 
 def analizar_cat(parametros):
@@ -425,7 +481,7 @@ def analizar_cat(parametros):
         i += 1
     archivo.crear_cat()
 
-def analizar_mkdir(parametros):
+def analizar_mkdir(parametros, rep_journaling):
     carpeta = mkdir()
     i = 0
     while i < len(parametros):
@@ -437,7 +493,35 @@ def analizar_mkdir(parametros):
         else:
             print(f"Parametro no aceptado en 'mkdir': {valor}")
         i += 1
+    
+    if rep_journaling:
+        return carpeta
+        
     carpeta.crear_mkdir()
+
+def analizar_recovery(parametros):
+    recuperacion = recovery()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-id=") == 0:
+            recuperacion.id = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'recovery': {valor}")
+        i += 1
+    recuperacion.crear_recovery()
+
+def analizar_loss(parametros):
+    perder_datos = recovery()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-id=") == 0:
+            perder_datos.id = get_valor_parametro(param)
+        else:
+            print(f"Parametro no aceptado en 'loss': {valor}")
+        i += 1
+    perder_datos.crear_loss()
 
 def analizar_pause():
     input("Presione ENTER para continuar...")

@@ -1,6 +1,7 @@
 mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk/" -name=Partition1
 mkfs -type=full -id=931disco2
 login -user=root -pass=123 -id=931disco2
+login -user=sam1 -pass=123 -id=931disco2
 mkdir -path="/home"
 mkdir -path="/bin"
 mkdir -path="/etc"
@@ -105,11 +106,7 @@ mkdir -path="/sys7"
 mkdir -path="/usr7"
 mkdir -path="/var7"
 mkdir -path="/tmp7"
+mkdir -path="/snap5/hola5/hugosmhd" -r
+mkdir -path="/home2/hola2/hugosmhd" -r
+mkdir -path="/recuerdos/hola2/hugosmhd" -r
 rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree
-pause
-mkfile -size=79 -path=/media/record.txt
-cat -file1="/media/record.txt"
-mkfile -size=146 -path=/proc6/encuesta.txt
-cat -file1="/proc6/encuesta.txt"
-mkfile -size=146 -path=/proc6/encuesta.txt
-cat -file1="/dev/duro.txt"

@@ -1,6 +1,26 @@
-mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
-fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
-mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
-mkfs -type=full -id=931disco2
-login -user=root -pass=123 -id=931disco2
+mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk"
+fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition1
+mount -path="/home/hugosmh/Documentos/Discos/disco3.dsk" -name=Partition1
+mkfs -type=full -id=931disco3 -fs=3fs
+login -user=root -pass=123 -id=931disco3
 mkfile -size=345 -path=/b.txt
+mkfile -size=345 -path=/c.txt
+mkfile -size=345 -path=/a.txt
+mkdir -path="/home"
+mkgrp -name=usuarios
+mkusr -user=user1 -pass=usuario -grp=usuarios
+mkgrp -name=usuarios2
+mkusr -user=user2 -pass=usuario -grp=usuarios
+rmgrp -name=usuarios2
+rmusr -user=user2
+mkdir -path="/home/hugosmh/Documentos" -r
+mkdir -path="/temp"
+move -path="/home/hugosmh/Documentos" -destino="/temp"
+rename -path="/temp/Documentos" -name="Documentos_"
+rep -id=931disco3 -path=/home/hugosmh/reportes -name=journaling
+pause
+loss -id=931disco3
+recovery -id=931disco3
+loss -id=931disco3
+cat -file1="/a.txt"
+recovery -id=931disco3

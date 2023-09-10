@@ -36,6 +36,7 @@ class cat():
                 print(f"Error: Ruta especificada '{archivo}' no existe")
                 return
             txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
+            print(len(txt))
             print("JOIN FILE MKFILE CAT")
             print(txt)
             pyperclip.copy(txt)

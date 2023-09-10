@@ -78,24 +78,28 @@ def imprimir_particiones(path):
 def exist_partition(path, name, mbr):
     try:
         for i, particion in enumerate(mbr.mbr_partitions):
+            print(particion.part_name.decode())
             if(name == particion.part_name.decode()):
                 return 'PE', particion, i
             if particion.part_type == b'E':
                 tmp = structs.EBR()
                 file = open(path, 'rb')
                 file.seek(particion.part_start)
-                contenido_binario = file.read(ctypes.sizeof(tmp))
-                ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
+                file.readinto(tmp)
+                # contenido_binario = file.read(ctypes.sizeof(tmp))
+                # ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
 
                 while True:
                     if tmp.part_next == -1:
                         break
+                    print(tmp.part_name)
                     if name == tmp.part_name.decode():
                         file.close()
                         return 'L', tmp, i
                     file.seek(tmp.part_next)
-                    contenido_binario = file.read(ctypes.sizeof(tmp))
-                    ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
+                    file.readinto(tmp)
+                    # contenido_binario = file.read(ctypes.sizeof(tmp))
+                    # ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
                 file.close()
         return False, False, False
 

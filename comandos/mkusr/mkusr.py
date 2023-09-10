@@ -4,7 +4,7 @@ import time
 import ctypes
 
 import structs
-from _global._global import particiones_montadas, session_inciada, users, groups
+from _global._global import particiones_montadas, session_inciada, users, groups, comando_actual
 from comandos.mount.mount import find_mounted
 from comandos.mkfs.mkfs import join_file, find_file, remove_grupo_usuario, crear_grupo_usuario
 from comandos.fdisk.fdisk import exist_partition
@@ -14,6 +14,7 @@ class mkusr():
         self.user = ""
         self.password = ""
         self.grp = ""
+        self.tipo = 0
 
     def crear_mkusr(self):
         print("MAKE MKUSR")
@@ -52,6 +53,30 @@ class mkusr():
         data_user = f"{len(users) + 1},U,{self.grp},{self.user},{self.password}\n"
         crear_grupo_usuario(sblock, data_user, self.user, 'U', user_actual)
 
+        if sblock.s_filesystem_type == 3:
+            print("entra a la escritura del journaling")
+            global comando_actual
+            print(comando_actual)
+            file = open(session_inciada.mounted.path, "rb+")
+            journaling_actual = structs.Journaling()
+            read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
+            for _ in range(sblock.s_inodes_count):
+                file.seek(read_journaling)
+                file.readinto(journaling_actual)
+
+                if(journaling_actual.fecha == 0):
+                    journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
+                    journaling_actual.fecha = int(time.time())
+                    print("Se escribe el journaling en mkfile")
+                    print(journaling_actual.comando)
+                    print(journaling_actual.fecha)
+                    file.seek(read_journaling)
+                    file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
+                    break
+
+                read_journaling += ctypes.sizeof(structs.Journaling)
+            file.close()
+
     def crear_rmusr(self):
         print("MAKE RMUSR, ESTE")
 
@@ -81,3 +106,27 @@ class mkusr():
 
         data_user = f"0,U,{user.group_name},{user.user_name},{user.user_password}"
         remove_grupo_usuario(sblock, data_user, user.user_name, 'U', 3)
+
+        if sblock.s_filesystem_type == 3:
+            print("entra a la escritura del journaling")
+            global comando_actual
+            print(comando_actual)
+            file = open(session_inciada.mounted.path, "rb+")
+            journaling_actual = structs.Journaling()
+            read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
+            for _ in range(sblock.s_inodes_count):
+                file.seek(read_journaling)
+                file.readinto(journaling_actual)
+
+                if(journaling_actual.fecha == 0):
+                    journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
+                    journaling_actual.fecha = int(time.time())
+                    print("Se escribe el journaling en mkfile")
+                    print(journaling_actual.comando)
+                    print(journaling_actual.fecha)
+                    file.seek(read_journaling)
+                    file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
+                    break
+
+                read_journaling += ctypes.sizeof(structs.Journaling)
+            file.close()

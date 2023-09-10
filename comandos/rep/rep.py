@@ -5,9 +5,16 @@ import ctypes
 import pyperclip
 
 import structs
+from analizador import analizador
 from _global._global import particiones_montadas, session_inciada
-from comandos.mount.mount import find_mounted
+from comandos.mount.mount import find_mounted, find_mounted_rep
 from comandos.mkfs.mkfs import join_file, find_file, find_carpeta_archivo
+from comandos.mkfile.mkfile import mkfile
+from comandos.mkdir.mkdir import mkdir
+from comandos.mkgrp.mkgrp import mkgrp
+from comandos.mkusr.mkusr import mkusr
+from comandos.move.move import move
+from comandos.rename.rename import rename
 
 class rep:
     def __init__(self):
@@ -27,14 +34,16 @@ class rep:
             self.reporte_block()
         elif(self.name == 'bm_inode'):
             self.reporte_bm_inode()
-        elif(self.name == 'bm_bloc'):
-            self.reporte_bm_bloc()
+        elif(self.name == 'bm_block'):
+            self.reporte_bm_block()
         elif(self.name == 'tree'):
             self.reporte_tree()
         elif(self.name == 'sb'):
             self.reporte_sb()
         elif(self.name == 'file'):
             self.reporte_file()
+        elif(self.name == 'journaling'):
+            self.reporte_journaling()
     
     def reporte_mbr(self):
         print("HACER REPORTE MBR")
@@ -79,7 +88,8 @@ class rep:
                 if particion.part_type == b'E' or particion.part_type == b'P':
                     dot += '<TR><TD colspan="2" BGCOLOR="#58d68d ">Particion</TD></TR>\n'
                     dot += '<TR><TD><FONT POINT-SIZE="15">part_status</FONT></TD>\n'
-                    dot += f'<TD><FONT POINT-SIZE="15">{particion.part_status.decode()}</FONT></TD></TR>\n'
+                    status = find_mounted_rep(particion.part_name.decode(), mounted.path)
+                    dot += f'<TD><FONT POINT-SIZE="15">{"1" if status else "0"}</FONT></TD></TR>\n'
                     dot += '<TR><TD><FONT POINT-SIZE="15">part_type</FONT></TD>\n'
                     dot += f'<TD><FONT POINT-SIZE="15">{particion.part_type.decode()}</FONT></TD></TR>\n'
                     dot += '<TR><TD><FONT POINT-SIZE="15">part_fit</FONT></TD>\n'
@@ -102,7 +112,8 @@ class rep:
                             break
                         dot += '<TR><TD colspan="2" BGCOLOR="#7fb3d5  ">Particion Logica</TD></TR>\n'
                         dot += '<TR><TD><FONT POINT-SIZE="15">part_status</FONT></TD>\n'
-                        dot += f'<TD><FONT POINT-SIZE="15">{tmp.part_status.decode()}</FONT></TD></TR>\n'
+                        status = find_mounted_rep(tmp.part_name.decode(), mounted.path)
+                        dot += f'<TD><FONT POINT-SIZE="15">{"1" if status else "0"}</FONT></TD></TR>\n'
                         dot += '<TR><TD><FONT POINT-SIZE="15">part_fit</FONT></TD>\n'
                         dot += f'<TD><FONT POINT-SIZE="15">{tmp.part_fit.decode()}</FONT></TD></TR>\n'
                         dot += '<TR><TD><FONT POINT-SIZE="15">part_start</FONT></TD>\n'
@@ -129,6 +140,7 @@ class rep:
 
         dot += '</TABLE>>];\n'
         dot += '}'
+        pyperclip.copy(dot)
         print(dot)
 
     def reporte_disk(self):
@@ -154,7 +166,7 @@ class rep:
         dot += 'edge [ fontname="Courier New", fontsize=20];\n'
         dot += 'node [ shape="box", fontsize=26];\n'
         dot += 'n_1 [label=<\n'
-        dot += "<table border='0' cellborder='1' color='blue' cellspacing='0'>\n"
+        dot += "<table border='0' cellborder='0' color='blue' cellspacing='0'>\n"
         try:
             mbr = structs.MBR()
             file = open(mounted.path, 'rb')
@@ -163,7 +175,7 @@ class rep:
             tamanio_total = mbr.mbr_tamano - ctypes.sizeof(structs.MBR)
             dot += "<tr>\n"
             dot += "<td>\n"
-            dot += "<table color='orange' cellspacing='0'>\n"
+            dot += "<table color='#229954' border='2' cellspacing='0'>\n"
             dot += "    <tr>\n"
             dot += "    <td>   MBR </td>\n"
             dot += "    </tr>\n"
@@ -187,7 +199,7 @@ class rep:
                         dot += "    </table>\n"
                         dot += "</td>\n"
                     dot += "<td>\n"
-                    dot += "    <table color='black' cellspacing='0' cellborder='0'>\n"
+                    dot += "    <table color='#7d3c98' border='3' cellspacing='0' cellborder='0'>\n"
                     dot += "        <tr>\n"
                     dot += "        <td></td>\n"
                     dot += "        </tr>\n"
@@ -204,7 +216,7 @@ class rep:
                 elif particion.part_type == b'E':
                     if particion.part_start != espacio_anterior:
                         dot += "<td>\n"
-                        dot += "    <table color='black' cellspacing='0' cellborder='0'>\n"
+                        dot += "    <table color='#2874a6' border='3' cellspacing='0' cellborder='0'>\n"
                         dot += "        <tr>\n"
                         dot += "        <td></td>\n"
                         dot += "        </tr>\n"
@@ -262,7 +274,7 @@ class rep:
 
             if mbr.mbr_tamano > espacio_anterior:
                 dot += "<td>\n"
-                dot += "    <table color='black' cellspacing='0' cellborder='0'>\n"
+                dot += "    <table color='#2874a6' border='3' cellspacing='0' cellborder='0'>\n"
                 dot += "        <tr>\n"
                 dot += "        <td></td>\n"
                 dot += "        </tr>\n"
@@ -284,6 +296,7 @@ class rep:
         dot += '</table>>];\n'
         dot += '}'
         print(dot)
+        pyperclip.copy(dot)
         
     def reporte_inode(self):
         print("HACER REPORTE INODE")
@@ -530,7 +543,7 @@ class rep:
         archivo.write(bits)
         archivo.close()
     
-    def reporte_bm_bloc(self):
+    def reporte_bm_block(self):
         print("HACER REPORTE BM BLOCK")
         print(self.name)
         print(self.path)
@@ -861,16 +874,19 @@ class rep:
         file.seek(mounted.part_start)
         file.readinto(sblock)
 
-        indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, self.ruta, session_inciada)
+        # session_inciada.mounted = mounted
+        directorio, archivo_ = os.path.split(self.ruta)
+        indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
         if(i == -1):
-            print(f"Error: Ruta especificada '{self.ruta}' no existe")
+            print(f"Error: Ruta especificada '{self.directorio}' no existe")
             return
         inodo_archivo, i_f = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
         if(i_f == -1):
+            print("Dos")
             print(f"Error: Ruta especificada '{self.ruta}' no existe")
             return
         # print(inodo_archivo.i_s)
-        txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
+        txt = join_file(sblock, inodo_archivo, mounted.path)
         print("JOIN FILE MKFILE")
         print(txt)
 
@@ -878,3 +894,139 @@ class rep:
         archivo = open("mi_archivo3.txt", "w")
         archivo.write(txt)
         archivo.close()
+
+    def reporte_journaling(self):
+        print("HACER REPORTE JOURNALING")
+        print(self.name)
+        print(self.path)
+        print(self.id)
+        print(self.ruta)
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        if sblock.s_filesystem_type == 3:
+            file = open(mounted.path, "rb+")
+            journaling_actual = structs.Journaling()
+            read_journaling = mounted.part_start + ctypes.sizeof(structs.SuperBloque)
+            print("Recorriendo Journaling")
+            dot = 'digraph G {\n'
+            dot += f'label="Reporte del Journaling";\n'
+            dot += 'labelloc=top;\n'
+            dot += 'edge [ fontname="Courier New", fontsize=20];\n'
+            dot += 'node [ shape="box", fontsize=26];\n'
+            dot += 'tabla_journaling [label=<\n'
+            dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='1'>\n"
+            dot += "<TR>\n"
+            dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>  Operacion  </FONT></TD>\n"
+            dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>   Path   </FONT></TD>\n"
+            dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>   Contenido   </FONT></TD>\n"
+            dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Fecha</FONT></TD>\n"
+            dot += "</TR>\n"
+            for _ in range(sblock.s_inodes_count):
+                file.seek(read_journaling)
+                file.readinto(journaling_actual)
+
+                if(journaling_actual.fecha == 0):
+                    break
+                # print(journaling_actual.comando)
+                instancia = analizador.analizar(journaling_actual.comando.decode(), True)
+                # print("El tipo de instancia es:", str(type(instancia)))
+                fecha_hora = datetime.fromtimestamp(journaling_actual.fecha)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                # print(fecha_formateada)
+                if isinstance(instancia, mkfile):
+                    dot += f"<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>mkfile</b></FONT></TD>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(instancia.path), 10):
+                        nuevo_texto += instancia.path[i:i+10] + "<br/>"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+
+                    content = instancia.file_contenido()
+                    nuevo_texto = ""
+                    for i in range(0, len(content), 30):
+                        nuevo_texto += content[i:i+30] + "<br/>"
+                    if len(content) > 0:
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"</TR>\n"
+                elif isinstance(instancia, mkdir):
+                    dot += f"<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>mkdir</b></FONT></TD>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(instancia.path), 10):
+                        nuevo_texto += instancia.path[i:i+10] + "<br/>"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>-</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"</TR>\n"
+                elif isinstance(instancia, mkgrp):
+                    if(instancia.tipo == 1):
+                        dot += f"<TR>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='18'><b>mkgrp</b></FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>/users.txt</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{instancia.name}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                        dot += f"</TR>\n"
+                    elif(instancia.tipo == 2):
+                        dot += f"<TR>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='18'><b>rmgrp</b></FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>/users.txt</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>-</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                        dot += f"</TR>\n"
+                elif isinstance(instancia, mkusr):
+                    if(instancia.tipo == 1):
+                        dot += f"<TR>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='18'><b>mkusr</b></FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>/users.txt</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{instancia.user}<br/>{instancia.password}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                        dot += f"</TR>\n"
+                    elif(instancia.tipo == 2):
+                        dot += f"<TR>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='18'><b>rmusr</b></FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>/users.txt</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>-</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                        dot += f"</TR>\n"
+                elif isinstance(instancia, move):
+                    dot += f"<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>move</b></FONT></TD>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(instancia.path), 10):
+                        nuevo_texto += instancia.path[i:i+10] + "<br/>"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>-</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"</TR>\n"
+                elif isinstance(instancia, rename):
+                    dot += f"<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>rename</b></FONT></TD>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(instancia.path), 10):
+                        nuevo_texto += instancia.path[i:i+10] + "<br/>"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{instancia.name}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"</TR>\n"
+                read_journaling += ctypes.sizeof(structs.Journaling)
+
+            
+            file.close()
+            dot += '</TABLE>>];\n'
+            dot += '}'
+            print(dot)
+            pyperclip.copy(dot)

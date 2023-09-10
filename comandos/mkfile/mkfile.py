@@ -5,7 +5,7 @@ import ctypes
 import pyperclip
 
 import structs
-from _global._global import particiones_montadas, session_inciada
+from _global._global import particiones_montadas, session_inciada, comando_actual
 from comandos.mount.mount import find_mounted
 from comandos.mkfs.mkfs import join_file, find_file, file_link, write_file, find_carpeta_archivo
 from comandos.fdisk.fdisk import exist_partition
@@ -72,6 +72,8 @@ class mkfile():
         file.readinto(sblock)
         file.close()
 
+        
+
         directorio, archivo_ = os.path.split(self.path)
         # Se verifica que no exista un archivo con el mismo nombre
         indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
@@ -118,3 +120,50 @@ class mkfile():
         print(txt)
         pyperclip.copy(txt)
 
+        if sblock.s_filesystem_type == 3:
+            print("entra a la escritura del journaling")
+            global comando_actual
+            print(comando_actual)
+            file = open(session_inciada.mounted.path, "rb+")
+            journaling_actual = structs.Journaling()
+            read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
+            for _ in range(sblock.s_inodes_count):
+                file.seek(read_journaling)
+                file.readinto(journaling_actual)
+
+                if(journaling_actual.fecha == 0):
+                    journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
+                    journaling_actual.fecha = int(time.time())
+                    print("Se escribe el journaling en mkfile")
+                    print(journaling_actual.comando)
+                    print(journaling_actual.fecha)
+                    file.seek(read_journaling)
+                    file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
+                    break
+
+                read_journaling += ctypes.sizeof(structs.Journaling)
+            file.close()
+
+    def file_contenido(self):
+        num = '0'
+        numbers = "0123456789"
+        content = ""
+        if self.cout != "":
+            try:
+                with open(self.cout, 'r') as archivo:
+                    content = archivo.read(self.size) if self.size_activo else archivo.read()
+            except FileNotFoundError:
+                print(f"Error: La ruta de cout {self.cout} no existe")
+        else:
+            iterations_fill = self.size // 10
+            for _ in range(iterations_fill):
+                content += numbers
+
+            iterations_fill = self.size % 10
+            for _ in range(iterations_fill):
+                content += num
+                if num == '9':
+                    num = '0'
+                    continue
+                num = chr(ord(num) + 1)
+        return content

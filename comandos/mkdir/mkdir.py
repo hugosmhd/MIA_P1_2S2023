@@ -4,14 +4,13 @@ import time
 import ctypes
 
 import structs
-from _global._global import particiones_montadas, session_inciada
+from _global._global import particiones_montadas, session_inciada, comando_actual
 from comandos.mount.mount import find_mounted
 from comandos.mkfs.mkfs import join_file, find_file, file_link, write_carpeta, find_carpeta, directory_link_r, find_carpeta_archivo
 from comandos.fdisk.fdisk import exist_partition
 
 
 def crear_mkdir_r(path, indo_carpeta, i):
-        print("mkdir")
 
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
@@ -54,7 +53,6 @@ def crear_mkdir_r(path, indo_carpeta, i):
         i_c = sblock.s_first_ino
         write_carpeta(sblock, inodo_carpeta, carpeta_root, session_inciada)
 
-        print("Carpeta creada con exito")
         return inodo_carpeta, i_c
 
 class mkdir():
@@ -63,7 +61,6 @@ class mkdir():
         self.recursivo = False
 
     def crear_mkdir(self):
-        print("mkdir")
 
         if self.recursivo:
             directorio, archivo_ = os.path.split(self.path)
@@ -74,10 +71,8 @@ class mkdir():
             file.close()
             indo_carpeta_archivo, i_c, encontrada, carpetas = find_carpeta_archivo(sblock, directorio, session_inciada, True)
             if not encontrada:
-                print("carpetas_restantes", carpetas)
                 for i, carpeta in enumerate(carpetas):
                     indo_carpeta_archivo, i_c = crear_mkdir_r(carpeta, indo_carpeta_archivo, i_c)
-
 
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
@@ -129,3 +124,26 @@ class mkdir():
         write_carpeta(sblock, inodo_carpeta, carpeta_root, session_inciada)
 
         print("Carpeta creada con exito")
+        if sblock.s_filesystem_type == 3:
+            print("entra a la escritura del journaling")
+            global comando_actual
+            print(comando_actual)
+            file = open(session_inciada.mounted.path, "rb+")
+            journaling_actual = structs.Journaling()
+            read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
+            for _ in range(sblock.s_inodes_count):
+                file.seek(read_journaling)
+                file.readinto(journaling_actual)
+
+                if(journaling_actual.fecha == 0):
+                    journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
+                    journaling_actual.fecha = int(time.time())
+                    print("Se escribe el journaling en mkfile")
+                    print(journaling_actual.comando)
+                    print(journaling_actual.fecha)
+                    file.seek(read_journaling)
+                    file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
+                    break
+
+                read_journaling += ctypes.sizeof(structs.Journaling)
+            file.close()

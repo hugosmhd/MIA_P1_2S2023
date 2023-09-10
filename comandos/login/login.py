@@ -85,8 +85,7 @@ class login():
         ctypes.memmove(ctypes.byref(mbr), contenido_binario, ctypes.sizeof(mbr))
         file.close()
         tipo, particion, i = exist_partition(mounted.path, mounted.name, mbr)
-        if tipo == 'PE':
-            authenticate(mounted, particion.part_start, user)
+        authenticate(mounted, mounted.part_start, user)
 
     def crear_logout(self):
         if session_inciada.is_logged:
