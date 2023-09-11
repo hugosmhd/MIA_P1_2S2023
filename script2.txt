@@ -1,112 +1,23 @@
-mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk/" -name=Partition1
-mkfs -type=full -id=931disco2
-login -user=root -pass=123 -id=931disco2
-login -user=sam1 -pass=123 -id=931disco2
-mkdir -path="/home"
-mkdir -path="/bin"
-mkdir -path="/etc"
-mkdir -path="/proc"
-mkdir -path="/dev"
-mkdir -path="/boot"
-mkdir -path="/media"
-mkdir -path="/run"
-mkdir -path="/snap"
-mkdir -path="/sys"
-mkdir -path="/usr"
-mkdir -path="/var"
-mkdir -path="/tmp"
-mkdir -path="/home1"
-mkdir -path="/bin1"
-mkdir -path="/etc1"
-mkdir -path="/proc1"
-mkdir -path="/dev1"
-mkdir -path="/boot1"
-mkdir -path="/media1"
-mkdir -path="/run1"
-mkdir -path="/snap1"
-mkdir -path="/sys1"
-mkdir -path="/usr1"
-mkdir -path="/var1"
-mkdir -path="/tmp1"
-mkdir -path="/home2"
-mkdir -path="/bin2"
-mkdir -path="/etc2"
-mkdir -path="/proc2"
-mkdir -path="/dev2"
-mkdir -path="/boot2"
-mkdir -path="/media2"
-mkdir -path="/run2"
-mkdir -path="/snap2"
-mkdir -path="/sys2"
-mkdir -path="/usr2"
-mkdir -path="/var2"
-mkdir -path="/tmp2"
-mkdir -path="/home3"
-mkdir -path="/bin3"
-mkdir -path="/etc3"
-mkdir -path="/proc3"
-mkdir -path="/dev3"
-mkdir -path="/boot3"
-mkdir -path="/media3"
-mkdir -path="/run3"
-mkdir -path="/snap3"
-mkdir -path="/sys3"
-mkdir -path="/usr3"
-mkdir -path="/var3"
-mkdir -path="/tmp3"
-mkdir -path="/home4"
-mkdir -path="/bin4"
-mkdir -path="/etc4"
-mkdir -path="/proc4"
-mkdir -path="/dev4"
-mkdir -path="/boot4"
-mkdir -path="/media4"
-mkdir -path="/run4"
-mkdir -path="/snap4"
-mkdir -path="/sys4"
-mkdir -path="/usr4"
-mkdir -path="/var4"
-mkdir -path="/tmp4"
-mkdir -path="/home5"
-mkdir -path="/bin5"
-mkdir -path="/etc5"
-mkdir -path="/proc5"
-mkdir -path="/dev5"
-mkdir -path="/boot5"
-mkdir -path="/media5"
-mkdir -path="/run5"
-mkdir -path="/snap5"
-mkdir -path="/sys5"
-mkdir -path="/usr5"
-mkdir -path="/var5"
-mkdir -path="/tmp5"
-mkdir -path="/home6"
-mkdir -path="/bin6"
-mkdir -path="/etc6"
-mkdir -path="/proc6"
-mkdir -path="/dev6"
-mkdir -path="/boot6"
-mkdir -path="/media6"
-mkdir -path="/run6"
-mkdir -path="/snap6"
-mkdir -path="/sys6"
-mkdir -path="/usr6"
-mkdir -path="/var6"
-mkdir -path="/tmp6"
-mkdir -path="/home7"
-mkdir -path="/bin7"
-mkdir -path="/etc7"
-mkdir -path="/proc7"
-mkdir -path="/dev7"
-mkdir -path="/boot7"
-mkdir -path="/media7"
-mkdir -path="/run7"
-mkdir -path="/snap7"
-mkdir -path="/sys7"
-mkdir -path="/usr7"
-mkdir -path="/var7"
-mkdir -path="/tmp7"
-mkdir -path="/snap5/hola5/hugosmhd" -r
-mkdir -path="/home2/hola2/hugosmhd" -r
-mkdir -path="/recuerdos/hola2/hugosmhd" -r
-rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree
+mkdisk -size=50 -unit=M -path=./home/archivos/Disco1.dsk -fit=FF
+mkdisk -unit=k -size=51200 -path=./home/archivos/Disco2.dsk -fit=BF
+mkdisk -size=10 -path=./home/archivos/Disco3.dsk
+mkdisk -size=51200 -path="./home/archivos/mis archivos/Disco4.dsk" -unit=K
+mkdisk -size=20 -path="./home/archivos/mis archivos/Disco5.dsk" -unit=M -fit=WF
+
+mkdisk -param=x -size=30 -path=./home/archivos/Disco.dsk
+
+rmdisk -path=./home/Disco3.dsk
+rmdisk -path=./home/archivos/Disco3.dsk
+rmdisk -path="./home/archivos/mis archivos/Disco4.dsk"
+
+fdisk -type=P -unit=K -name=Part1 -size=7680 -path=./home/archivos/Disco1.dsk -fit=BF
+fdisk -type=E -unit=K -name=Part2 -size=7680 -path=./home/archivos/Disco1.dsk -fit=FF
+fdisk -type=E -unit=K -name=Part3 -size=7680 -path=./home/archivos/Disco1.dsk -fit=WF
+fdisk -type=P -unit=K -name=Part3 -size=7680 -path=./home/archivos/Disco1.dsk -fit=WF
+fdisk -type=P -unit=K -name=Part4 -size=7680 -path=./home/archivos/Disco1.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part5 -size=1280 -path=./home/archivos/Disco1.dsk -fit=BF
+fdisk -type=L -unit=K -name=Part6 -size=1280 -path=./home/archivos/Disco1.dsk -fit=WF
+fdisk -type=L -unit=K -name=Part7 -size=1280 -path=./home/archivos/Disco1.dsk -fit=wf
+fdisk -type=L -unit=K -name=Part8 -size=1280 -path=./home/archivos/Disco1.dsk -fit=ff
+fdisk -type=L -unit=K -name=Part9 -size=1280 -path=./home/archivos/Disco1.dsk -fit=bf
+fdisk -type=L -unit=K -name=Part9 -size=1024 -path=./home/archivos/Disco1.dsk -fit=BF

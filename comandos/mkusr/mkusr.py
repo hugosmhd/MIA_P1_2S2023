@@ -17,7 +17,6 @@ class mkusr():
         self.tipo = 0
 
     def crear_mkusr(self):
-        print("MAKE MKUSR")
 
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
@@ -54,9 +53,7 @@ class mkusr():
         crear_grupo_usuario(sblock, data_user, self.user, 'U', user_actual)
 
         if sblock.s_filesystem_type == 3:
-            print("entra a la escritura del journaling")
             global comando_actual
-            print(comando_actual)
             file = open(session_inciada.mounted.path, "rb+")
             journaling_actual = structs.Journaling()
             read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
@@ -67,9 +64,6 @@ class mkusr():
                 if(journaling_actual.fecha == 0):
                     journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
                     journaling_actual.fecha = int(time.time())
-                    print("Se escribe el journaling en mkfile")
-                    print(journaling_actual.comando)
-                    print(journaling_actual.fecha)
                     file.seek(read_journaling)
                     file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
                     break
@@ -78,7 +72,6 @@ class mkusr():
             file.close()
 
     def crear_rmusr(self):
-        print("MAKE RMUSR, ESTE")
 
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
@@ -108,9 +101,7 @@ class mkusr():
         remove_grupo_usuario(sblock, data_user, user.user_name, 'U', 3)
 
         if sblock.s_filesystem_type == 3:
-            print("entra a la escritura del journaling")
             global comando_actual
-            print(comando_actual)
             file = open(session_inciada.mounted.path, "rb+")
             journaling_actual = structs.Journaling()
             read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
@@ -121,9 +112,6 @@ class mkusr():
                 if(journaling_actual.fecha == 0):
                     journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
                     journaling_actual.fecha = int(time.time())
-                    print("Se escribe el journaling en mkfile")
-                    print(journaling_actual.comando)
-                    print(journaling_actual.fecha)
                     file.seek(read_journaling)
                     file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
                     break

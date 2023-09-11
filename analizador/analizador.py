@@ -18,24 +18,27 @@ import structs
 def analizar(entrada, rep_journaling = False):
     # comando = entrada.lower()
     comando = entrada
-    global comando_actual
-    comando_actual.clear()
-    comando_actual.append(comando)
-    cmdentrada = comando.split(' ')
-    parametros = []
-    for i, param in enumerate(cmdentrada):
-        if(param == '#'):
-            continue
-        if(i == 0):
-            comando = param
-        else:
-            parametros.append(param)
-    instancia = identificar_parametros(comando, parametros, rep_journaling)
-    if rep_journaling:
-        return instancia
+    comando = comando.strip()
+    if not comando.startswith("#"):
+        global comando_actual
+        comando_actual.clear()
+        comando_actual.append(comando)
+        cmdentrada = comando.split(' ')
+        parametros = []
+        for i, param in enumerate(cmdentrada):
+            if(i == 0):
+                comando = param
+            else:
+                parametros.append(param)
+        instancia = identificar_parametros(comando, parametros, rep_journaling)
+        if rep_journaling:
+            return instancia
+    else:
+        print("Linea de comentario")
+        print(comando)
         
 def identificar_parametros(comando, parametros, rep_journaling):
-    comando.lower()
+    comando = comando.lower()
     if(comando == 'mkdisk'):
         analizar_mkdisk(parametros)
     elif(comando == 'rmdisk'):
@@ -96,8 +99,11 @@ def identificar_parametros(comando, parametros, rep_journaling):
         analizar_execute(parametros)
     elif(comando == 'pause'):
         analizar_pause()
+    elif(comando == '\n' or comando == '\t' or comando == '\r' or comando.strip() == ""):
+        pass
     else:
-        print("Comando no válido")
+        print(comando)
+        print(f"Comando no {comando} válido")
 
 def get_path(i, parametros):
     valor = ""
@@ -125,7 +131,6 @@ def get_path(i, parametros):
                 caracter = tmpParam[j]
                 valor = valor + caracter
 
-            # print("jaja", tmpParam, posicion)    
             if ya_no_entra and tmpParam[posicion] == '"' and concatenar:
                 comillas = True
                 ya_no_entra = False
@@ -170,43 +175,6 @@ def leer_script(path):
 
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script1.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script2.txt
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition2
-# fdisk -size=9 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3
-# fdisk -size=7 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition4
-# fdisk -size=5 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1 -type=E -fit=FF
-# fdisk -size=2 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Logic1 -type=L
-# fdisk -delete=full -name=Partition1 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
-# fdisk -delete=full -name=Partition2 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
-# fdisk -delete=full -name=Partition3 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
-# fdisk -delete=full -name=Partition4 -path=/home/hugosmh/Documentos/Discos/disco2.dsk
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1 -add=1 -unit=M
-# fdisk -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3 -add=1 -unit=M
-# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition2
-# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition3
-# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Extended1
-# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Logic1
-# unmount -id=931disco2
-# unmount -id=933disco2
-# unmount -id=934disco2
-# unmount -id=932disco2
-# mkgrp -name=usuarios
-# mkgrp -name=usuarioa
-# mkgrp -name=usuarioc
-# logout
-# login -user=roots -pass=123 -id=931disco2
-# mkdir -path=/home/user/docs -r
-# mkdisk -size=30 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk"
-# fdisk -size=3 -unit=M -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
-# mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
-# mkfs -type=full -id=931disco2
-# login -user=root -pass=123 -id=931disco2
-# mkfile -size=1827 -path=/b.txt
-# mkfile -size=1764 -path=/a.txt
-# mkfile -size=193 -path=/c.txt
-# mkfile -size=64 -path=/d.txt
-# mkfile -size=65 -path=/e.txt
-# mkfile -size=7 -path=/f.txt
 def analizar_mkdisk(parametros):
     disco = mkdisk()
     i = 0
@@ -220,6 +188,8 @@ def analizar_mkdisk(parametros):
             disco.fit = get_valor_parametro(param)
         elif param.find("-unit=") == 0:
             disco.unit = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkdisk': {param}")
 
@@ -233,6 +203,8 @@ def analizar_rmdisk(parametros):
         param = parametros[i]
         if param.find("-path=") == 0:
             disco.path, i = get_path(i, parametros)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'rmdisk': {param}")
 
@@ -261,6 +233,8 @@ def analizar_fdisk(parametros):
         elif param.find("-add=") == 0:
             particion.add = int(get_valor_parametro(param))
             particion.isAdd = True
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'fdisk': {valor}")
         i += 1
@@ -275,6 +249,8 @@ def analizar_mount(parametros):
             particion_montar.path, i = get_path(i, parametros)
         elif param.find("-name=") == 0:
             particion_montar.name = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mount': {valor}")
         i += 1
@@ -287,6 +263,8 @@ def analizar_unmount(parametros):
         param = parametros[i]
         if param.find("-id=") == 0:
             particion_desmontar.name = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'unmount': {valor}")
         i += 1
@@ -303,6 +281,8 @@ def analizar_mkfs(parametros):
             formatear_particion.type = get_valor_parametro(param)
         elif param.find("-fs=") == 0:
             formatear_particion.fs = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkfs': {valor}")
         i += 1
@@ -319,6 +299,8 @@ def analizar_login(parametros):
             autenticacion.user = get_valor_parametro(param)
         elif param.find("-pass=") == 0:
             autenticacion.password = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'login': {valor}")
         i += 1
@@ -330,6 +312,8 @@ def analizar_logout(parametros):
     while i < len(parametros):
         param = parametros[i]
         print(f"Parametro no aceptado en 'logout': {param}")
+        if param[0] == '#':
+            break
         i += 1
     autenticacion.crear_logout()
 
@@ -340,6 +324,8 @@ def analizar_mkgrp(parametros, rep_journaling = False):
         param = parametros[i]
         if param.find("-name=") == 0:
             new_grp.name = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
@@ -356,6 +342,8 @@ def analizar_rmgrp(parametros, rep_journaling = False):
         param = parametros[i]
         if param.find("-name=") == 0:
             new_grp.name = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
@@ -377,6 +365,8 @@ def analizar_mkusr(parametros, rep_journaling = False):
             new_user.password = get_valor_parametro(param)
         elif param.find("-grp=") == 0:
             new_user.grp = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkusr': {param}")
         i += 1
@@ -393,6 +383,8 @@ def analizar_rmusr(parametros, rep_journaling = False):
         param = parametros[i]
         if param.find("-user=") == 0:
             new_user.user = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkusr': {param}")
         i += 1
@@ -418,15 +410,12 @@ def analizar_mkfile(parametros, rep_journaling = False):
         elif param.find("-cout=") == 0:
             print(parametros)
             archivo.cout, i = get_path(i, parametros)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkfile': {param}")
         i += 1
-    # print("Termino bien")
-    # print(archivo.path)
-    # print(archivo.cout)
     if rep_journaling:
-        # print("archivo jajjaa")
-        # print("El tipo de instancia es yup:", str(type(archivo)))
         return archivo
     archivo.crear_mkfile()
 
@@ -439,6 +428,8 @@ def analizar_rename(parametros, rep_journaling):
             archivo_carpeta.path, i = get_path(i, parametros)
         elif param.find("-name=") == 0:
             archivo_carpeta.name, i = get_path(i, parametros)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'rename': {valor}")
         i += 1
@@ -457,6 +448,8 @@ def analizar_move(parametros, rep_journaling):
             archivo_carpeta.path, i = get_path(i, parametros)
         elif param.find("-destino=") == 0:
             archivo_carpeta.destino, i = get_path(i, parametros)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'move': {valor}")
         i += 1
@@ -476,6 +469,8 @@ def analizar_cat(parametros):
             file, i = get_path(i, parametros)
             archivo.files.append(file)
             num_file += 1
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'cat': {valor}, verifique que siga la secuencia")
         i += 1
@@ -490,6 +485,8 @@ def analizar_mkdir(parametros, rep_journaling):
             carpeta.path, i = get_path(i, parametros)
         elif param.find("-r") == 0:
             carpeta.recursivo = True
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'mkdir': {valor}")
         i += 1
@@ -506,6 +503,8 @@ def analizar_recovery(parametros):
         param = parametros[i]
         if param.find("-id=") == 0:
             recuperacion.id = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'recovery': {valor}")
         i += 1
@@ -518,6 +517,8 @@ def analizar_loss(parametros):
         param = parametros[i]
         if param.find("-id=") == 0:
             perder_datos.id = get_valor_parametro(param)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'loss': {valor}")
         i += 1
@@ -539,16 +540,20 @@ def analizar_rep(parametros):
             reporte.id = get_valor_parametro(param)
         elif param.find("-ruta=") == 0:
             reporte.ruta, i = get_path(i, parametros)
+        elif param[0] == '#':
+            break
         else:
             print(f"Parametro no aceptado en 'rep': {valor}")
         i += 1
     reporte.crear_rep()
-# execute -path=execute.txt
+
 def analizar_execute(parametros):
     i = 0
     while i < len(parametros):
         param = parametros[i]
         if param.find("-path=") == 0:
             path, i = get_path(i, parametros)
+        elif param[0] == '#':
+            break
         i += 1
     leer_script(path)

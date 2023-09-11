@@ -16,10 +16,6 @@ class rename():
         self.name = ""
 
     def crear_rename(self):
-        print("rename")
-        print(self.path)
-        print(self.name)
-
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
         file.seek(session_inciada.mounted.part_start)
@@ -34,9 +30,7 @@ class rename():
         file.close()
 
         if sblock.s_filesystem_type == 3:
-            print("entra a la escritura del journaling")
             global comando_actual
-            print(comando_actual)
             file = open(session_inciada.mounted.path, "rb+")
             journaling_actual = structs.Journaling()
             read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
@@ -47,14 +41,9 @@ class rename():
                 if(journaling_actual.fecha == 0):
                     journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
                     journaling_actual.fecha = int(time.time())
-                    print("Se escribe el journaling en mkfile")
-                    print(journaling_actual.comando)
-                    print(journaling_actual.fecha)
                     file.seek(read_journaling)
                     file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
                     break
 
                 read_journaling += ctypes.sizeof(structs.Journaling)
             file.close()
-        # print(bloque_carpeta.b_content[2].b_name.decode())
-        # print(bloque_carpeta.b_content[2].b_inodo)

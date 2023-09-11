@@ -16,11 +16,6 @@ class move():
         self.destino = ""
 
     def crear_move(self):
-        print("move")
-        print(self.path)
-        print(self.destino)
-
-
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
         file.seek(session_inciada.mounted.part_start)
@@ -32,15 +27,8 @@ class move():
 
         # Carpeta o Archivo que se desea mover
         indo_origen, i_o = find_carpeta(sblock, self.path, session_inciada)
-        print("i_d", i_d)
-        print("i_o", i_o)
         bloque_carpeta, i, write_block = find_url(sblock, self.path, session_inciada)
-        print("limpiar_origen:", i)
         name = bloque_carpeta.b_content[i].b_name
-        print(name)
-        print(f"Escribir en {write_block}")
-        # print(i_o)
-        # print(i_d)
         file_link_move(sblock, name, session_inciada, indo_destino, i_o, i_d)
 
         bloque_carpeta.b_content[i].b_inodo = -1
@@ -52,9 +40,7 @@ class move():
 
 
         if sblock.s_filesystem_type == 3:
-            print("entra a la escritura del journaling")
             global comando_actual
-            print(comando_actual)
             file = open(session_inciada.mounted.path, "rb+")
             journaling_actual = structs.Journaling()
             read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
@@ -65,9 +51,6 @@ class move():
                 if(journaling_actual.fecha == 0):
                     journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
                     journaling_actual.fecha = int(time.time())
-                    print("Se escribe el journaling en mkgrp")
-                    print(journaling_actual.comando)
-                    print(journaling_actual.fecha)
                     file.seek(read_journaling)
                     file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
                     break

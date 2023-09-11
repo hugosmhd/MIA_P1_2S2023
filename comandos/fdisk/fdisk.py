@@ -57,7 +57,6 @@ def imprimir_particiones(path):
 
                 while True:
                     if tmp.part_next == -1:
-                        print("Rompeeeeeee")
                         break
                     
                     print("**** EBR ****")
@@ -78,7 +77,6 @@ def imprimir_particiones(path):
 def exist_partition(path, name, mbr):
     try:
         for i, particion in enumerate(mbr.mbr_partitions):
-            print(particion.part_name.decode())
             if(name == particion.part_name.decode()):
                 return 'PE', particion, i
             if particion.part_type == b'E':
@@ -86,20 +84,15 @@ def exist_partition(path, name, mbr):
                 file = open(path, 'rb')
                 file.seek(particion.part_start)
                 file.readinto(tmp)
-                # contenido_binario = file.read(ctypes.sizeof(tmp))
-                # ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
 
                 while True:
                     if tmp.part_next == -1:
                         break
-                    print(tmp.part_name)
                     if name == tmp.part_name.decode():
                         file.close()
                         return 'L', tmp, i
                     file.seek(tmp.part_next)
                     file.readinto(tmp)
-                    # contenido_binario = file.read(ctypes.sizeof(tmp))
-                    # ctypes.memmove(ctypes.byref(tmp), contenido_binario, ctypes.sizeof(tmp))
                 file.close()
         return False, False, False
 
@@ -243,7 +236,6 @@ def eliminar_particion(name, path):
             print("No existe ninguna particion con ese nombre")
             return
 
-        print("Puede que sea lógica")
         tmp = structs.EBR()
         file = open(path, 'rb+')
         file.seek(extended.part_start)
@@ -260,7 +252,7 @@ def eliminar_particion(name, path):
                 break
             
             if tmp.part_name.decode() == name:
-                print("Se encontró la partición a eliminar")
+                # print("Se encontró la partición a eliminar")
                 if tmp.part_start == extended.part_start:
                     tmp.part_status = b'0'
                     tmp.part_name = b'\0'*16
@@ -634,19 +626,7 @@ class fdisk:
         self.add = 0
 
     def crear_fdisk(self):
-        # print("FDISK")
         self.unit = self.unit.lower()
-        # print("UNIT", self.unit)
-        # print("TYPE", self.type)
-        # print("FIT", self.fit)
-        # print("ISADD", self.isAdd)
-        # print("SIZE", self.size)
-        # print("PATH", self.path)
-        # print("NAME", self.name)
-        # print("SUPRIM", self.suprim)
-        # print("ADD", self.add)
-
-
 
         size = 0
         add = 0

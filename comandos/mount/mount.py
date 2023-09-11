@@ -16,7 +16,7 @@ def get_number_mount(path, name):
 
 def recorrer_montadas():
     for montada in particiones_montadas:
-        print(f"\t> Ruta: {montada.path},  Particion: {montada.name},  Id: {montada.id}")
+        print(f"\t-- Ruta: {montada.path},  Particion: {montada.name},  Id: {montada.id}")
 
 def find_mounted(id_):
     for montada in particiones_montadas:

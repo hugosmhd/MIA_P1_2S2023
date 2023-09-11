@@ -30,7 +30,6 @@ def authenticate(mounted, part_start, user):
         print(f"Error: Ruta especificada '/user.txt' no existe")
         return
     usuarios = join_file(sblock, inodo_archivo, mounted.path)
-    print(usuarios)
     lineas = usuarios.split("\n")
 
     for i, linea in enumerate(lineas):
@@ -44,13 +43,10 @@ def authenticate(mounted, part_start, user):
             users.append(user_actual)
             if atributos[0] != "0":
                 if atributos[3] == user.user and atributos[4] == user.password:
-                    print("Usuario encontrado")
+                    # print("Usuario encontrado")
                     session_inciada.credenciales = user
                     session_inciada.mounted = mounted
                     session_inciada.is_logged = True
-                    print(user.user)
-                    print(user.password)
-                    print(user.id)
             else:
                 if atributos[3] == user.user and atributos[4] == user.password:
                     print("Error el usuario que busca ha sido eliminado.")

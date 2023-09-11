@@ -47,10 +47,10 @@ class rep:
     
     def reporte_mbr(self):
         print("HACER REPORTE MBR")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
+        # print(self.name)
+        # print(self.path)
+        # print(self.id)
+        # print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -141,14 +141,9 @@ class rep:
         dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
-        print(dot)
 
     def reporte_disk(self):
         print("HACER REPORTE DISK")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -295,15 +290,10 @@ class rep:
 
         dot += '</table>>];\n'
         dot += '}'
-        print(dot)
         pyperclip.copy(dot)
         
     def reporte_inode(self):
         print("HACER REPORTE INODE")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -372,7 +362,6 @@ class rep:
                 dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[(i+2)+(i*2)]}</FONT></TD>\n"
                 dot += "</TR>\n"
                 
-                # print(i)
             dot += "    </TABLE>\n"
             dot += "</TD></TR>\n"
             dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_type  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_type.decode()}</FONT></TD></TR>\n"
@@ -395,15 +384,10 @@ class rep:
         file.close()
         dot += '</TABLE>>];\n'
         dot += '}'
-        print(dot)
         pyperclip.copy(dot)
 
     def reporte_block(self):
         print("HACER REPORTE BLOCK")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -442,8 +426,6 @@ class rep:
             if total_activos == 0 or total_activos == 5:
                 dot += "<TR>\n"
             read_on_b = sblock.s_block_start + (sblock.s_block_size * cantidad_bloques)
-            # print("tipo de bloque", cantidad_bloques)
-            # print(bit)
             if bit == b'd':
                 bloque_carpeta = structs.BloqueCarpeta()
                 file.seek(read_on_b)
@@ -486,15 +468,10 @@ class rep:
         file.close()
         dot += '</TABLE>>];\n'
         dot += '}'
-        # print(dot)
         pyperclip.copy(dot)
 
     def reporte_bm_inode(self):
         print("HACER REPORTE BM INODE")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -545,10 +522,6 @@ class rep:
     
     def reporte_bm_block(self):
         print("HACER REPORTE BM BLOCK")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -599,10 +572,6 @@ class rep:
 
     def reporte_tree(self):
         print("HACER REPORTE TREE")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -785,7 +754,7 @@ class rep:
         file.close()
         dot += enlaces
         dot += '}'
-        print(dot)
+
         with open("./rep.dot", "w") as fich:
             fich.write(dot)
             fich.close()
@@ -798,10 +767,6 @@ class rep:
 
     def reporte_sb(self):
         print("HACER REPORTE SB")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -850,15 +815,10 @@ class rep:
         file.close()
         dot += '</TABLE>>];\n'
         dot += '}'
-        print(dot)
         pyperclip.copy(dot)
     
     def reporte_file(self):
         print("HACER REPORTE FILE")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -874,7 +834,9 @@ class rep:
         file.seek(mounted.part_start)
         file.readinto(sblock)
 
-        # session_inciada.mounted = mounted
+        # Hay que probar
+        nuevo_mounted = session_inciada.mounted
+        session_inciada.mounted = mounted
         directorio, archivo_ = os.path.split(self.ruta)
         indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
         if(i == -1):
@@ -882,13 +844,12 @@ class rep:
             return
         inodo_archivo, i_f = find_file(sblock, self.ruta, session_inciada.mounted.path, indo_carpeta_archivo)
         if(i_f == -1):
-            print("Dos")
             print(f"Error: Ruta especificada '{self.ruta}' no existe")
             return
-        # print(inodo_archivo.i_s)
+
+        session_inciada.mounted = nuevo_mounted
+
         txt = join_file(sblock, inodo_archivo, mounted.path)
-        print("JOIN FILE MKFILE")
-        print(txt)
 
         file.close()
         archivo = open("mi_archivo3.txt", "w")
@@ -897,10 +858,6 @@ class rep:
 
     def reporte_journaling(self):
         print("HACER REPORTE JOURNALING")
-        print(self.name)
-        print(self.path)
-        print(self.id)
-        print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -920,7 +877,6 @@ class rep:
             file = open(mounted.path, "rb+")
             journaling_actual = structs.Journaling()
             read_journaling = mounted.part_start + ctypes.sizeof(structs.SuperBloque)
-            print("Recorriendo Journaling")
             dot = 'digraph G {\n'
             dot += f'label="Reporte del Journaling";\n'
             dot += 'labelloc=top;\n'
@@ -940,12 +896,9 @@ class rep:
 
                 if(journaling_actual.fecha == 0):
                     break
-                # print(journaling_actual.comando)
                 instancia = analizador.analizar(journaling_actual.comando.decode(), True)
-                # print("El tipo de instancia es:", str(type(instancia)))
                 fecha_hora = datetime.fromtimestamp(journaling_actual.fecha)
                 fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-                # print(fecha_formateada)
                 if isinstance(instancia, mkfile):
                     dot += f"<TR>\n"
                     dot += f"    <TD><FONT POINT-SIZE='18'><b>mkfile</b></FONT></TD>\n"
@@ -1028,5 +981,4 @@ class rep:
             file.close()
             dot += '</TABLE>>];\n'
             dot += '}'
-            print(dot)
             pyperclip.copy(dot)

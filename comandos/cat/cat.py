@@ -15,8 +15,6 @@ class cat():
         self.files = []
 
     def crear_cat(self):
-        # print("Crear cat")
-        # print(self.files)
 
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
@@ -26,7 +24,6 @@ class cat():
 
         for archivo in self.files:
             directorio, archivo_ = os.path.split(archivo)
-            # print("jaaa", directorio)
             indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
             if(i == -1):
                 print(f"Error: Ruta especificada '{directorio}' no existe")
@@ -36,7 +33,6 @@ class cat():
                 print(f"Error: Ruta especificada '{archivo}' no existe")
                 return
             txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
-            print(len(txt))
-            print("JOIN FILE MKFILE CAT")
+            # print("JOIN FILE MKFILE CAT")
             print(txt)
             pyperclip.copy(txt)

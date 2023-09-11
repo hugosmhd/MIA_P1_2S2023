@@ -20,8 +20,6 @@ class mkfile():
         self.cout = ""
 
     def crear_mkfile(self):
-        print("mkfile")
-        print(self.size)
 
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
@@ -36,7 +34,6 @@ class mkfile():
             file.close()
             indo_carpeta_archivo, i_c, encontrada, carpetas = find_carpeta_archivo(sblock, directorio, session_inciada, True)
             if not encontrada:
-                print("carpetas_restantes", carpetas)
                 for i, carpeta in enumerate(carpetas):
                     indo_carpeta_archivo, i_c = crear_mkdir_r(carpeta, indo_carpeta_archivo, i_c)
 
@@ -65,7 +62,6 @@ class mkfile():
                     continue
                 num = chr(ord(num) + 1)
 
-        # print(content)
         sblock = structs.SuperBloque()
         file = open(session_inciada.mounted.path, "rb+")
         file.seek(session_inciada.mounted.part_start)
@@ -109,21 +105,16 @@ class mkfile():
         file.readinto(sblock)
         file.close()
         write_file(sblock, inodo_file, content, session_inciada)
-        # print(self.path)
         inodo_archivo, i_f = find_file(sblock, self.path, session_inciada.mounted.path, indo_carpeta_archivo)
         if(i_f == -1):
             print(f"Error: Ruta especificada '{self.path}' no existe")
             return
         # print(inodo_archivo.i_s)
         txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
-        print("JOIN FILE MKFILE")
-        print(txt)
-        pyperclip.copy(txt)
+        # pyperclip.copy(txt)
 
         if sblock.s_filesystem_type == 3:
-            print("entra a la escritura del journaling")
             global comando_actual
-            print(comando_actual)
             file = open(session_inciada.mounted.path, "rb+")
             journaling_actual = structs.Journaling()
             read_journaling = session_inciada.mounted.part_start + ctypes.sizeof(structs.SuperBloque)
@@ -134,9 +125,6 @@ class mkfile():
                 if(journaling_actual.fecha == 0):
                     journaling_actual.comando = comando_actual[0].encode('utf-8')[:100].ljust(100, b'\0')
                     journaling_actual.fecha = int(time.time())
-                    print("Se escribe el journaling en mkfile")
-                    print(journaling_actual.comando)
-                    print(journaling_actual.fecha)
                     file.seek(read_journaling)
                     file.write(ctypes.string_at(ctypes.byref(journaling_actual), ctypes.sizeof(journaling_actual)))
                     break

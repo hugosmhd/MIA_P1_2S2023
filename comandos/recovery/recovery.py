@@ -17,9 +17,6 @@ class recovery():
         self.id = ""
 
     def crear_recovery(self):
-        print("recovery")
-        print(self.id)
-
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
             return
@@ -29,7 +26,6 @@ class recovery():
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        # print(content)
         super_bloque = structs.SuperBloque()
         file = open(mounted.path, "rb+")
         file.seek(mounted.part_start)
@@ -77,7 +73,6 @@ class recovery():
         inodo_file_user.i_block[0] = 1
 
         file_user = structs.BloqueArchivo()
-        # print("Peso BloqueArchivo", ctypes.sizeof(file_user))
         file_user.b_content = data.encode('utf-8')[:64].ljust(64, b'\0')
 
         file.seek(super_bloque.s_bm_inode_start)
@@ -117,7 +112,6 @@ class recovery():
         users.clear()
         groups.clear()
         # session_inciada.is_recovery = True
-        print("Recuperaaaaaaaaaaaaaaaaaaaaaaaaaaaar")
         for _ in range(super_bloque.s_inodes_count):
             file.seek(read_journaling)
             file.readinto(journaling_actual)
@@ -125,7 +119,6 @@ class recovery():
             if(journaling_actual.fecha == 0):
                 break
 
-            print(journaling_actual.comando.decode())
             analizador.analizar(journaling_actual.comando.decode())
             read_journaling += ctypes.sizeof(structs.Journaling)
         
@@ -134,16 +127,12 @@ class recovery():
         file.seek(mounted.part_start)
         file.write(ctypes.string_at(ctypes.byref(super_bloque), ctypes.sizeof(super_bloque)))
         file.close()
-        # print("Se recuperan los grupos")
         new_users = usuarios.copy()
         new_groups = grupos.copy()
         # user = new_users
         # groups = new_groups
     
     def crear_loss(self):
-        print("loss")
-        print(self.id)
-
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
             return
