@@ -1,0 +1,1866 @@
+digraph G {
+overlap=false;ranksep=1;graph [
+    fontname="Helvetica,Arial,sans-serif"
+    rankdir = "LR"
+]
+node [
+    fontname="Helvetica,Arial,sans-serif"
+    shape=record
+    style=filled
+    fillcolor=gray95
+]
+inodo_0 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 0</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:34</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:34</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:34</td> </tr>
+        <tr> <td port='a_u0'>ap1</td><td port='a_s0'>0</td> </tr>
+        <tr> <td port='a_u5'>ap2</td><td port='a_s5'>5</td> </tr>
+        <tr> <td port='a_u10'>ap3</td><td port='a_s10'>10</td> </tr>
+        <tr> <td port='a_u15'>ap4</td><td port='a_s15'>15</td> </tr>
+        <tr> <td port='a_u20'>ap5</td><td port='a_s20'>20</td> </tr>
+        <tr> <td port='a_u25'>ap6</td><td port='a_s25'>25</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_1 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f4d03f'> <b>Inodo 1</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>147</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>1</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:34</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:34</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:34</td> </tr>
+        <tr> <td port='a_u1'>ap1</td><td port='a_s1'>1</td> </tr>
+        <tr> <td port='a_u2'>ap2</td><td port='a_s2'>2</td> </tr>
+        <tr> <td port='a_u3'>ap3</td><td port='a_s3'>3</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_2 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 2</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u4'>ap1</td><td port='a_s4'>4</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_3 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 3</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u6'>ap1</td><td port='a_s6'>6</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_4 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 4</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u7'>ap1</td><td port='a_s7'>7</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_5 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 5</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u8'>ap1</td><td port='a_s8'>8</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_6 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 6</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u9'>ap1</td><td port='a_s9'>9</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_7 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 7</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u11'>ap1</td><td port='a_s11'>11</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_8 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 8</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u12'>ap1</td><td port='a_s12'>12</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_9 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 9</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u13'>ap1</td><td port='a_s13'>13</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_10 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 10</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u14'>ap1</td><td port='a_s14'>14</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_11 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 11</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u16'>ap1</td><td port='a_s16'>16</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_12 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 12</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u17'>ap1</td><td port='a_s17'>17</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_13 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 13</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u18'>ap1</td><td port='a_s18'>18</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_14 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 14</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u19'>ap1</td><td port='a_s19'>19</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_15 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 15</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u21'>ap1</td><td port='a_s21'>21</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_16 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 16</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u22'>ap1</td><td port='a_s22'>22</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_17 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 17</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u23'>ap1</td><td port='a_s23'>23</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_18 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 18</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u24'>ap1</td><td port='a_s24'>24</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_19 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 19</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u26'>ap1</td><td port='a_s26'>26</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_20 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 20</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u27'>ap1</td><td port='a_s27'>27</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_21 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 21</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u28'>ap1</td><td port='a_s28'>28</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_22 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 22</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u29'>ap1</td><td port='a_s29'>29</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_23 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 23</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u30'>ap1</td><td port='a_s30'>30</td> </tr>
+        <tr> <td port='a_u39'>ap2</td><td port='a_s39'>39</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_24 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 24</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u31'>ap1</td><td port='a_s31'>31</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_25 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 25</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u32'>ap1</td><td port='a_s32'>32</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_26 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 26</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u33'>ap1</td><td port='a_s33'>33</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_27 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 27</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u34'>ap1</td><td port='a_s34'>34</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_28 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 28</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u35'>ap1</td><td port='a_s35'>35</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_29 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 29</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:41</td> </tr>
+        <tr> <td port='a_u36'>ap1</td><td port='a_s36'>36</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_30 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f4d03f'> <b>Inodo 30</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>75</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>1</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td port='a_u37'>ap1</td><td port='a_s37'>37</td> </tr>
+        <tr> <td port='a_u38'>ap2</td><td port='a_s38'>38</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_31 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f4d03f'> <b>Inodo 31</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>1700</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>1</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td port='a_u40'>ap1</td><td port='a_s40'>40</td> </tr>
+        <tr> <td port='a_u41'>ap2</td><td port='a_s41'>41</td> </tr>
+        <tr> <td port='a_u42'>ap3</td><td port='a_s42'>42</td> </tr>
+        <tr> <td port='a_u43'>ap4</td><td port='a_s43'>43</td> </tr>
+        <tr> <td port='a_u44'>ap5</td><td port='a_s44'>44</td> </tr>
+        <tr> <td port='a_u45'>ap6</td><td port='a_s45'>45</td> </tr>
+        <tr> <td port='a_u46'>ap7</td><td port='a_s46'>46</td> </tr>
+        <tr> <td port='a_u47'>ap8</td><td port='a_s47'>47</td> </tr>
+        <tr> <td port='a_u48'>ap9</td><td port='a_s48'>48</td> </tr>
+        <tr> <td port='a_u49'>ap10</td><td port='a_s49'>49</td> </tr>
+        <tr> <td port='a_u50'>ap11</td><td port='a_s50'>50</td> </tr>
+        <tr> <td port='a_u51'>ap12</td><td port='a_s51'>51</td> </tr>
+        <tr> <td port='a_u52'>ap13</td><td port='a_s52'>52</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_32 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f4d03f'> <b>Inodo 32</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>1</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>ap1</td><td>-1</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_33 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 33</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td port='a_u68'>ap1</td><td port='a_s68'>68</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_34 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 34</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td port='a_u69'>ap1</td><td port='a_s69'>69</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_35 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f1948a'> <b>Inodo 35</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td port='a_u70'>ap1</td><td port='a_s70'>70</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+inodo_36 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='i_e' colspan='2' BGCOLOR='#f4d03f'> <b>Inodo 36</b> </td> </tr>
+        <tr> <td>i_uid</td><td>1</td> </tr>
+        <tr> <td>i_gid</td><td port='ss1'>1</td></tr>
+        <tr> <td>i_s</td><td port='ss2'>0</td> </tr>
+        <tr> <td>i_type</td><td port='ss2'>1</td> </tr>
+        <tr> <td>i_perm</td><td port='ss2'>664</td> </tr>
+        <tr> <td>i_atime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>i_ctime</td><td port='ss3'>12-09-2023 09:18:42</td> </tr>
+        <tr> <td>ap1</td><td>-1</td> </tr>
+        <tr> <td>ap2</td><td>-1</td> </tr>
+        <tr> <td>ap3</td><td>-1</td> </tr>
+        <tr> <td>ap4</td><td>-1</td> </tr>
+        <tr> <td>ap5</td><td>-1</td> </tr>
+        <tr> <td>ap6</td><td>-1</td> </tr>
+        <tr> <td>ap7</td><td>-1</td> </tr>
+        <tr> <td>ap8</td><td>-1</td> </tr>
+        <tr> <td>ap9</td><td>-1</td> </tr>
+        <tr> <td>ap10</td><td>-1</td> </tr>
+        <tr> <td>ap11</td><td>-1</td> </tr>
+        <tr> <td>ap12</td><td>-1</td> </tr>
+        <tr> <td>ap13</td><td>-1</td> </tr>
+        <tr> <td>ap14</td><td>-1</td> </tr>
+        <tr> <td>ap15</td><td>-1</td> </tr>
+    </table>>
+]
+bloque_0 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 0</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u1'><font point-size='15'>  user.txt  </font></td><td port='a_s1'><font point-size='15'>1</font></td></tr>
+    <tr><td port='a_u2'><font point-size='15'>  bin  </font></td><td port='a_s2'><font point-size='15'>2</font></td></tr>
+    </table>>
+]
+bloque_1 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 1</b>   </td> </tr>
+    <tr><td><font point-size='15'>  1,G,root
+1,U,roo<br/>t,root,123
+2,G,u<br/>suarios
+3,G,adm
+<br/>0,G,mail
+5,G,new<br/>  </font></td></tr>
+    </table>>
+]
+bloque_2 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 2</b>   </td> </tr>
+    <tr><td><font point-size='15'>  s
+6,G,sys
+2,U,ro<br/>ot,usuario1,pass<br/>word
+3,U,usuario<br/>s,user1,abc
+0,U,<br/>  </font></td></tr>
+    </table>>
+]
+bloque_3 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 3</b>   </td> </tr>
+    <tr><td><font point-size='15'>  usuarios,user2,a<br/>bc
+<br/>  </font></td></tr>
+    </table>>
+]
+bloque_4 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 4</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_5 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 5</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td port='a_u3'><font point-size='15'>  boot  </font></td><td port='a_s3'><font point-size='15'>3</font></td></tr>
+    <tr><td port='a_u4'><font point-size='15'>  cdrom  </font></td><td port='a_s4'><font point-size='15'>4</font></td></tr>
+    <tr><td port='a_u5'><font point-size='15'>  dev  </font></td><td port='a_s5'><font point-size='15'>5</font></td></tr>
+    <tr><td port='a_u6'><font point-size='15'>  etc  </font></td><td port='a_s6'><font point-size='15'>6</font></td></tr>
+    </table>>
+]
+bloque_6 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 6</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_7 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 7</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_8 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 8</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_9 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 9</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_10 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 10</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td port='a_u7'><font point-size='15'>  home  </font></td><td port='a_s7'><font point-size='15'>7</font></td></tr>
+    <tr><td port='a_u8'><font point-size='15'>  lib  </font></td><td port='a_s8'><font point-size='15'>8</font></td></tr>
+    <tr><td port='a_u9'><font point-size='15'>  lib64  </font></td><td port='a_s9'><font point-size='15'>9</font></td></tr>
+    <tr><td port='a_u10'><font point-size='15'>  media  </font></td><td port='a_s10'><font point-size='15'>10</font></td></tr>
+    </table>>
+]
+bloque_11 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 11</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u21'><font point-size='15'>  archivos  </font></td><td port='a_s21'><font point-size='15'>21</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_12 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 12</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_13 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 13</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_14 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 14</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_15 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 15</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td port='a_u11'><font point-size='15'>  mnt  </font></td><td port='a_s11'><font point-size='15'>11</font></td></tr>
+    <tr><td port='a_u12'><font point-size='15'>  opt  </font></td><td port='a_s12'><font point-size='15'>12</font></td></tr>
+    <tr><td port='a_u13'><font point-size='15'>  proc  </font></td><td port='a_s13'><font point-size='15'>13</font></td></tr>
+    <tr><td port='a_u14'><font point-size='15'>  run  </font></td><td port='a_s14'><font point-size='15'>14</font></td></tr>
+    </table>>
+]
+bloque_16 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 16</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_17 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 17</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_18 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 18</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_19 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 19</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_20 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 20</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td port='a_u15'><font point-size='15'>  sbin  </font></td><td port='a_s15'><font point-size='15'>15</font></td></tr>
+    <tr><td port='a_u16'><font point-size='15'>  snap  </font></td><td port='a_s16'><font point-size='15'>16</font></td></tr>
+    <tr><td port='a_u17'><font point-size='15'>  srv  </font></td><td port='a_s17'><font point-size='15'>17</font></td></tr>
+    <tr><td port='a_u18'><font point-size='15'>  sys  </font></td><td port='a_s18'><font point-size='15'>18</font></td></tr>
+    </table>>
+]
+bloque_21 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 21</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_22 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 22</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_23 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 23</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_24 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 24</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_25 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 25</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td port='a_u19'><font point-size='15'>  tmp  </font></td><td port='a_s19'><font point-size='15'>19</font></td></tr>
+    <tr><td port='a_u20'><font point-size='15'>  var  </font></td><td port='a_s20'><font point-size='15'>20</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_26 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 26</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_27 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 27</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_28 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 28</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u22'><font point-size='15'>  user  </font></td><td port='a_s22'><font point-size='15'>22</font></td></tr>
+    <tr><td port='a_u25'><font point-size='15'>  carpeta1  </font></td><td port='a_s25'><font point-size='15'>25</font></td></tr>
+    </table>>
+]
+bloque_29 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 29</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u23'><font point-size='15'>  docs  </font></td><td port='a_s23'><font point-size='15'>23</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_30 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 30</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u24'><font point-size='15'>  usac  </font></td><td port='a_s24'><font point-size='15'>24</font></td></tr>
+    <tr><td port='a_u30'><font point-size='15'>  Tarea1.txt  </font></td><td port='a_s30'><font point-size='15'>30</font></td></tr>
+    </table>>
+]
+bloque_31 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 31</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u33'><font point-size='15'>  archivos  </font></td><td port='a_s33'><font point-size='15'>33</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_32 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 32</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u26'><font point-size='15'>  carpeta2  </font></td><td port='a_s26'><font point-size='15'>26</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_33 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 33</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u27'><font point-size='15'>  carpeta3  </font></td><td port='a_s27'><font point-size='15'>27</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_34 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 34</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u28'><font point-size='15'>  carpeta4  </font></td><td port='a_s28'><font point-size='15'>28</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_35 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 35</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u29'><font point-size='15'>  carpeta5  </font></td><td port='a_s29'><font point-size='15'>29</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_36 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 36</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_37 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 37</b>   </td> </tr>
+    <tr><td><font point-size='15'>  0123456789012345<br/>6789012345678901<br/>2345678901234567<br/>890123456789012<br/>  </font></td></tr>
+    </table>>
+]
+bloque_38 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 38</b>   </td> </tr>
+    <tr><td><font point-size='15'>  345678901234<br/>  </font></td></tr>
+    </table>>
+]
+bloque_39 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 39</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td port='a_u31'><font point-size='15'>  Tarea2.txt  </font></td><td port='a_s31'><font point-size='15'>31</font></td></tr>
+    <tr><td port='a_u32'><font point-size='15'>  Tarea3.txt  </font></td><td port='a_s32'><font point-size='15'>32</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_40 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 40</b>   </td> </tr>
+    <tr><td><font point-size='15'>  0123456789012345<br/>6789012345678901<br/>2345678901234567<br/>890123456789012<br/>  </font></td></tr>
+    </table>>
+]
+bloque_41 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 41</b>   </td> </tr>
+    <tr><td><font point-size='15'>  3456789012345678<br/>9012345678901234<br/>5678901234567890<br/>123456789012345<br/>  </font></td></tr>
+    </table>>
+]
+bloque_42 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 42</b>   </td> </tr>
+    <tr><td><font point-size='15'>  6789012345678901<br/>2345678901234567<br/>8901234567890123<br/>456789012345678<br/>  </font></td></tr>
+    </table>>
+]
+bloque_43 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 43</b>   </td> </tr>
+    <tr><td><font point-size='15'>  9012345678901234<br/>5678901234567890<br/>1234567890123456<br/>789012345678901<br/>  </font></td></tr>
+    </table>>
+]
+bloque_44 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 44</b>   </td> </tr>
+    <tr><td><font point-size='15'>  2345678901234567<br/>8901234567890123<br/>4567890123456789<br/>012345678901234<br/>  </font></td></tr>
+    </table>>
+]
+bloque_45 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 45</b>   </td> </tr>
+    <tr><td><font point-size='15'>  5678901234567890<br/>1234567890123456<br/>7890123456789012<br/>345678901234567<br/>  </font></td></tr>
+    </table>>
+]
+bloque_46 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 46</b>   </td> </tr>
+    <tr><td><font point-size='15'>  8901234567890123<br/>4567890123456789<br/>0123456789012345<br/>678901234567890<br/>  </font></td></tr>
+    </table>>
+]
+bloque_47 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 47</b>   </td> </tr>
+    <tr><td><font point-size='15'>  1234567890123456<br/>7890123456789012<br/>3456789012345678<br/>901234567890123<br/>  </font></td></tr>
+    </table>>
+]
+bloque_48 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 48</b>   </td> </tr>
+    <tr><td><font point-size='15'>  4567890123456789<br/>0123456789012345<br/>6789012345678901<br/>234567890123456<br/>  </font></td></tr>
+    </table>>
+]
+bloque_49 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 49</b>   </td> </tr>
+    <tr><td><font point-size='15'>  7890123456789012<br/>3456789012345678<br/>9012345678901234<br/>567890123456789<br/>  </font></td></tr>
+    </table>>
+]
+bloque_50 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 50</b>   </td> </tr>
+    <tr><td><font point-size='15'>  0123456789012345<br/>6789012345678901<br/>2345678901234567<br/>890123456789012<br/>  </font></td></tr>
+    </table>>
+]
+bloque_51 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 51</b>   </td> </tr>
+    <tr><td><font point-size='15'>  3456789012345678<br/>9012345678901234<br/>5678901234567890<br/>123456789012345<br/>  </font></td></tr>
+    </table>>
+]
+bloque_52 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#77dd77'> <b>  Bloque Indirecto S 52</b>   </td> </tr>
+    <tr><td port='a_u53'><font point-size='15'>  b_pointer[0]</font></td><td port='a_s53'><font point-size='15'>53</font></td></tr>
+    <tr><td port='a_u54'><font point-size='15'>  b_pointer[1]</font></td><td port='a_s54'><font point-size='15'>54</font></td></tr>
+    <tr><td port='a_u55'><font point-size='15'>  b_pointer[2]</font></td><td port='a_s55'><font point-size='15'>55</font></td></tr>
+    <tr><td port='a_u56'><font point-size='15'>  b_pointer[3]</font></td><td port='a_s56'><font point-size='15'>56</font></td></tr>
+    <tr><td port='a_u57'><font point-size='15'>  b_pointer[4]</font></td><td port='a_s57'><font point-size='15'>57</font></td></tr>
+    <tr><td port='a_u58'><font point-size='15'>  b_pointer[5]</font></td><td port='a_s58'><font point-size='15'>58</font></td></tr>
+    <tr><td port='a_u59'><font point-size='15'>  b_pointer[6]</font></td><td port='a_s59'><font point-size='15'>59</font></td></tr>
+    <tr><td port='a_u60'><font point-size='15'>  b_pointer[7]</font></td><td port='a_s60'><font point-size='15'>60</font></td></tr>
+    <tr><td port='a_u61'><font point-size='15'>  b_pointer[8]</font></td><td port='a_s61'><font point-size='15'>61</font></td></tr>
+    <tr><td port='a_u62'><font point-size='15'>  b_pointer[9]</font></td><td port='a_s62'><font point-size='15'>62</font></td></tr>
+    <tr><td port='a_u63'><font point-size='15'>  b_pointer[10]</font></td><td port='a_s63'><font point-size='15'>63</font></td></tr>
+    <tr><td port='a_u64'><font point-size='15'>  b_pointer[11]</font></td><td port='a_s64'><font point-size='15'>64</font></td></tr>
+    <tr><td port='a_u65'><font point-size='15'>  b_pointer[12]</font></td><td port='a_s65'><font point-size='15'>65</font></td></tr>
+    <tr><td port='a_u66'><font point-size='15'>  b_pointer[13]</font></td><td port='a_s66'><font point-size='15'>66</font></td></tr>
+    <tr><td port='a_u67'><font point-size='15'>  b_pointer[14]</font></td><td port='a_s67'><font point-size='15'>67</font></td></tr>
+    <tr><td><font point-size='15'>  b_pointer[15]  </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_53 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 53</b>   </td> </tr>
+    <tr><td><font point-size='15'>  6789012345678901<br/>2345678901234567<br/>8901234567890123<br/>456789012345678<br/>  </font></td></tr>
+    </table>>
+]
+bloque_54 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 54</b>   </td> </tr>
+    <tr><td><font point-size='15'>  9012345678901234<br/>5678901234567890<br/>1234567890123456<br/>789012345678901<br/>  </font></td></tr>
+    </table>>
+]
+bloque_55 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 55</b>   </td> </tr>
+    <tr><td><font point-size='15'>  2345678901234567<br/>8901234567890123<br/>4567890123456789<br/>012345678901234<br/>  </font></td></tr>
+    </table>>
+]
+bloque_56 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 56</b>   </td> </tr>
+    <tr><td><font point-size='15'>  5678901234567890<br/>1234567890123456<br/>7890123456789012<br/>345678901234567<br/>  </font></td></tr>
+    </table>>
+]
+bloque_57 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 57</b>   </td> </tr>
+    <tr><td><font point-size='15'>  8901234567890123<br/>4567890123456789<br/>0123456789012345<br/>678901234567890<br/>  </font></td></tr>
+    </table>>
+]
+bloque_58 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 58</b>   </td> </tr>
+    <tr><td><font point-size='15'>  1234567890123456<br/>7890123456789012<br/>3456789012345678<br/>901234567890123<br/>  </font></td></tr>
+    </table>>
+]
+bloque_59 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 59</b>   </td> </tr>
+    <tr><td><font point-size='15'>  4567890123456789<br/>0123456789012345<br/>6789012345678901<br/>234567890123456<br/>  </font></td></tr>
+    </table>>
+]
+bloque_60 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 60</b>   </td> </tr>
+    <tr><td><font point-size='15'>  7890123456789012<br/>3456789012345678<br/>9012345678901234<br/>567890123456789<br/>  </font></td></tr>
+    </table>>
+]
+bloque_61 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 61</b>   </td> </tr>
+    <tr><td><font point-size='15'>  0123456789012345<br/>6789012345678901<br/>2345678901234567<br/>890123456789012<br/>  </font></td></tr>
+    </table>>
+]
+bloque_62 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 62</b>   </td> </tr>
+    <tr><td><font point-size='15'>  3456789012345678<br/>9012345678901234<br/>5678901234567890<br/>123456789012345<br/>  </font></td></tr>
+    </table>>
+]
+bloque_63 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 63</b>   </td> </tr>
+    <tr><td><font point-size='15'>  6789012345678901<br/>2345678901234567<br/>8901234567890123<br/>456789012345678<br/>  </font></td></tr>
+    </table>>
+]
+bloque_64 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 64</b>   </td> </tr>
+    <tr><td><font point-size='15'>  9012345678901234<br/>5678901234567890<br/>1234567890123456<br/>789012345678901<br/>  </font></td></tr>
+    </table>>
+]
+bloque_65 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 65</b>   </td> </tr>
+    <tr><td><font point-size='15'>  2345678901234567<br/>8901234567890123<br/>4567890123456789<br/>012345678901234<br/>  </font></td></tr>
+    </table>>
+]
+bloque_66 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 66</b>   </td> </tr>
+    <tr><td><font point-size='15'>  5678901234567890<br/>1234567890123456<br/>7890123456789012<br/>345678901234567<br/>  </font></td></tr>
+    </table>>
+]
+bloque_67 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo 67</b>   </td> </tr>
+    <tr><td><font point-size='15'>  8901234567890123<br/>4567890123456789<br/>0123456789012345<br/>67890123456789<br/>  </font></td></tr>
+    </table>>
+]
+bloque_68 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 68</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u34'><font point-size='15'>  proyectos  </font></td><td port='a_s34'><font point-size='15'>34</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_69 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 69</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u35'><font point-size='15'>  fase1  </font></td><td port='a_s35'><font point-size='15'>35</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+bloque_70 [
+    shape=plain
+    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>
+        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta 70</b> </td> </tr>
+       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>
+    <tr><td><font point-size='15'>  .  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td><font point-size='15'>  ..  </font></td><td><font point-size='15'>0</font></td></tr>
+    <tr><td port='a_u36'><font point-size='15'>  entrada.txt  </font></td><td port='a_s36'><font point-size='15'>36</font></td></tr>
+    <tr><td><font point-size='15'>    </font></td><td><font point-size='15'>-1</font></td></tr>
+    </table>>
+]
+inodo_0:a_s0 -> bloque_0:b_e;
+inodo_0:a_s5 -> bloque_5:b_e;
+inodo_0:a_s10 -> bloque_10:b_e;
+inodo_0:a_s15 -> bloque_15:b_e;
+inodo_0:a_s20 -> bloque_20:b_e;
+inodo_0:a_s25 -> bloque_25:b_e;
+inodo_1:a_s1 -> bloque_1:b_e;
+inodo_1:a_s2 -> bloque_2:b_e;
+inodo_1:a_s3 -> bloque_3:b_e;
+inodo_2:a_s4 -> bloque_4:b_e;
+inodo_3:a_s6 -> bloque_6:b_e;
+inodo_4:a_s7 -> bloque_7:b_e;
+inodo_5:a_s8 -> bloque_8:b_e;
+inodo_6:a_s9 -> bloque_9:b_e;
+inodo_7:a_s11 -> bloque_11:b_e;
+inodo_8:a_s12 -> bloque_12:b_e;
+inodo_9:a_s13 -> bloque_13:b_e;
+inodo_10:a_s14 -> bloque_14:b_e;
+inodo_11:a_s16 -> bloque_16:b_e;
+inodo_12:a_s17 -> bloque_17:b_e;
+inodo_13:a_s18 -> bloque_18:b_e;
+inodo_14:a_s19 -> bloque_19:b_e;
+inodo_15:a_s21 -> bloque_21:b_e;
+inodo_16:a_s22 -> bloque_22:b_e;
+inodo_17:a_s23 -> bloque_23:b_e;
+inodo_18:a_s24 -> bloque_24:b_e;
+inodo_19:a_s26 -> bloque_26:b_e;
+inodo_20:a_s27 -> bloque_27:b_e;
+inodo_21:a_s28 -> bloque_28:b_e;
+inodo_22:a_s29 -> bloque_29:b_e;
+inodo_23:a_s30 -> bloque_30:b_e;
+inodo_23:a_s39 -> bloque_39:b_e;
+inodo_24:a_s31 -> bloque_31:b_e;
+inodo_25:a_s32 -> bloque_32:b_e;
+inodo_26:a_s33 -> bloque_33:b_e;
+inodo_27:a_s34 -> bloque_34:b_e;
+inodo_28:a_s35 -> bloque_35:b_e;
+inodo_29:a_s36 -> bloque_36:b_e;
+inodo_30:a_s37 -> bloque_37:b_e;
+inodo_30:a_s38 -> bloque_38:b_e;
+inodo_31:a_s40 -> bloque_40:b_e;
+inodo_31:a_s41 -> bloque_41:b_e;
+inodo_31:a_s42 -> bloque_42:b_e;
+inodo_31:a_s43 -> bloque_43:b_e;
+inodo_31:a_s44 -> bloque_44:b_e;
+inodo_31:a_s45 -> bloque_45:b_e;
+inodo_31:a_s46 -> bloque_46:b_e;
+inodo_31:a_s47 -> bloque_47:b_e;
+inodo_31:a_s48 -> bloque_48:b_e;
+inodo_31:a_s49 -> bloque_49:b_e;
+inodo_31:a_s50 -> bloque_50:b_e;
+inodo_31:a_s51 -> bloque_51:b_e;
+inodo_31:a_s52 -> bloque_52:b_e;
+inodo_33:a_s68 -> bloque_68:b_e;
+inodo_34:a_s69 -> bloque_69:b_e;
+inodo_35:a_s70 -> bloque_70:b_e;
+bloque_0:a_s1 -> inodo_1:i_e;
+bloque_0:a_s2 -> inodo_2:i_e;
+bloque_5:a_s3 -> inodo_3:i_e;
+bloque_5:a_s4 -> inodo_4:i_e;
+bloque_5:a_s5 -> inodo_5:i_e;
+bloque_5:a_s6 -> inodo_6:i_e;
+bloque_10:a_s7 -> inodo_7:i_e;
+bloque_10:a_s8 -> inodo_8:i_e;
+bloque_10:a_s9 -> inodo_9:i_e;
+bloque_10:a_s10 -> inodo_10:i_e;
+bloque_11:a_s21 -> inodo_21:i_e;
+bloque_15:a_s11 -> inodo_11:i_e;
+bloque_15:a_s12 -> inodo_12:i_e;
+bloque_15:a_s13 -> inodo_13:i_e;
+bloque_15:a_s14 -> inodo_14:i_e;
+bloque_20:a_s15 -> inodo_15:i_e;
+bloque_20:a_s16 -> inodo_16:i_e;
+bloque_20:a_s17 -> inodo_17:i_e;
+bloque_20:a_s18 -> inodo_18:i_e;
+bloque_25:a_s19 -> inodo_19:i_e;
+bloque_25:a_s20 -> inodo_20:i_e;
+bloque_28:a_s22 -> inodo_22:i_e;
+bloque_28:a_s25 -> inodo_25:i_e;
+bloque_29:a_s23 -> inodo_23:i_e;
+bloque_30:a_s24 -> inodo_24:i_e;
+bloque_30:a_s30 -> inodo_30:i_e;
+bloque_31:a_s33 -> inodo_33:i_e;
+bloque_32:a_s26 -> inodo_26:i_e;
+bloque_33:a_s27 -> inodo_27:i_e;
+bloque_34:a_s28 -> inodo_28:i_e;
+bloque_35:a_s29 -> inodo_29:i_e;
+bloque_39:a_s31 -> inodo_31:i_e;
+bloque_39:a_s32 -> inodo_32:i_e;
+bloque_52:a_s53 -> bloque_53:b_e;
+bloque_52:a_s54 -> bloque_54:b_e;
+bloque_52:a_s55 -> bloque_55:b_e;
+bloque_52:a_s56 -> bloque_56:b_e;
+bloque_52:a_s57 -> bloque_57:b_e;
+bloque_52:a_s58 -> bloque_58:b_e;
+bloque_52:a_s59 -> bloque_59:b_e;
+bloque_52:a_s60 -> bloque_60:b_e;
+bloque_52:a_s61 -> bloque_61:b_e;
+bloque_52:a_s62 -> bloque_62:b_e;
+bloque_52:a_s63 -> bloque_63:b_e;
+bloque_52:a_s64 -> bloque_64:b_e;
+bloque_52:a_s65 -> bloque_65:b_e;
+bloque_52:a_s66 -> bloque_66:b_e;
+bloque_52:a_s67 -> bloque_67:b_e;
+bloque_68:a_s34 -> inodo_34:i_e;
+bloque_69:a_s35 -> inodo_35:i_e;
+bloque_70:a_s36 -> inodo_36:i_e;
+}

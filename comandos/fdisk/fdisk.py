@@ -434,6 +434,9 @@ def make_primaria(name, path, size, fit, type_char):
     nueva_particion.part_type = bytes(type_char, 'utf-8')
     nueva_particion.part_fit = bytes(fit.upper(), 'utf-8')
     nueva_particion.part_name = name.encode('utf-8')[:16].ljust(16, b'\0')
+    print("New")
+    print(mbr.mbr_tamano)
+    print(nueva_particion.part_s)
 
     nuevo_mbr = posicionar_particion(mbr, size, usadas, nueva_particion)
     if nuevo_mbr == None:

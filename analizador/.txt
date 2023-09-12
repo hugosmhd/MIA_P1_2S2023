@@ -1,0 +1,32 @@
+# Definir una expresión regular para encontrar parámetros con valores
+pattern = re.compile(r"(-[a-zA-Z]+)=([^ ]+)")
+
+# Buscar todos los parámetros en la cadena
+parametros_encontrados = re.findall(pattern, cadena)
+
+# Crear un diccionario para almacenar los parámetros encontrados
+parametros_dict = {param.lower(): valor for param, valor in parametros_encontrados}
+
+# Parámetros que deseas buscar (sin distinción entre mayúsculas y minúsculas)
+parametros_a_buscar = ["-id", "-path", "-name"]
+
+# Inicializar un conjunto para registrar los parámetros no encontrados
+parametros_no_encontrados = set(parametros_a_buscar)
+
+# Procesar los parámetros encontrados
+for param in parametros_a_buscar:
+    param_lower = param.lower()
+    if param_lower in parametros_dict:
+        valor = parametros_dict[param_lower]
+        print(f"{param}: {valor}")
+        # Remover el parámetro encontrado del conjunto de no encontrados
+        parametros_no_encontrados.discard(param)
+
+# Procesar cualquier parámetro encontrado que no esté en la lista de parámetros buscados
+for param, valor in parametros_dict.items():
+    if param not in parametros_a_buscar:
+        print(f"Error: Parámetro no válido en la cadena: {param}={valor}")
+
+# Marcar como error cualquier parámetro buscado que no se encontró
+for param in parametros_no_encontrados:
+    print(f"Error: Parámetro no encontrado en la cadena: {param}")

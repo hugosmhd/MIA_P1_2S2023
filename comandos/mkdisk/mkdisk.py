@@ -30,11 +30,11 @@ class mkdisk:
         tam_disco = 0
         ceros = b"\0" * 1024
 
-        if disco.unit == "K":
+        if disco.unit.upper() == "K":
             for i in range(disco.size):
                 file.write(ceros)
             tam_disco = 1024 * disco.size
-        elif disco.unit == "M" or disco.unit == "":
+        elif disco.unit.upper() == "M" or disco.unit == "":
             for i in range(1024 * disco.size):
                 file.write(ceros)
             tam_disco = 1024 * 1024 * disco.size

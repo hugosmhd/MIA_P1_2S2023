@@ -10,9 +10,9 @@ mkdisk -param=x -size=30 -path=./home/archivos/Disco.dsk
 
 #ELIMINACION DE DISCOS
 #El primero deberia dar error
-rmDisk -path=./home/Disco3.dsk
-rmDisk -path=./home/archivos/Disco3.dsk
-RMDISK -path="./home/archivos/mis archivos/Disco4.dsk"
+#rmDisk -path=./home/Disco3.dsk
+#rmDisk -path=./home/archivos/Disco3.dsk
+#RMDISK -path="./home/archivos/mis archivos/Disco4.dsk"
 
 #CREACION DE PARTICIONES
 #Particiones en el disco1
@@ -89,5 +89,21 @@ mount -path="./home/archivos/mis archivos/Disco5.dsk" -name=Part31 #193b
 mount -path="./home/archivos/mis archivos/Disco5.dsk" -name=Part32 #193c
 
 # METODO PARA MOSTRAR LAS PARTICIONES MONTADAS (A DISCRECION DE CADA ESTUDIANTE)
-mount
-pause
+#mountlist
+#pause
+
+#DESMONTAR PARTICIONES
+unmount -id=932Disco2
+unmount -id=932Disco1
+unmount -id=932Disco5
+unmount -id=933Disco2
+unmount -id=191x #ERROR
+
+
+#REPORTES
+rep -id=931Disco1 -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/home/archivos/reports/reporte1.png -name=disk
+rep -id=931Disco1 -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/home/archivos/reports/reporte2.png -name=mbr
+rep -id=931Disco2 -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/home/archivos/reports/reporte3.png -name=disk
+rep -id=931Disco2 -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/home/archivos/reports/reporte4.png -name=mbr
+rep -id=931Disco5 -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/home/archivos/reports/reporte5.png -name=disk
+rep -id=931Disco5 -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/home/archivos/reports/reporte6.png -name=mbr

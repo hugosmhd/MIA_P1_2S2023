@@ -1,3 +1,6 @@
+import re
+
+import structs
 from comandos.mkdisk.mkdisk import mkdisk
 from comandos.fdisk.fdisk import fdisk
 from comandos.mount.mount import mount
@@ -13,9 +16,10 @@ from comandos.mkdir.mkdir import mkdir
 from comandos.recovery.recovery import recovery
 from comandos.rep.rep import rep
 from _global._global import comando_actual
-import structs
 
 def analizar(entrada, rep_journaling = False):
+    # cadena = "rep -id=931Disco1 -Path=./home/archivos/reports/reporte2.jpg -name=mbr -delete=full"
+    
     # comando = entrada.lower()
     comando = entrada
     comando = comando.strip()
@@ -169,6 +173,7 @@ def leer_script(path):
         print(f"El script con ruta {path} no existe")
 
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/new_script.txt
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/new_script2.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script4.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script5.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script6.txt
@@ -203,8 +208,11 @@ def analizar_rmdisk(parametros):
         param = parametros[i]
         if param.find("-path=") == 0:
             disco.path, i = get_path(i, parametros)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'rmdisk': {param}")
 
@@ -543,7 +551,7 @@ def analizar_rep(parametros):
         elif param[0] == '#':
             break
         else:
-            print(f"Parametro no aceptado en 'rep': {valor}")
+            print(f"Parametro no aceptado en 'rep': {param}")
         i += 1
     reporte.crear_rep()
 

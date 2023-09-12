@@ -3,6 +3,7 @@ import struct
 from datetime import datetime
 import ctypes
 import pyperclip
+import graphviz
 
 import structs
 from analizador import analizador
@@ -57,8 +58,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
         dot = 'digraph G {\n'
         dot += 'label="Reporte del MBR";\n'
@@ -141,6 +143,14 @@ class rep:
         dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
 
     def reporte_disk(self):
         print("HACER REPORTE DISK")
@@ -150,8 +160,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
         directorio, archivo = os.path.split(mounted.path)
 
@@ -291,6 +302,14 @@ class rep:
         dot += '</table>>];\n'
         dot += '}'
         pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
         
     def reporte_inode(self):
         print("HACER REPORTE INODE")
@@ -300,8 +319,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -385,6 +405,14 @@ class rep:
         dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
 
     def reporte_block(self):
         print("HACER REPORTE BLOCK")
@@ -394,8 +422,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -452,6 +481,30 @@ class rep:
                     dot += f"<TR><TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD></TR>\n"
                 dot += "</TABLE>\n"
                 dot += "</TD>\n"
+            elif bit == b's' or bit == b'l' or bit == b't':
+                bloque_apuntador = structs.BloqueApuntadores()
+                file.seek(read_on_b)
+                file.readinto(bloque_apuntador)
+                dot += "<TD>\n"
+                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                dot += f"    <TR><TD BGCOLOR='#fdfd96'> Bloque Apuntadores {cantidad_bloques} </TD></TR>\n"
+                dot += "<TR><TD>\n"
+                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                for i in range(4):
+                    dot += "<TR>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+1)+(i*3)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[i+(i*3)]}</FONT></TD>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+2)+(i*3)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+1)+(i*3)]}</FONT></TD>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+3)+(i*3)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+2)+(i*3)]}</FONT></TD>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+4)+(i*3)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+3)+(i*3)]}</FONT></TD>\n"
+                    dot += "</TR>\n"
+                dot += "</TABLE>\n"
+                dot += "</TD></TR>\n"
+                dot += "</TABLE>\n"
+                dot += "</TD>\n"
             
             read_on += 1
             file.seek(read_on)
@@ -469,6 +522,14 @@ class rep:
         dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
 
     def reporte_bm_inode(self):
         print("HACER REPORTE BM INODE")
@@ -478,8 +539,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -516,7 +578,7 @@ class rep:
                 total_activos = 0
 
         file.close()
-        archivo = open("mi_archivo.txt", "w")
+        archivo = open(self.path, "w")
         archivo.write(bits)
         archivo.close()
     
@@ -528,8 +590,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -566,7 +629,7 @@ class rep:
                 total_activos = 0
 
         file.close()
-        archivo = open("mi_archivo2.txt", "w")
+        archivo = open(self.path, "w")
         archivo.write(bits)
         archivo.close()
 
@@ -578,8 +641,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -759,11 +823,15 @@ class rep:
             fich.write(dot)
             fich.close()
 
-        rep_dot = "./rep.dot"
-        rep_pdf = "./rep.pdf"
-        crear_pdf = f"dot -Tpdf {rep_dot} -o {rep_pdf}"
-        os.system(crear_pdf)
         pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
 
     def reporte_sb(self):
         print("HACER REPORTE SB")
@@ -773,8 +841,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -816,6 +885,14 @@ class rep:
         dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
     
     def reporte_file(self):
         print("HACER REPORTE FILE")
@@ -825,8 +902,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -852,7 +930,7 @@ class rep:
         txt = join_file(sblock, inodo_archivo, mounted.path)
 
         file.close()
-        archivo = open("mi_archivo3.txt", "w")
+        archivo = open(self.path, "w")
         archivo.write(txt)
         archivo.close()
 
@@ -864,8 +942,9 @@ class rep:
             print("ID {self.id} no encontrado, verifique su entrada")
             return
 
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
 
 
         file = open(mounted.path, "rb+")
@@ -982,3 +1061,11 @@ class rep:
             dot += '</TABLE>>];\n'
             dot += '}'
             pyperclip.copy(dot)
+            grafica = graphviz.Source(dot)
+            nombre_archivo, extension = os.path.splitext(self.path)
+            if extension.lower() == '.png':
+                grafica.render(filename=nombre_archivo, format='png')
+            elif extension.lower() == '.jpg':
+                grafica.render(filename=nombre_archivo, format='jpg')
+            elif extension.lower() == '.pdf':
+                grafica.render(filename=nombre_archivo, format='pdf')

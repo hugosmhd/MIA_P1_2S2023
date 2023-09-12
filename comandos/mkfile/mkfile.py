@@ -25,6 +25,10 @@ class mkfile():
             print("Error: No se ha iniciado ninguna sesion")
             return
 
+        if self.size < 0:
+            print("Error: El tamaño del archivo no puede ser negativo")
+            return
+
         directorio, archivo_ = os.path.split(self.path)
         if self.recursivo:
             file = open(session_inciada.mounted.path, "rb+")
@@ -49,6 +53,7 @@ class mkfile():
                     content = archivo.read(self.size) if self.size_activo else archivo.read()
             except FileNotFoundError:
                 print(f"Error: La ruta de cout {self.cout} no existe")
+                return
         else:
             iterations_fill = self.size // 10
             for _ in range(iterations_fill):
