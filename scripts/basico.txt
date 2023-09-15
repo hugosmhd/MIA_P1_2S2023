@@ -1,0 +1,103 @@
+#CREACION DE DISCOS
+Mkdisk -size=50 -unit=M -path=/home/archivos/Disco1.dsk -fit=FF
+Mkdisk -unit=k -size=51200 -path=/home/archivos/Disco2.dsk -fit=BF
+mkDisk -size=10 -path=/home/archivos/Disco3.dsk
+mkdisk -size=51200 -path="/home/archivos/mis archivos/Disco4.dsk" -unit=K
+mkDisk -size=20 -path="/home/archivos/mis archivos/Disco5.dsk" -unit=M -fit=WF
+
+#Deberia dar error
+mkdisk -param=x -size=30 -path=/home/archivos/Disco.dsk
+
+#ELIMINACION DE DISCOS
+#El primero deberia dar error
+rmDisk -path=/home/Disco3.dsk
+rmDisk -path=/home/archivos/Disco3.dsk
+RMDISK -path="/home/archivos/mis archivos/Disco4.dsk"
+
+#CREACION DE PARTICIONES
+#Particiones en el disco1
+fdisk -type=P -unit=K -name=Part1 -size=7680 -path=/home/archivos/Disco1.dsk -fit=BF #7.5 MB
+fdisk -type=E -unit=K -name=Part2 -size=7680 -path=/home/archivos/Disco1.dsk -fit=FF
+fdisk -type=E -unit=K -name=Part3 -size=7680 -path=/home/archivos/Disco1.dsk -fit=WF #Deberia dar error
+fdisk -type=P -unit=K -name=Part3 -size=7680 -path=/home/archivos/Disco1.dsk -fit=WF
+fdisk -type=P -unit=K -name=Part4 -size=7680 -path=/home/archivos/Disco1.dsk -fit=BF
+FDISK -type=L -unit=k -name=Part5 -size=1280 -path=/home/archivos/Disco1.dsk -fit=BF #1.25 MB
+fdisk -type=L -unit=K -name=Part6 -size=1280 -path=/home/archivos/Disco1.dsk -fit=WF
+fdisk -type=L -unit=K -name=Part7 -size=1280 -path=/home/archivos/Disco1.dsk -fit=wf
+fdisk -type=L -unit=K -name=Part8 -size=1280 -path=/home/archivos/Disco1.dsk -fit=ff
+fdisk -type=L -unit=K -name=Part9 -size=1280 -path=/home/archivos/Disco1.dsk -fit=bf
+fdisk -type=L -unit=K -name=Part9 -size=1024 -path=/home/archivos/Disco1.dsk -fit=BF #ERROR nombre 
+
+#Particiones en el disco2
+fdisk -type=L -unit=k -name=Part11 -size=10240 -path=/home/archivos/Disco2.dsk -fit=BF #ERRROR no hay una extendida
+fdisk -type=L -unit=k -name=Part12 -size=10240 -path=/home/archivos/Disco2.dsk -fit=BF #ERRROR no hay una extendida
+fDisk -type=P -unit=K -name=Part11 -size=10240 -path=/home/archivos/Disco2.dsk -fit=BF #10 MB
+fDisk -type=P -unit=m -name=Part12 -size=5 -path=/home/archivos/Disco2.dsk -fit=FF #5MB
+fDisk -type=P -unit=K -name=Part13 -size=5120 -path=/home/archivos/Disco2.dsk -fit=WF #5 MB
+fdisk -type=E -unit=m -name=Part14 -size=20 -path=/home/archivos/Disco2.dsk #20 MB
+fdisk -type=L -unit=k -name=Part15 -size=1536 -path=/home/archivos/Disco2.dsk #1.5 MB
+fdisk -type=L -unit=k -name=Part16 -size=1536 -path=/home/archivos/Disco2.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part17 -size=1536 -path=/home/archivos/Disco2.dsk -fit=FF
+fdisk -type=L -unit=k -name=Part18 -size=1536 -path=/home/archivos/Disco2.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part19 -size=1536 -path=/home/archivos/Disco2.dsk -fit=WF
+fdisk -type=L -unit=k -name=Part20 -size=1536 -path=/home/archivos/Disco2.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part21 -size=1536 -path=/home/archivos/Disco2.dsk -fit=FF
+fdisk -type=L -unit=k -name=Part22 -size=1536 -path=/home/archivos/Disco2.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part23 -size=1536 -path=/home/archivos/Disco2.dsk -fit=FF
+fdisk -type=L -unit=k -name=Part24 -size=1536 -path=/home/archivos/Disco2.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part25 -size=1536 -path=/home/archivos/Disco2.dsk -fit=wF
+fdisk -type=L -unit=k -name=Part26 -size=1536 -path=/home/archivos/Disco2.dsk -fit=BF
+fdisk -type=L -unit=k -name=Part27 -size=1536 -path=/home/archivos/Disco2.dsk -fit=FF
+
+
+#Particiones en el disco 5
+fdisk -type=E -unit=k -name=Part30 -size=5120 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF #5MB
+fdisk -type=L -unit=k -name=Part31 -size=1024 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF
+fdisk -type=P -unit=k -name=Part32 -size=5120 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF
+fdisk -type=L -unit=k -name=Part33 -size=1024 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF
+fdisk -type=P -unit=k -name=Part34 -size=5120 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF
+fdisk -type=L -unit=k -name=Part36 -size=1024 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF
+fdisk -type=L -unit=k -name=Part37 -size=1024 -path="/home/archivos/mis archivos/Disco5.dsk" -fit=BF
+
+#Eliminar particiones disco1
+fdisk -delete=full -name=Part1 -path=/home/archivos/Disco1.dsk
+fdisk -delete=full -name=Part6 -path=/home/archivos/Disco1.dsk
+fdisk -delete=full -name=Part10 -path=/home/archivos/Disco1.dsk #Error no existe
+fdisk -delete=full -name=Part9 -path=/home/archivos/Disco1.dsk
+#Agregando espacio
+fdisk -add=500 -unit=K -path=/home/archivos/Disco1.dsk -name=Part4
+
+#Eliminadndo y agregando espacio disco2
+fdisk -delete=full -name=Part13 -path=/home/archivos/Disco2.dsk
+fdisk -add=1 -unit=m -path=/home/archivos/Disco2.dsk -name=Part12
+
+#MONTAR PARTICIONES
+# De aqui en adelante, los id's que tengan el '19' lo deben de corroborar con los digitos de su carne
+mount -path=/home/archivos/Disco3.dsk -name=Part3 #ERROR no existe
+mount -path=/home/archivos/Disco1.dsk -name=Part2 #191a
+mount -path=/home/archivos/Disco1.dsk -name=Part3 #191b
+mount -path=/home/archivos/Disco1.dsk -name=Part4 #191c
+mount -path=/home/archivos/Disco1.dsk -name=Part5 #191d
+mount -path=/home/archivos/Disco1.dsk -name=Part7 #191e
+mount -path=/home/archivos/Disco2.dsk -name=Part14 #192a
+mount -path=/home/archivos/Disco2.dsk -name=Part15 #192b
+mount -path=/home/archivos/Disco2.dsk -name=Part16 #192c
+mount -path=/home/archivos/Disco2.dsk -name=Part17 #192d
+mount -path="/home/archivos/mis archivos/Disco5.dsk" -name=Part30 #193a
+mount -path="/home/archivos/mis archivos/Disco5.dsk" -name=Part31 #193b
+mount -path="/home/archivos/mis archivos/Disco5.dsk" -name=Part32 #193c
+
+#DESMONTAR PARTICIONES
+unmount -id=931Disco2
+unmount -id=931Disco5
+unmount -id=932Disco5
+unmount -id=933Disco2
+unmount -id=191x #ERROR
+
+#REPORTES
+rep -id=931Disco1 -path=/home/archivos/reports/reporte1.jpg -name=disk
+rep -id=931Disco1 -path=/home/archivos/reports/reporte2.jpg -name=mbr
+rep -id=932Disco2 -path=/home/archivos/reports/reporte3.jpg -name=disk
+rep -id=932Disco2 -path=/home/archivos/reports/reporte4.jpg -name=mbr
+rep -id=933Disco5 -path=/home/archivos/reports/reporte5.jpg -name=disk
+rep -id=933Disco5 -path=/home/archivos/reports/reporte6.jpg -name=mbr

@@ -17,6 +17,10 @@ class mkdisk:
 
     def crear_mkdisk(self, disco):
 
+        if self.size == 0 or self.path == '':
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         directorio, archivo = os.path.split(disco.path)
         
         if not os.path.exists(directorio):
@@ -63,33 +67,13 @@ class mkdisk:
 
         print(f"Disco \"{disco.path}\" creado correctamente")
         file.close()
-        
-        # try:
-        #     with open(disco.path, "rb") as file:
-        #         contenido_binario = file.read()
-        #     mbr = structs.MBR()
-        #     ctypes.memmove(ctypes.byref(mbr), contenido_binario, ctypes.sizeof(mbr))
-        #     print(" ----- DATOS DEL MBR ----- ")
-        #     print(f"Tamaño del disco: {mbr.mbr_tamano} bytes")
-        #     fecha_hora = datetime.fromtimestamp(mbr.mbr_fecha_creacion)
-        #     fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-        #     print(f"Fecha de creacion del disco: {fecha_formateada}")
-        #     print(f"Signature: {mbr.mbr_dsk_signature}")
-        #     print(f"Fit: {mbr.dsk_fit.decode()}")
-
-        #     for i, particion in enumerate(mbr.mbr_partitions):
-        #         print("------------------------------------------")
-        #         print(f"Partición {i + 1}:")
-        #         print("Estado:", particion.part_status.decode())
-        #         print("Tipo:", particion.part_type.decode())
-        #         print("Fit:", particion.part_fit.decode())
-        #         print("Inicio:", particion.part_start)
-        #         print("Tamaño:", particion.part_s)
-        #         print("Nombre:", particion.part_name)
-        # except FileNotFoundError:
-        #     pass
 
     def crear_rmdisk(self):
+
+        if self.path == '':
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         directorio, archivo = os.path.split(self.path)
         
         answer = input("¿Está seguro de eliminar el disco? S/N: ")

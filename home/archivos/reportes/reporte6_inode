@@ -1,9 +1,0 @@
-digraph G {
-label="Reporte de Inodos";
-labelloc=top;
-edge [ fontname="Courier New", fontsize=20];
-node [ shape="box", fontsize=26];
-n_1 [label=<
-<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='8' cellpadding='0'>
-</TABLE>>];
-}

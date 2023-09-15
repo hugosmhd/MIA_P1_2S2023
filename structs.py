@@ -1,12 +1,13 @@
 import struct
 import ctypes
 
-
 class User():
     def __init__(self):
-        self.user_name = ""
-        self.user_password = ""
+        self.id = 0
+        self.user = ""
+        self.password = ""
         self.group_name = ""
+        self.group_id = 1
 
 class SesionUsuario():
     def __init__(self, credenciales, mounted, is_logged):
@@ -258,17 +259,3 @@ class MBR(ctypes.Structure):
     #         self.dsk_fit
     #     )        
     #     return data
-
-# def size_mbr():
-#     return 'I q I 1s'
-
-# def deserializar_mbr(data):
-#     desempaquetados = struct.unpack(size_mbr(), data)
-#     return desempaquetados
-
-# def size_partition():
-#     return '1s 1s 1s i i 16s'
-
-# def deserializar_partition(data):
-#     desempaquetados = struct.unpack(size_partition(), data)
-#     return desempaquetados

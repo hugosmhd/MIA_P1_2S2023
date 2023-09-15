@@ -1,0 +1,38 @@
+mount -path="/home/hugosmh/Documentos/Discos/disco2.dsk" -name=Partition1
+mkfs -type=full -id=931disco2
+login -user=root -pass=123 -id=931disco2
+mkdir -path=/hola
+mkdir -path=/hola/adios -r
+mkfile -size=24 -path=/hola/r.txt
+mkfile -size=78 -path=/hola/adios/p.txt
+mkdir -path=/hola/adios/hola -r
+mkfile -size=78 -path=/hola/adios/hola/p.txt
+mkfile -size=488 -path=/record.txt
+mkfile -size=148 -path=/prueba.txt
+rep -id=931disco2 -path=/home/hugosmh/reportes -name=tree
+pause
+rename -path=/hola/adios -name="rename"
+rename -path=/hola/r.txt -name="z.txt"
+mkdir -path=/home
+mkdir -path=/home/hugosmhd
+mkdir -path=/home/hugosmhd/chistis -r
+move -path=/hola/rename -destino="/home/hugosmhd/chistis"
+move -path=/hola/z.txt -destino="/home/hugosmhd/chistis"
+move -path=/record.txt -destino="/home/hugosmhd/chistis"
+mkfile -size=1 -path=/record2.txt
+rep -id=931disco2 -path=/home/hugosmh/reportes/tree.jpg -name=tree
+cat -file1="/user.txt"
+rep -id=931disco2 -path="/home/hugosmh/reportes/inodos.jpg" -name=inode
+chmod -path=/record2.txt -r -ugo=444
+chmod -path=/hola/ -r -ugo=333
+chmod -path=/ -r -ugo=111
+
+mkgrp -name=usuarios2
+mkgrp -name=usuarios
+mkusr -user=user1 -pass=usuario -grp=usuarios
+mkusr -user=user2 -pass=usuario -grp=usuarios
+mkusr -user=user3 -pass=usuario -grp=usuarios
+chown -path=/record2.txt -user=user3
+chown -path=/record2.txt -user=user1 -r
+chown -path=/hola/ -user=user4 -r
+chgrp -user=user2 -grp=usuarios2

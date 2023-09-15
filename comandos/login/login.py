@@ -10,6 +10,14 @@ from comandos.mkfs.mkfs import join_file, find_file, find_carpeta_archivo
 from comandos.fdisk.fdisk import exist_partition
 
 
+def buscar_grupo(name):
+    num = 0
+    for group in groups:
+        num += 1
+        if group == name:
+            return num
+    return -1
+
 def authenticate(mounted, part_start, user):
     file = open(mounted.path, "rb+")
     sblock = structs.SuperBloque()
@@ -34,27 +42,32 @@ def authenticate(mounted, part_start, user):
 
     for i, linea in enumerate(lineas):
         atributos = linea.split(",")
+        if len(atributos) == 3:
+            groups.append(atributos[2])
 
+    for i, linea in enumerate(lineas):
+        atributos = linea.split(",")
         if len(atributos) == 5:
             user_actual = structs.User()
-            user_actual.user_name = atributos[3]
-            user_actual.user_password = atributos[4]
+            user_actual.id = int(atributos[0])
+            user_actual.user = atributos[3]
+            user_actual.password = atributos[4]
             user_actual.group_name = atributos[2]
+            user_actual.group_id = buscar_grupo(atributos[2])
             users.append(user_actual)
             if atributos[0] != "0":
                 if atributos[3] == user.user and atributos[4] == user.password:
-                    # print("Usuario encontrado")
-                    session_inciada.credenciales = user
+                    session_inciada.credenciales = user_actual
                     session_inciada.mounted = mounted
                     session_inciada.is_logged = True
+                    print("Sesion iniciada correctamente")
+                    print(f"Bienvenido usuario {user_actual.user}")
             else:
                 if atributos[3] == user.user and atributos[4] == user.password:
                     print("Error el usuario que busca ha sido eliminado.")
                     users.clear()
                     groups.clear()
                     return
-        elif len(atributos) == 3:
-            groups.append(atributos[2])
 
 
 class login():
@@ -64,6 +77,9 @@ class login():
         self.user = ""
 
     def crear_login(self, user):
+        if self.user == "" or self.password == "" or self.id == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
 
         if session_inciada.is_logged:
             print("Error: Actualmente hay una sesion iniciada")

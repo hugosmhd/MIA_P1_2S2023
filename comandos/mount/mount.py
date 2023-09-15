@@ -39,6 +39,11 @@ class mount:
         if self.path == "" and self.name == "":
             recorrer_montadas()
             return
+
+        if self.path == "" or self.name == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         mbr = structs.MBR()
         with open(self.path, "rb") as file:
             file.seek(0, 0)
@@ -88,6 +93,10 @@ class mount:
                 return
 
     def crear_unmount(self):
+        if self.name == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         for i, montada in enumerate(particiones_montadas):
             if(self.name == montada.id):
                 particiones_montadas.pop(i)

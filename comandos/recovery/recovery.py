@@ -2,7 +2,7 @@ import os
 import math
 import time
 import ctypes
-import pyperclip
+# import pyperclip
 
 import structs
 from _global._global import particiones_montadas, session_inciada, comando_actual, users, groups
@@ -25,7 +25,8 @@ class recovery():
         if(mounted == None):
             print("ID {self.id} no encontrado, verifique su entrada")
             return
-
+        
+        session_inciada.is_recovery = True
         super_bloque = structs.SuperBloque()
         file = open(mounted.path, "rb+")
         file.seek(mounted.part_start)
@@ -98,7 +99,7 @@ class recovery():
         file.write(ctypes.string_at(ctypes.byref(carpeta_root), ctypes.sizeof(carpeta_root)))
         # BLOQUE ARCHIVO USER.TXT
         file.write(ctypes.string_at(ctypes.byref(file_user), ctypes.sizeof(file_user)))
-
+        
         
         file.close()
 
@@ -111,6 +112,14 @@ class recovery():
         grupos = groups.copy()
         users.clear()
         groups.clear()
+        user_actual = structs.User()
+        user_actual.id = str(1)
+        user_actual.user = 'root'
+        user_actual.password = '123'
+        user_actual.group_name = 'root'
+        user_actual.group_id = 1
+        users.append(user_actual)
+        groups.append('root')
         # session_inciada.is_recovery = True
         for _ in range(super_bloque.s_inodes_count):
             file.seek(read_journaling)
@@ -129,6 +138,7 @@ class recovery():
         file.close()
         new_users = usuarios.copy()
         new_groups = grupos.copy()
+        session_inciada.is_recovery = False
         # user = new_users
         # groups = new_groups
     
@@ -141,7 +151,7 @@ class recovery():
         if(mounted == None):
             print("ID {self.id} no encontrado, verifique su entrada")
             return
-
+        
         super_bloque = structs.SuperBloque()
         file = open(mounted.path, "rb+")
         file.seek(mounted.part_start)

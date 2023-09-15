@@ -1,0 +1,84 @@
+digraph {
+
+label="Disco1.dsk";
+labelloc=top;
+edge [ fontname="Courier New", fontsize=20];
+node [ shape="box", fontsize=26];
+
+tbl [
+label=< <table border='0' cellborder='1' color='blue' cellspacing='0'>
+  <tr>
+    <td>
+      <table color='orange' cellspacing='0'>
+        <tr>
+          <td>   MBR </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table color='black' cellspacing='0' cellborder='0'>
+        <tr>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Libre<br /><FONT POINT-SIZE="15">   25% del disco   </FONT></td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+
+      </table>
+    </td>
+    <td>
+      <table color='orange' cellspacing='0' cellpadding="0">
+        <tr cellspacing='0'>
+          <td>Extendida</td>
+        </tr>
+
+        <tr cellspacing='0'>
+          <td cellspacing='0'>
+            <table color='orange' border="1" cellspacing='0'>
+              <tr>
+                <td>EBR</td>
+                <td>Logica<br /><FONT POINT-SIZE="15">   25% del disco   </FONT></td>
+                <td>Libre<br /><FONT POINT-SIZE="15">   25% del disco   </FONT></td>
+                <td>EBR</td>
+                <td>Logica<br /><FONT POINT-SIZE="15">   25% del disco   </FONT></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table color='black' cellspacing='0' cellborder='0'>
+        <tr>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Primaria<br /><FONT POINT-SIZE="15">   20% del disco   </FONT></td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table color='black' cellspacing='0' cellborder='0'>
+        <tr>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Libre<br /><FONT POINT-SIZE="15">   25% del disco   </FONT></td>
+        </tr>
+        <tr>
+          <td></td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+  </table>
+  >];
+
+  }

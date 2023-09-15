@@ -2,7 +2,7 @@ import os
 import math
 import time
 import ctypes
-import pyperclip
+# import pyperclip
 
 import structs
 from _global._global import particiones_montadas, session_inciada, comando_actual
@@ -21,6 +21,10 @@ class mkfile():
 
     def crear_mkfile(self):
 
+        if self.path == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
             return
@@ -37,6 +41,35 @@ class mkfile():
             file.readinto(sblock)
             file.close()
             indo_carpeta_archivo, i_c, encontrada, carpetas = find_carpeta_archivo(sblock, directorio, session_inciada, True)
+            inodo_actual = structs.Inodo()
+            
+            file = open(session_inciada.mounted.path, "rb+")
+            read_on_i = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * i_c)
+            file.seek(read_on_i)
+            file.readinto(inodo_actual)
+            file.close()
+
+            permisos_u = (inodo_actual.i_perm // 100) % 10  # El primer dígito
+            permisos_g = (inodo_actual.i_perm // 10) % 10   # El segundo dígito
+            permisos_o = inodo_actual.i_perm % 10            # El tercer dígito
+            permisos = False
+            if session_inciada.credenciales.id == inodo_actual.i_uid:
+                # Permisos de escritura
+                if permisos_u == 2 or permisos_u == 3 or permisos_u == 6 or permisos_u == 7:
+                    permisos = True
+            elif session_inciada.credenciales.group_id == inodo_actual.i_gid:
+                # Permisos de escritura
+                if permisos_g == 2 or permisos_g == 3 or permisos_g == 6 or permisos_g == 7:
+                    permisos = True
+            else:
+                # Permisos de escritura
+                if permisos_o == 2 or permisos_o == 3 or permisos_o == 6 or permisos_o == 7:
+                    permisos = True
+            
+            if not permisos and not session_inciada.is_recovery:
+                print(f"Error: Problemas de permisos para crear el directorio {self.path}")
+                return
+
             if not encontrada:
                 for i, carpeta in enumerate(carpetas):
                     indo_carpeta_archivo, i_c = crear_mkdir_r(carpeta, indo_carpeta_archivo, i_c)
@@ -50,7 +83,7 @@ class mkfile():
             try:
 
                 with open(self.cout, 'r') as archivo:
-                    content = archivo.read(self.size) if self.size_activo else archivo.read()
+                    content = archivo.read()
             except FileNotFoundError:
                 print(f"Error: La ruta de cout {self.cout} no existe")
                 return
@@ -73,8 +106,6 @@ class mkfile():
         file.readinto(sblock)
         file.close()
 
-        
-
         directorio, archivo_ = os.path.split(self.path)
         # Se verifica que no exista un archivo con el mismo nombre
         indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, directorio, session_inciada)
@@ -86,6 +117,27 @@ class mkfile():
             print(f"Error: Archivo '{self.path}' ya existe")
             return
 
+        permisos_u = (indo_carpeta_archivo.i_perm // 100) % 10  # El primer dígito
+        permisos_g = (indo_carpeta_archivo.i_perm // 10) % 10   # El segundo dígito
+        permisos_o = indo_carpeta_archivo.i_perm % 10            # El tercer dígito
+        permisos = False
+        if session_inciada.credenciales.id == indo_carpeta_archivo.i_uid:
+            # Permisos de escritura
+            if permisos_u == 2 or permisos_u == 3 or permisos_u == 6 or permisos_u == 7:
+                permisos = True
+        elif session_inciada.credenciales.group_id == indo_carpeta_archivo.i_gid:
+            # Permisos de escritura
+            if permisos_g == 2 or permisos_g == 3 or permisos_g == 6 or permisos_g == 7:
+                permisos = True
+        else:
+            # Permisos de escritura
+            if permisos_o == 2 or permisos_o == 3 or permisos_o == 6 or permisos_o == 7:
+                permisos = True
+        
+        if not permisos and not session_inciada.is_recovery and session_inciada.credenciales.user != 'root':
+            print(f"No tienes permisos de escritura sobre la carpeta {directorio}")
+            return
+
         if sblock.s_first_ino == -1:
             # No hay más inodos disponibles, error
             return
@@ -94,8 +146,8 @@ class mkfile():
             return
 
         inodo_file = structs.Inodo()
-        inodo_file.i_uid = 1
-        inodo_file.i_gid = 1
+        inodo_file.i_uid = session_inciada.credenciales.id
+        inodo_file.i_gid = session_inciada.credenciales.group_id
         inodo_file.i_s = len(content)
         inodo_file.i_atime = int(time.time())
         inodo_file.i_ctime = int(time.time())

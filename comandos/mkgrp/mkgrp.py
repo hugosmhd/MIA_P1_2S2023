@@ -15,10 +15,15 @@ class mkgrp():
         self.tipo = 0
 
     def crear_mkgrp(self):
+
+        if self.name == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
             return
-        elif session_inciada.is_logged and session_inciada.credenciales.user != 'root':
+        elif not session_inciada.is_recovery and session_inciada.credenciales.user != 'root':
             print("Error: El comando 'mkgrp' unicamente lo puede hacer un usuario root")
             return
 
@@ -56,10 +61,14 @@ class mkgrp():
             file.close()
 
     def crear_rmgrp(self):
+        if self.name == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         if not session_inciada.is_logged:
             print("Error: No se ha iniciado ninguna sesion")
             return
-        elif session_inciada.is_logged and session_inciada.credenciales.user != 'root':
+        elif not session_inciada.is_recovery and session_inciada.credenciales.user != 'root':
             print("Error: El comando 'rmgrp' unicamente lo puede hacer un usuario root")
             return
 

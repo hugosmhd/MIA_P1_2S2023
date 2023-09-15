@@ -45,6 +45,258 @@ def next_first_block(sblock, path_disk):
     file.close()
     return -1
 
+def cambiar_propietario_r(super_bloque, file, inodo, i_o, propietario, id):
+    read_on_file = -1
+    read_on_archive = -1
+    if inodo.i_uid != int(id) and int(id) != 1:
+        print(f"Error: No tienes los permisos suficientes en el inodo {i_o}")
+        return
+
+    if inodo.i_type == b'1':
+        inodo.i_uid = int(propietario)
+        write_on = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i_o)
+        file.seek(write_on)
+        file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+        return
+
+    inodo_archivo = structs.Inodo()
+
+    bcarpeta = structs.BloqueCarpeta()
+
+    for b in range(12):
+        if inodo.i_block[b] == -1:
+            continue
+        read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
+        file.seek(read_on_file)
+        file.readinto(bcarpeta)
+        for j in range(4):
+            b_inode = bcarpeta.b_content[j].b_inodo
+            nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+            if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                file.seek(read_on_archive)
+                file.readinto(inodo_archivo)
+                cambiar_propietario_r(super_bloque, file, inodo_archivo, b_inode, propietario, id)
+
+    # if inodo.i_block[12] != -1:
+    #     bloque_s_indirecto = structs.BloqueApuntadores()
+    #     read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+    #     file.seek(read_on_block)
+    #     file.readinto(bloque_s_indirecto)
+
+    #     for s in range(16):
+    #         if bloque_s_indirecto.b_pointers[s] == -1:
+    #             break
+    #         read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+    #         file.seek(read_on_file)
+    #         file.readinto(bcarpeta)
+    #         for j in range(4):
+    #             b_inode = bcarpeta.b_content[j].b_inodo
+    #             nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+    #             if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+    #                 read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+    #                 file.seek(read_on_archive)
+    #                 file.readinto(inodo_archivo)
+    #                 cambiar_propietario_r(super_bloque, file, inodo_archivo, b_inode, propietario)
+
+    # if inodo.i_block[13] != -1:
+    #     bloque_d_indirecto = structs.BloqueApuntadores()
+    #     read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+    #     file.seek(read_on_block)
+    #     file.readinto(bloque_d_indirecto)
+    #     for d in range(16):
+    #         if bloque_d_indirecto.b_pointers[d] == -1:
+    #             continue
+
+    #         bloque_s_indirecto = structs.BloqueApuntadores()
+    #         read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+    #         file.seek(read_on_block)
+    #         file.readinto(bloque_s_indirecto)
+    #         for s in range(16):
+    #             if bloque_s_indirecto.b_pointers[s] == -1:
+    #                 continue
+
+    #             read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+    #             file.seek(read_on_file)
+    #             file.readinto(bcarpeta)
+
+    #             for j in range(4):
+    #                 b_inode = bcarpeta.b_content[j].b_inodo
+    #                 nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+    #                 if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+    #                     read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+    #                     file.seek(read_on_archive)
+    #                     file.readinto(inodo_archivo)
+    #                     cambiar_propietario_r(super_bloque, file, inodo_archivo, b_inode, propietario)
+
+    # if inodo.i_block[14] != -1:
+    #     bloque_t_indirecto = structs.BloqueApuntadores()
+    #     read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+    #     file.seek(read_on_block)
+    #     file.readinto(bloque_t_indirecto)
+
+    #     for t in range(16):
+    #         if bloque_t_indirecto.b_pointers[t] == -1:
+    #             continue
+
+    #         bloque_d_indirecto = structs.BloqueApuntadores()
+    #         read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_t_indirecto.b_pointers[t])
+    #         file.seek(read_on_block)
+    #         file.readinto(bloque_d_indirecto)
+    #         for d in range(16):
+    #             if bloque_d_indirecto.b_pointers[d] == -1:
+    #                 continue
+
+    #             bloque_s_indirecto = structs.BloqueApuntadores()
+    #             read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+    #             file.seek(read_on_block)
+    #             file.readinto(bloque_s_indirecto)
+    #             for s in range(16):
+    #                 if bloque_s_indirecto.b_pointers[s] == -1:
+    #                     continue
+
+    #                 read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+    #                 file.seek(read_on_file)
+    #                 file.readinto(bcarpeta)
+
+    #                 for j in range(4):
+    #                     b_inode = bcarpeta.b_content[j].b_inodo
+    #                     nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+    #                     if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+    #                         read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+    #                         file.seek(read_on_archive)
+    #                         file.readinto(inodo_archivo)
+    #                         cambiar_propietario_r(super_bloque, file, inodo_archivo, b_inode, propietario)
+
+    inodo.i_uid = int(propietario)
+    write_on = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i_o)
+    file.seek(write_on)
+    file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+
+def cambiar_permisos_r(super_bloque, file, inodo, i_o, permisos):
+    read_on_file = -1
+    read_on_archive = -1
+    if inodo.i_type == b'1':
+        inodo.i_perm = permisos
+        write_on = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i_o)
+        file.seek(write_on)
+        file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+        return
+
+    inodo_archivo = structs.Inodo()
+
+    bcarpeta = structs.BloqueCarpeta()
+
+    for b in range(12):
+        if inodo.i_block[b] == -1:
+            continue
+        read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
+        file.seek(read_on_file)
+        file.readinto(bcarpeta)
+        for j in range(4):
+            b_inode = bcarpeta.b_content[j].b_inodo
+            nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+            if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                file.seek(read_on_archive)
+                file.readinto(inodo_archivo)
+                cambiar_permisos_r(super_bloque, file, inodo_archivo, b_inode, permisos)
+
+    if inodo.i_block[12] != -1:
+        bloque_s_indirecto = structs.BloqueApuntadores()
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+        file.seek(read_on_block)
+        file.readinto(bloque_s_indirecto)
+
+        for s in range(16):
+            if bloque_s_indirecto.b_pointers[s] == -1:
+                break
+            read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+            file.seek(read_on_file)
+            file.readinto(bcarpeta)
+            for j in range(4):
+                b_inode = bcarpeta.b_content[j].b_inodo
+                nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                    read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                    file.seek(read_on_archive)
+                    file.readinto(inodo_archivo)
+                    cambiar_permisos_r(super_bloque, file, inodo_archivo, b_inode, permisos)
+
+    if inodo.i_block[13] != -1:
+        bloque_d_indirecto = structs.BloqueApuntadores()
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+        file.seek(read_on_block)
+        file.readinto(bloque_d_indirecto)
+        for d in range(16):
+            if bloque_d_indirecto.b_pointers[d] == -1:
+                continue
+
+            bloque_s_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+            file.seek(read_on_block)
+            file.readinto(bloque_s_indirecto)
+            for s in range(16):
+                if bloque_s_indirecto.b_pointers[s] == -1:
+                    continue
+
+                read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                file.seek(read_on_file)
+                file.readinto(bcarpeta)
+
+                for j in range(4):
+                    b_inode = bcarpeta.b_content[j].b_inodo
+                    nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                    if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                        read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                        file.seek(read_on_archive)
+                        file.readinto(inodo_archivo)
+                        cambiar_permisos_r(super_bloque, file, inodo_archivo, b_inode, permisos)
+
+    if inodo.i_block[14] != -1:
+        bloque_t_indirecto = structs.BloqueApuntadores()
+        read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+        file.seek(read_on_block)
+        file.readinto(bloque_t_indirecto)
+
+        for t in range(16):
+            if bloque_t_indirecto.b_pointers[t] == -1:
+                continue
+
+            bloque_d_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_t_indirecto.b_pointers[t])
+            file.seek(read_on_block)
+            file.readinto(bloque_d_indirecto)
+            for d in range(16):
+                if bloque_d_indirecto.b_pointers[d] == -1:
+                    continue
+
+                bloque_s_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+                file.seek(read_on_block)
+                file.readinto(bloque_s_indirecto)
+                for s in range(16):
+                    if bloque_s_indirecto.b_pointers[s] == -1:
+                        continue
+
+                    read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                    file.seek(read_on_file)
+                    file.readinto(bcarpeta)
+
+                    for j in range(4):
+                        b_inode = bcarpeta.b_content[j].b_inodo
+                        nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                        if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                            read_on_archive = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                            file.seek(read_on_archive)
+                            file.readinto(inodo_archivo)
+                            cambiar_permisos_r(super_bloque, file, inodo_archivo, b_inode, permisos)
+
+    inodo.i_perm = permisos
+    write_on = super_bloque.s_inode_start + (ctypes.sizeof(structs.Inodo) * i_o)
+    file.seek(write_on)
+    file.write(ctypes.string_at(ctypes.byref(inodo), ctypes.sizeof(inodo)))
+
 # //////////////////////////////////////
 def find_file(super_bloque, path, path_disk, inodo, msg = True):
     read_on_file = -1
@@ -193,7 +445,7 @@ def find_url(super_bloque, path, user_session):
 
     if(len(carpetas) >= 2 and carpetas[1] != ''):
         carpetas = carpetas[1:]
-        for i, carpeta in enumerate(carpetas, start=1):
+        for i, carpeta in enumerate(carpetas):
             for b in range(12):
                 if inodo.i_block[b] == -1:
                     continue
@@ -211,6 +463,7 @@ def find_url(super_bloque, path, user_session):
                 if encontrada:
                     encontrada = False
                     break
+                    # Faltan bloques indirectos
 
     for b in range(12):
         if inodo.i_block[b] == -1:
@@ -332,7 +585,7 @@ def find_url(super_bloque, path, user_session):
     return bcarpeta_actual, i_c, -1
 
 # //////////////////////////////////////
-def find_carpeta(super_bloque, path, user_session):
+def find_carpeta(super_bloque, path, path_disk):
     carpetas = path.split('/')
 
     # Verificar que arranque desde la raiz
@@ -346,7 +599,7 @@ def find_carpeta(super_bloque, path, user_session):
     i_c = 0
     encontrada = False
     carpeta_encontrada = False
-    file = open(user_session.mounted.path, 'rb+')
+    file = open(path_disk, 'rb+')
     file.seek(super_bloque.s_inode_start)
     file.readinto(inodo)
 
@@ -740,7 +993,6 @@ def join_file(super_bloque, inodo_file, path_disk):
     if totalSegments > 0:
         if inodo_file.i_block[12] == -1:
             return txt
-        print("Entra en el bloque simple indirecto")
 
         iterations_blocks = min(totalSegments, 16)
         bloque_s_indirecto = structs.BloqueApuntadores()
@@ -2655,7 +2907,7 @@ def make_ext2(part_size, start, path):
     inodo_file_user.i_ctime = super_bloque.s_umtime
     inodo_file_user.i_mtime = super_bloque.s_umtime
     inodo_file_user.i_type = b'1'
-    inodo_file_user.i_perm = 0o664 # 0o664
+    inodo_file_user.i_perm = 664 # 0o664
     inodo_file_user.i_block[0] = 1
 
     file_user = structs.BloqueArchivo()
@@ -2695,6 +2947,11 @@ class mkfs():
         self.fs = "2fs"
 
     def crear_mkfs(self):
+        
+        if self.id == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         mounted = find_mounted(self.id)
         if(mounted == None):
             print("ID {self.id} no encontrado, verifique su entrada")

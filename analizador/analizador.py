@@ -15,6 +15,8 @@ from comandos.move.move import move
 from comandos.mkdir.mkdir import mkdir
 from comandos.recovery.recovery import recovery
 from comandos.rep.rep import rep
+from comandos.chmod.chmod import chmod
+from comandos.chown.chown import chown
 from _global._global import comando_actual
 
 def analizar(entrada, rep_journaling = False):
@@ -75,10 +77,22 @@ def identificar_parametros(comando, parametros, rep_journaling):
         usuario = analizar_rmusr(parametros, rep_journaling)
         if rep_journaling:
             return usuario
+    elif(comando == 'chgrp'):
+        usuario = analizar_chgrp(parametros, rep_journaling)
+        if rep_journaling:
+            return usuario
     elif(comando == 'mkfile'):
         archivo = analizar_mkfile(parametros, rep_journaling)
         if rep_journaling:
             return archivo
+    elif(comando == 'chmod'):
+        permisos = analizar_chmod(parametros, rep_journaling)
+        if rep_journaling:
+            return permisos
+    elif(comando == 'chown'):
+        nuevo_propietario = analizar_chown(parametros, rep_journaling)
+        if rep_journaling:
+            return nuevo_propietario
     elif(comando == 'cat'):
         analizar_cat(parametros)
     elif(comando == 'rename'):
@@ -106,8 +120,7 @@ def identificar_parametros(comando, parametros, rep_journaling):
     elif(comando == '\n' or comando == '\t' or comando == '\r' or comando.strip() == ""):
         pass
     else:
-        print(comando)
-        print(f"Comando no {comando} válido")
+        print(f"Comando {comando} no válido")
 
 def get_path(i, parametros):
     valor = ""
@@ -165,21 +178,69 @@ def leer_script(path):
     try:
         with open(path, "r") as file:
             for line in file:
-                print("------------------------------------------")
+                print("---------------- **************** ---------------- **************** ---------------- **************** ---------------- ****************")
                 print("LINEA DEL ARCHIVO:", line.strip())
                 comando = line.strip()
                 analizar(comando)
     except FileNotFoundError:
         print(f"El script con ruta {path} no existe")
 
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/scripts/avanzado1.txt
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/basico.txt
+# execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/chmod.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/new_script.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/new_script2.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script4.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script5.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script6.txt
-
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script1.txt
 # execute -path=/home/hugosmh/Escritorio/TAREAS_MIA/MIA_P1_2S2023/script2.txt
+def analizar_chown(parametros, rep_journaling = False):
+    nuevo_propietario = chown()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            nuevo_propietario.path, i = get_path(i, parametros)
+        elif param.find("-r") == 0:
+            nuevo_propietario.recursivo = True
+        elif param.find("-user=") == 0:
+            nuevo_propietario.user = get_valor_parametro(param)
+        elif param.startswith("#"):
+            break
+        elif param == '':
+            i += 1
+            continue
+        else:
+            print(f"Parametro no aceptado en 'chown': {param}")
+        i += 1
+    if rep_journaling:
+        return nuevo_propietario
+    nuevo_propietario.crear_chown()
+
+def analizar_chmod(parametros, rep_journaling = False):
+    permisos = chmod()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-path=") == 0:
+            permisos.path, i = get_path(i, parametros)
+        elif param.find("-r") == 0:
+            permisos.recursivo = True
+        elif param.find("-ugo=") == 0:
+            permisos.ugo = int(get_valor_parametro(param))
+        elif param.startswith("#"):
+            break
+        elif param == '':
+            i += 1
+            continue
+        else:
+            print(f"Parametro no aceptado en 'chmod': {param}")
+        i += 1
+    if rep_journaling:
+        return permisos
+    permisos.crear_chmod()
+
 def analizar_mkdisk(parametros):
     disco = mkdisk()
     i = 0
@@ -193,8 +254,11 @@ def analizar_mkdisk(parametros):
             disco.fit = get_valor_parametro(param)
         elif param.find("-unit=") == 0:
             disco.unit = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'mkdisk': {param}")
 
@@ -241,10 +305,13 @@ def analizar_fdisk(parametros):
         elif param.find("-add=") == 0:
             particion.add = int(get_valor_parametro(param))
             particion.isAdd = True
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'fdisk': {valor}")
+            print(f"Parametro no aceptado en 'fdisk': {param}")
         i += 1
     particion.crear_fdisk()
 
@@ -257,10 +324,13 @@ def analizar_mount(parametros):
             particion_montar.path, i = get_path(i, parametros)
         elif param.find("-name=") == 0:
             particion_montar.name = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'mount': {valor}")
+            print(f"Parametro no aceptado en 'mount': {param}")
         i += 1
     particion_montar.crear_mount()
 
@@ -271,10 +341,13 @@ def analizar_unmount(parametros):
         param = parametros[i]
         if param.find("-id=") == 0:
             particion_desmontar.name = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'unmount': {valor}")
+            print(f"Parametro no aceptado en 'unmount': {param}")
         i += 1
     particion_desmontar.crear_unmount()
 
@@ -289,10 +362,13 @@ def analizar_mkfs(parametros):
             formatear_particion.type = get_valor_parametro(param)
         elif param.find("-fs=") == 0:
             formatear_particion.fs = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'mkfs': {valor}")
+            print(f"Parametro no aceptado en 'mkfs': {param}")
         i += 1
     formatear_particion.crear_mkfs()
 
@@ -307,10 +383,13 @@ def analizar_login(parametros):
             autenticacion.user = get_valor_parametro(param)
         elif param.find("-pass=") == 0:
             autenticacion.password = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'login': {valor}")
+            print(f"Parametro no aceptado en 'login': {param}")
         i += 1
     autenticacion.crear_login(autenticacion)
 
@@ -319,9 +398,12 @@ def analizar_logout(parametros):
     i = 0
     while i < len(parametros):
         param = parametros[i]
-        print(f"Parametro no aceptado en 'logout': {param}")
-        if param[0] == '#':
+        if param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
+        print(f"Parametro no aceptado en 'logout': {param}")
         i += 1
     autenticacion.crear_logout()
 
@@ -332,8 +414,11 @@ def analizar_mkgrp(parametros, rep_journaling = False):
         param = parametros[i]
         if param.find("-name=") == 0:
             new_grp.name = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
@@ -350,8 +435,11 @@ def analizar_rmgrp(parametros, rep_journaling = False):
         param = parametros[i]
         if param.find("-name=") == 0:
             new_grp.name = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'mkgrp': {param}")
         i += 1
@@ -373,8 +461,11 @@ def analizar_mkusr(parametros, rep_journaling = False):
             new_user.password = get_valor_parametro(param)
         elif param.find("-grp=") == 0:
             new_user.grp = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'mkusr': {param}")
         i += 1
@@ -384,6 +475,29 @@ def analizar_mkusr(parametros, rep_journaling = False):
         return new_user
     new_user.crear_mkusr()
 
+def analizar_chgrp(parametros, rep_journaling = False):
+    new_group = mkusr()
+    i = 0
+    while i < len(parametros):
+        param = parametros[i]
+        if param.find("-user=") == 0:
+            new_group.user = get_valor_parametro(param)
+        elif param.find("-grp=") == 0:
+            new_group.grp = get_valor_parametro(param)
+        elif param.startswith("#"):
+            break
+        elif param == '':
+            i += 1
+            continue
+        else:
+            print(f"Parametro no aceptado en 'chgrp': {param}")
+        i += 1
+
+    if rep_journaling:
+        new_group.tipo = 3
+        return new_group
+    new_group.crear_chgrp()
+
 def analizar_rmusr(parametros, rep_journaling = False):
     new_user = mkusr()
     i = 0
@@ -391,8 +505,11 @@ def analizar_rmusr(parametros, rep_journaling = False):
         param = parametros[i]
         if param.find("-user=") == 0:
             new_user.user = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'mkusr': {param}")
         i += 1
@@ -415,11 +532,13 @@ def analizar_mkfile(parametros, rep_journaling = False):
         elif param.find("-size=") == 0:
             archivo.size = int(get_valor_parametro(param))
             archivo.size_activo = True
-        elif param.find("-cout=") == 0:
-            print(parametros)
+        elif param.find("-cont=") == 0:
             archivo.cout, i = get_path(i, parametros)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'mkfile': {param}")
         i += 1
@@ -436,10 +555,13 @@ def analizar_rename(parametros, rep_journaling):
             archivo_carpeta.path, i = get_path(i, parametros)
         elif param.find("-name=") == 0:
             archivo_carpeta.name, i = get_path(i, parametros)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'rename': {valor}")
+            print(f"Parametro no aceptado en 'rename': {param}")
         i += 1
 
     if rep_journaling:
@@ -456,10 +578,13 @@ def analizar_move(parametros, rep_journaling):
             archivo_carpeta.path, i = get_path(i, parametros)
         elif param.find("-destino=") == 0:
             archivo_carpeta.destino, i = get_path(i, parametros)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'move': {valor}")
+            print(f"Parametro no aceptado en 'move': {param}")
         i += 1
 
     if rep_journaling:
@@ -477,10 +602,13 @@ def analizar_cat(parametros):
             file, i = get_path(i, parametros)
             archivo.files.append(file)
             num_file += 1
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'cat': {valor}, verifique que siga la secuencia")
+            print(f"Parametro no aceptado en 'cat': {param}, verifique que siga la secuencia")
         i += 1
     archivo.crear_cat()
 
@@ -493,10 +621,13 @@ def analizar_mkdir(parametros, rep_journaling):
             carpeta.path, i = get_path(i, parametros)
         elif param.find("-r") == 0:
             carpeta.recursivo = True
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'mkdir': {valor}")
+            print(f"Parametro no aceptado en 'mkdir': {param}")
         i += 1
     
     if rep_journaling:
@@ -511,10 +642,13 @@ def analizar_recovery(parametros):
         param = parametros[i]
         if param.find("-id=") == 0:
             recuperacion.id = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'recovery': {valor}")
+            print(f"Parametro no aceptado en 'recovery': {param}")
         i += 1
     recuperacion.crear_recovery()
 
@@ -525,10 +659,13 @@ def analizar_loss(parametros):
         param = parametros[i]
         if param.find("-id=") == 0:
             perder_datos.id = get_valor_parametro(param)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
-            print(f"Parametro no aceptado en 'loss': {valor}")
+            print(f"Parametro no aceptado en 'loss': {param}")
         i += 1
     perder_datos.crear_loss()
 
@@ -548,8 +685,11 @@ def analizar_rep(parametros):
             reporte.id = get_valor_parametro(param)
         elif param.find("-ruta=") == 0:
             reporte.ruta, i = get_path(i, parametros)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         else:
             print(f"Parametro no aceptado en 'rep': {param}")
         i += 1
@@ -561,7 +701,10 @@ def analizar_execute(parametros):
         param = parametros[i]
         if param.find("-path=") == 0:
             path, i = get_path(i, parametros)
-        elif param[0] == '#':
+        elif param.startswith("#"):
             break
+        elif param == '':
+            i += 1
+            continue
         i += 1
     leer_script(path)

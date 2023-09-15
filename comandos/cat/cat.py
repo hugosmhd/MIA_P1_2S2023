@@ -2,7 +2,7 @@ import os
 import math
 import time
 import ctypes
-import pyperclip
+# import pyperclip
 
 import structs
 from _global._global import particiones_montadas, session_inciada
@@ -15,6 +15,14 @@ class cat():
         self.files = []
 
     def crear_cat(self):
+
+        if len(self.files) == 0:
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+        
+        if not session_inciada.is_logged:
+            print("Error: No se ha iniciado ninguna sesion")
+            return
 
         file = open(session_inciada.mounted.path, "rb+")
         sblock = structs.SuperBloque()
@@ -32,7 +40,28 @@ class cat():
             if(i_f == -1):
                 print(f"Error: Ruta especificada '{archivo}' no existe")
                 return
+
+            permisos_u = (inodo_archivo.i_perm // 100) % 10  # El primer dígito
+            permisos_g = (inodo_archivo.i_perm // 10) % 10   # El segundo dígito
+            permisos_o = inodo_archivo.i_perm % 10            # El tercer dígito
+            permisos = False
+            if session_inciada.credenciales.id == inodo_archivo.i_uid:
+                # Permisos de lectura
+                if permisos_u >= 4:
+                    permisos = True
+            elif session_inciada.credenciales.group_id == inodo_archivo.i_gid:
+                # Permisos de lectura
+                if permisos_g >= 4:
+                    permisos = True
+            else:
+                # Permisos de lectura
+                if permisos_o >= 4:
+                    permisos = True
+            
+            if not permisos and session_inciada.credenciales.user != 'root':
+                print(f"No tienes permisos de lectura sobre el archivo {archivo}")
+                continue
+
             txt = join_file(sblock, inodo_archivo, session_inciada.mounted.path)
-            # print("JOIN FILE MKFILE CAT")
             print(txt)
-            pyperclip.copy(txt)
+            # pyperclip.copy(txt)

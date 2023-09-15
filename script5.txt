@@ -1,4 +1,0 @@
-mount -path="/home/hugosmh/Documentos/Discos/disco5.dsk" -name=Partition2
-mkfs -type=full -id=931disco5
-login -user=root -pass=123 -id=931disco5
-rep -name=disk -path=/home/hugosmh/reportes -id=931disco5

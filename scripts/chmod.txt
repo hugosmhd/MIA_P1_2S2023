@@ -1,0 +1,8 @@
+mount -path=/home/hugosmh/archivos/Discos/Disco1.dsk -name=Part1 #191a -> id1 -> cambiar el 191a por el ID que a ustedes les genera
+mkfs -type=full -id=931Disco1 -fs=2fs
+login -user=root -pass=123 -id=931Disco1
+rep -id=931Disco1 -path="/home/hugosmh/archivos/reportes/reporte6_block.pdf" -name=block
+pause
+chmod -path="/home/archivos/user/docs/Tarea2.txt" -ugo=001
+rep -id=931Disco1 -path="/home/hugosmh/archivos/reportes/reporte6_block.pdf" -name=block
+pause

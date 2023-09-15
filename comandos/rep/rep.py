@@ -9,13 +9,35 @@ import structs
 from analizador import analizador
 from _global._global import particiones_montadas, session_inciada
 from comandos.mount.mount import find_mounted, find_mounted_rep
-from comandos.mkfs.mkfs import join_file, find_file, find_carpeta_archivo
+from comandos.mkfs.mkfs import join_file, find_file, find_carpeta_archivo, find_carpeta
 from comandos.mkfile.mkfile import mkfile
 from comandos.mkdir.mkdir import mkdir
 from comandos.mkgrp.mkgrp import mkgrp
 from comandos.mkusr.mkusr import mkusr
 from comandos.move.move import move
 from comandos.rename.rename import rename
+from comandos.chown.chown import chown
+from comandos.chmod.chmod import chmod
+
+def representacion_permisos(digito):
+    if digito == 0:
+        return '---'
+    elif digito == 1:
+        return '--x'
+    elif digito == 2:
+        return '-w-'
+    elif digito == 3:
+        return '-wx'
+    elif digito == 4:
+        return 'r--'
+    elif digito == 5:
+        return 'r-x'
+    elif digito == 6:
+        return 'rw-'
+    elif digito == 7:
+        return 'rwx'
+    else:
+        return '???'
 
 class rep:
     def __init__(self):
@@ -25,6 +47,11 @@ class rep:
         self.ruta = ''
 
     def crear_rep(self):
+
+        if self.name == "" or self.path == "" or self.id == "":
+            print("Error: Verifique su entrada faltan parametros obligatorios")
+            return
+
         if(self.name == 'mbr'):
             self.reporte_mbr()
         elif(self.name == 'disk'):
@@ -45,13 +72,11 @@ class rep:
             self.reporte_file()
         elif(self.name == 'journaling'):
             self.reporte_journaling()
+        elif(self.name == 'ls'):
+            self.reporte_ls()
     
     def reporte_mbr(self):
         print("HACER REPORTE MBR")
-        # print(self.name)
-        # print(self.path)
-        # print(self.id)
-        # print(self.ruta)
 
         mounted = find_mounted(self.id)
         if(mounted == None):
@@ -339,70 +364,74 @@ class rep:
         dot += 'labelloc=top;\n'
         dot += 'edge [ fontname="Courier New", fontsize=20];\n'
         dot += 'node [ shape="box", fontsize=26];\n'
-        dot += 'n_1 [label=<\n'
-        dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='8' cellpadding='0'>\n"
-        total_activos = 0
-        while cantidad_inodos < sblock.s_inodes_count:
-            if bit == b'0':
-                cantidad_inodos += 1
+        if bit == b'0':
+            dot += 'n_1 [label="Error: Particion Dañada" color="red"]\n'
+            file.close()
+        else:
+            dot += 'n_1 [label=<\n'
+            dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='8' cellpadding='0'>\n"
+            total_activos = 0
+            while cantidad_inodos < sblock.s_inodes_count:
+                if bit == b'0':
+                    cantidad_inodos += 1
+                    read_on += 1
+                    file.seek(read_on)
+                    bit = file.read(1)
+                    continue
+                if total_activos == 0 or total_activos == 5:
+                    dot += "<TR>\n"
+                read_on_i = sblock.s_inode_start + (sblock.s_inode_size * cantidad_inodos)
+                inodo = structs.Inodo()
+                file.seek(read_on_i)
+                file.readinto(inodo)
+                dot += "<TD>\n"
+                dot += "    <TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                dot += f"        <TR><TD colspan='3' BGCOLOR='{'#f1948a' if inodo.i_type == b'0' else '#f4d03f'}'> Inodo {cantidad_inodos} </TD></TR>\n"
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_uid  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_uid}</FONT></TD></TR>\n"
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_gid  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_gid}</FONT></TD></TR>\n"
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_s  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_s}</FONT></TD></TR>\n"
+                fecha_hora = datetime.fromtimestamp(inodo.i_atime)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_atime  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
+                fecha_hora = datetime.fromtimestamp(inodo.i_ctime)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_ctime  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
+                fecha_hora = datetime.fromtimestamp(inodo.i_mtime)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_mtime  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
+                dot += "<TR><TD colspan='3'>\n"
+                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                for i in range(5):
+                    dot += "<TR>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>i_b{(i+1)+(i*2)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[i+(i*2)]}</FONT></TD>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>i_b{(i+2)+(i*2)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[(i+1)+(i*2)]}</FONT></TD>\n"
+                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>i_b{(i+3)+(i*2)}  </b></FONT></TD>\n"
+                    dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[(i+2)+(i*2)]}</FONT></TD>\n"
+                    dot += "</TR>\n"
+                    
+                dot += "    </TABLE>\n"
+                dot += "</TD></TR>\n"
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_type  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_type.decode()}</FONT></TD></TR>\n"
+                dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_perm  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_perm}</FONT></TD></TR>\n"
+                dot += "    </TABLE>\n"
+                dot += "</TD>\n"
+                
                 read_on += 1
                 file.seek(read_on)
                 bit = file.read(1)
-                continue
-            if total_activos == 0 or total_activos == 5:
-                dot += "<TR>\n"
-            read_on_i = sblock.s_inode_start + (sblock.s_inode_size * cantidad_inodos)
-            inodo = structs.Inodo()
-            file.seek(read_on_i)
-            file.readinto(inodo)
-            dot += "<TD>\n"
-            dot += "    <TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
-            dot += f"        <TR><TD colspan='3' BGCOLOR='{'#f1948a' if inodo.i_type == b'0' else '#f4d03f'}'> Inodo {cantidad_inodos} </TD></TR>\n"
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_uid  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_uid}</FONT></TD></TR>\n"
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_gid  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_gid}</FONT></TD></TR>\n"
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_s  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_s}</FONT></TD></TR>\n"
-            fecha_hora = datetime.fromtimestamp(inodo.i_atime)
-            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_atime  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
-            fecha_hora = datetime.fromtimestamp(inodo.i_ctime)
-            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_ctime  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
-            fecha_hora = datetime.fromtimestamp(inodo.i_mtime)
-            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_mtime  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD></TR>\n"
-            dot += "<TR><TD colspan='3'>\n"
-            dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
-            for i in range(5):
-                dot += "<TR>\n"
-                dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>i_b{(i+1)+(i*2)}  </b></FONT></TD>\n"
-                dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[i+(i*2)]}</FONT></TD>\n"
-                dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>i_b{(i+2)+(i*2)}  </b></FONT></TD>\n"
-                dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[(i+1)+(i*2)]}</FONT></TD>\n"
-                dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>i_b{(i+3)+(i*2)}  </b></FONT></TD>\n"
-                dot += f"<TD><FONT POINT-SIZE='15'>  {inodo.i_block[(i+2)+(i*2)]}</FONT></TD>\n"
-                dot += "</TR>\n"
-                
-            dot += "    </TABLE>\n"
-            dot += "</TD></TR>\n"
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_type  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_type.decode()}</FONT></TD></TR>\n"
-            dot += f"        <TR><TD colspan='1'><FONT POINT-SIZE='15'>  i_perm  </FONT></TD><TD colspan='2'><FONT POINT-SIZE='15'>{inodo.i_perm}</FONT></TD></TR>\n"
-            dot += "    </TABLE>\n"
-            dot += "</TD>\n"
-            
-            read_on += 1
-            file.seek(read_on)
-            bit = file.read(1)
-            cantidad_inodos += 1
-            total_activos += 1
-            if total_activos != 0 and total_activos == 5:
-                dot += "</TR>\n"
-                total_activos = 0
+                cantidad_inodos += 1
+                total_activos += 1
+                if total_activos != 0 and total_activos == 5:
+                    dot += "</TR>\n"
+                    total_activos = 0
 
-        if total_activos != 0 and (total_activos) != 5:
-            dot += "</TR>\n"
+            if total_activos != 0 and (total_activos) != 5:
+                dot += "</TR>\n"
 
-        file.close()
-        dot += '</TABLE>>];\n'
+            file.close()
+            dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
         grafica = graphviz.Source(dot)
@@ -442,94 +471,98 @@ class rep:
         dot += 'labelloc=top;\n'
         dot += 'edge [ fontname="Courier New", fontsize=20];\n'
         dot += 'node [ shape="box", fontsize=26];\n'
-        dot += 'n_1 [label=<\n'
-        dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='8' cellpadding='0'>\n"
-        total_activos = 0
-        while cantidad_bloques < sblock.s_blocks_count:
-            if bit == b'0':
-                cantidad_bloques += 1
+        if bit == b'0':
+            dot += 'n_1 [label="Error: Particion Dañada" color="red"]\n'
+            file.close()
+        else:
+            dot += 'n_1 [label=<\n'
+            dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='8' cellpadding='0'>\n"
+            total_activos = 0
+            while cantidad_bloques < sblock.s_blocks_count:
+                if bit == b'0':
+                    cantidad_bloques += 1
+                    read_on += 1
+                    file.seek(read_on)
+                    bit = file.read(1)
+                    continue
+                if total_activos == 0 or total_activos == 5:
+                    dot += "<TR>\n"
+                read_on_b = sblock.s_block_start + (sblock.s_block_size * cantidad_bloques)
+                if bit == b'd':
+                    bloque_carpeta = structs.BloqueCarpeta()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_carpeta)
+                    dot += "<TD>\n"
+                    dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                    dot += f"    <TR><TD colspan='2' BGCOLOR='#84b6f4'> Bloque Carpeta {cantidad_bloques} </TD></TR>\n"
+                    dot += f"<TR><TD><FONT POINT-SIZE='15' COLOR='#6c3483'>  <b>b_name</b>  </FONT></TD><TD><FONT POINT-SIZE='15' COLOR='#6c3483'><b>b_inode</b></FONT></TD></TR>"
+                    for i in range(4):
+                        dot += f"    <TR><TD><FONT POINT-SIZE='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </FONT></TD><TD><FONT POINT-SIZE='15'>{bloque_carpeta.b_content[i].b_inodo}</FONT></TD></TR>\n"
+                    dot += "</TABLE>\n"
+                    dot += "</TD>\n"
+                elif bit == b'f':
+                    bloque_archivo = structs.BloqueArchivo()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_archivo)
+                    dot += "<TD>\n"
+                    dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                    dot += f"    <TR><TD BGCOLOR='#fdfd96'> Bloque Archivo {cantidad_bloques} </TD></TR>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(bloque_archivo.b_content), 16):
+                        nuevo_texto += bloque_archivo.b_content[i:i+16].decode() + "<br/>"
+                    if len(bloque_archivo.b_content) > 0:
+                        dot += f"<TR><TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD></TR>\n"
+                    dot += "</TABLE>\n"
+                    dot += "</TD>\n"
+                elif bit == b's' or bit == b'l' or bit == b't':
+                    bloque_apuntador = structs.BloqueApuntadores()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_apuntador)
+                    dot += "<TD>\n"
+                    dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                    dot += f"    <TR><TD BGCOLOR='#fdfd96'> Bloque Apuntadores {cantidad_bloques} </TD></TR>\n"
+                    dot += "<TR><TD>\n"
+                    dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
+                    for i in range(4):
+                        dot += "<TR>\n"
+                        dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+1)+(i*3)}  </b></FONT></TD>\n"
+                        dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[i+(i*3)]}</FONT></TD>\n"
+                        dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+2)+(i*3)}  </b></FONT></TD>\n"
+                        dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+1)+(i*3)]}</FONT></TD>\n"
+                        dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+3)+(i*3)}  </b></FONT></TD>\n"
+                        dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+2)+(i*3)]}</FONT></TD>\n"
+                        dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+4)+(i*3)}  </b></FONT></TD>\n"
+                        dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+3)+(i*3)]}</FONT></TD>\n"
+                        dot += "</TR>\n"
+                    dot += "</TABLE>\n"
+                    dot += "</TD></TR>\n"
+                    dot += "</TABLE>\n"
+                    dot += "</TD>\n"
+                
                 read_on += 1
                 file.seek(read_on)
                 bit = file.read(1)
-                continue
-            if total_activos == 0 or total_activos == 5:
-                dot += "<TR>\n"
-            read_on_b = sblock.s_block_start + (sblock.s_block_size * cantidad_bloques)
-            if bit == b'd':
-                bloque_carpeta = structs.BloqueCarpeta()
-                file.seek(read_on_b)
-                file.readinto(bloque_carpeta)
-                dot += "<TD>\n"
-                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
-                dot += f"    <TR><TD colspan='2' BGCOLOR='#84b6f4'> Bloque Carpeta {cantidad_bloques} </TD></TR>\n"
-                dot += f"<TR><TD><FONT POINT-SIZE='15' COLOR='#6c3483'>  <b>b_name</b>  </FONT></TD><TD><FONT POINT-SIZE='15' COLOR='#6c3483'><b>b_inode</b></FONT></TD></TR>"
-                for i in range(4):
-                    dot += f"    <TR><TD><FONT POINT-SIZE='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </FONT></TD><TD><FONT POINT-SIZE='15'>{bloque_carpeta.b_content[i].b_inodo}</FONT></TD></TR>\n"
-                dot += "</TABLE>\n"
-                dot += "</TD>\n"
-            elif bit == b'f':
-                bloque_archivo = structs.BloqueArchivo()
-                file.seek(read_on_b)
-                file.readinto(bloque_archivo)
-                dot += "<TD>\n"
-                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
-                dot += f"    <TR><TD BGCOLOR='#fdfd96'> Bloque Archivo {cantidad_bloques} </TD></TR>\n"
-                nuevo_texto = ""
-                for i in range(0, len(bloque_archivo.b_content), 16):
-                    nuevo_texto += bloque_archivo.b_content[i:i+16].decode() + "<br/>"
-                if len(bloque_archivo.b_content) > 0:
-                    dot += f"<TR><TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD></TR>\n"
-                dot += "</TABLE>\n"
-                dot += "</TD>\n"
-            elif bit == b's' or bit == b'l' or bit == b't':
-                bloque_apuntador = structs.BloqueApuntadores()
-                file.seek(read_on_b)
-                file.readinto(bloque_apuntador)
-                dot += "<TD>\n"
-                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
-                dot += f"    <TR><TD BGCOLOR='#fdfd96'> Bloque Apuntadores {cantidad_bloques} </TD></TR>\n"
-                dot += "<TR><TD>\n"
-                dot += "<TABLE BORDER='0' CELLBORDER='1' CELLSPACING='0' cellpadding='0'>\n"
-                for i in range(4):
-                    dot += "<TR>\n"
-                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+1)+(i*3)}  </b></FONT></TD>\n"
-                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[i+(i*3)]}</FONT></TD>\n"
-                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+2)+(i*3)}  </b></FONT></TD>\n"
-                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+1)+(i*3)]}</FONT></TD>\n"
-                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+3)+(i*3)}  </b></FONT></TD>\n"
-                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+2)+(i*3)]}</FONT></TD>\n"
-                    dot += f"<TD><FONT COLOR='#21618c' POINT-SIZE='15'>  <b>b_p{(i+4)+(i*3)}  </b></FONT></TD>\n"
-                    dot += f"<TD><FONT POINT-SIZE='15'>  {bloque_apuntador.b_pointers[(i+3)+(i*3)]}</FONT></TD>\n"
+                cantidad_bloques += 1
+                total_activos += 1
+                if total_activos != 0 and total_activos == 5:
                     dot += "</TR>\n"
-                dot += "</TABLE>\n"
-                dot += "</TD></TR>\n"
-                dot += "</TABLE>\n"
-                dot += "</TD>\n"
-            
-            read_on += 1
-            file.seek(read_on)
-            bit = file.read(1)
-            cantidad_bloques += 1
-            total_activos += 1
-            if total_activos != 0 and total_activos == 5:
+                    total_activos = 0
+
+            if total_activos != 0 and (total_activos) != 5:
                 dot += "</TR>\n"
-                total_activos = 0
 
-        if total_activos != 0 and (total_activos) != 5:
-            dot += "</TR>\n"
-
-        file.close()
-        dot += '</TABLE>>];\n'
+            file.close()
+            dot += '</TABLE>>];\n'
         dot += '}'
         pyperclip.copy(dot)
-        grafica = graphviz.Source(dot)
-        nombre_archivo, extension = os.path.splitext(self.path)
-        if extension.lower() == '.png':
-            grafica.render(filename=nombre_archivo, format='png')
-        elif extension.lower() == '.jpg':
-            grafica.render(filename=nombre_archivo, format='jpg')
-        elif extension.lower() == '.pdf':
-            grafica.render(filename=nombre_archivo, format='pdf')
+        # grafica = graphviz.Source(dot)
+        # nombre_archivo, extension = os.path.splitext(self.path)
+        # if extension.lower() == '.png':
+        #     grafica.render(filename=nombre_archivo, format='png')
+        # elif extension.lower() == '.jpg':
+        #     grafica.render(filename=nombre_archivo, format='jpg')
+        # elif extension.lower() == '.pdf':
+        #     grafica.render(filename=nombre_archivo, format='pdf')
 
     def reporte_bm_inode(self):
         print("HACER REPORTE BM INODE")
@@ -672,156 +705,156 @@ class rep:
         enlaces = ""
 
         total_activos = 0
-        while cantidad_inodos < sblock.s_inodes_count:
-            if bit == b'0':
+        if bit == b'0':
+            dot += 'n_1 [label="Error: Particion Dañada" color="red"]\n'
+            file.close()
+        else:
+            while cantidad_inodos < sblock.s_inodes_count:
+                if bit == b'0':
+                    cantidad_inodos += 1
+                    read_on += 1
+                    file.seek(read_on)
+                    bit = file.read(1)
+                    continue
+                read_on_i = sblock.s_inode_start + (sblock.s_inode_size * cantidad_inodos)
+                inodo = structs.Inodo()
+                file.seek(read_on_i)
+                file.readinto(inodo)
+                dot += f"inodo_{cantidad_inodos} [\n"
+                dot += "    shape=plain\n"
+                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                dot += f"        <tr> <td port='i_e' colspan='2' BGCOLOR='{'#f1948a' if inodo.i_type == b'0' else '#f4d03f'}'> <b>Inodo {cantidad_inodos}</b> </td> </tr>\n"
+                dot += f"        <tr> <td>i_uid</td><td>{inodo.i_uid}</td> </tr>\n"
+                dot += f"        <tr> <td>i_gid</td><td port='ss1'>{inodo.i_gid}</td></tr>\n"
+                dot += f"        <tr> <td>i_s</td><td port='ss2'>{inodo.i_s}</td> </tr>\n"
+                dot += f"        <tr> <td>i_type</td><td port='ss2'>{inodo.i_type.decode()}</td> </tr>\n"
+                dot += f"        <tr> <td>i_perm</td><td port='ss2'>{inodo.i_perm}</td> </tr>\n"
+                fecha_hora = datetime.fromtimestamp(inodo.i_atime)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                dot += f"        <tr> <td>i_atime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
+                fecha_hora = datetime.fromtimestamp(inodo.i_ctime)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                dot += f"        <tr> <td>i_ctime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
+                fecha_hora = datetime.fromtimestamp(inodo.i_mtime)
+                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                dot += f"        <tr> <td>i_ctime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
+                for i in range(15):
+                    if inodo.i_block[i] != -1:
+                        dot += f"        <tr> <td port='a_u{inodo.i_block[i]}'>ap{i+1}</td><td port='a_s{inodo.i_block[i]}'>{inodo.i_block[i]}</td> </tr>\n"
+                        enlaces += f"inodo_{cantidad_inodos}:a_s{inodo.i_block[i]} -> bloque_{inodo.i_block[i]}:b_e;\n"
+                    else:
+                        dot += f"        <tr> <td>ap{i+1}</td><td>{inodo.i_block[i]}</td> </tr>\n"
+                dot += "    </table>>\n"
+                dot += "]\n"
+                
+                read_on += 1
+                file.seek(read_on)
+                bit = file.read(1)
                 cantidad_inodos += 1
+
+            cantidad_bloques = 0
+            read_on = sblock.s_bm_block_start
+            file.seek(read_on)
+            bit = file.read(1)
+
+            while cantidad_bloques < sblock.s_blocks_count:
+                if bit == b'0':
+                    cantidad_bloques += 1
+                    read_on += 1
+                    file.seek(read_on)
+                    bit = file.read(1)
+                    continue
+                read_on_b = sblock.s_block_start + (sblock.s_block_size * cantidad_bloques)
+                if bit == b'd':
+                    bloque_carpeta = structs.BloqueCarpeta()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_carpeta)
+                    dot += f"bloque_{cantidad_bloques} [\n"
+                    dot += "    shape=plain\n"
+                    dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                    dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta {cantidad_bloques}</b> </td> </tr>\n"
+                    dot += f"       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>\n"
+                    for i in range(4):
+                        if bloque_carpeta.b_content[i].b_inodo != -1 and bloque_carpeta.b_content[i].b_name.decode() != "." and bloque_carpeta.b_content[i].b_name.decode() != "..":
+                            dot += f"    <tr><td port='a_u{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td port='a_s{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
+                            enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_carpeta.b_content[i].b_inodo} -> inodo_{bloque_carpeta.b_content[i].b_inodo}:i_e;\n"
+                        else:
+                            dot += f"    <tr><td><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
+                    dot += "    </table>>\n"
+                    dot += "]\n"
+                elif bit == b'f':
+                    bloque_archivo = structs.BloqueArchivo()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_archivo)
+                    dot += f"bloque_{cantidad_bloques} [\n"
+                    dot += "    shape=plain\n"
+                    dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                    dot += f"        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo {cantidad_bloques}</b>   </td> </tr>\n"
+
+                    nuevo_texto = ""
+                    for i in range(0, len(bloque_archivo.b_content), 16):
+                        nuevo_texto += bloque_archivo.b_content[i:i+16].decode() + "<br/>"
+                    if len(bloque_archivo.b_content) > 0:
+                        dot += f"    <tr><td><font point-size='15'>  {nuevo_texto}  </font></td></tr>\n"
+                    dot += "    </table>>\n"
+                    dot += "]\n"
+                elif bit == b's':
+                    bloque_apuntador = structs.BloqueApuntadores()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_apuntador)
+                    dot += f"bloque_{cantidad_bloques} [\n"
+                    dot += "    shape=plain\n"
+                    dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                    dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#77dd77'> <b>  Bloque Indirecto S {cantidad_bloques}</b>   </td> </tr>\n"
+                    for i in range(16):
+                        if bloque_apuntador.b_pointers[i] != -1:
+                            dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                            enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
+                        else:
+                            dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                    dot += "    </table>>\n"
+                    dot += "]\n"
+                elif bit == b'l':
+                    bloque_apuntador = structs.BloqueApuntadores()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_apuntador)
+                    dot += f"bloque_{cantidad_bloques} [\n"
+                    dot += "    shape=plain\n"
+                    dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                    dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#fdcae1'> <b>  Bloque Indirecto D {cantidad_bloques}</b>   </td> </tr>\n"
+                    for i in range(16):
+                        if bloque_apuntador.b_pointers[i] != -1:
+                            dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                            enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
+                        else:
+                            dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                    dot += "    </table>>\n"
+                    dot += "]\n"
+                elif bit == b't':
+                    bloque_apuntador = structs.BloqueApuntadores()
+                    file.seek(read_on_b)
+                    file.readinto(bloque_apuntador)
+                    dot += f"bloque_{cantidad_bloques} [\n"
+                    dot += "    shape=plain\n"
+                    dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
+                    dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#fdcae1'> <b>  Bloque Indirecto T {cantidad_bloques}</b>   </td> </tr>\n"
+                    for i in range(16):
+                        if bloque_apuntador.b_pointers[i] != -1:
+                            dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                            enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
+                        else:
+                            dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
+                    dot += "    </table>>\n"
+                    dot += "]\n"
+                
                 read_on += 1
                 file.seek(read_on)
                 bit = file.read(1)
-                continue
-            read_on_i = sblock.s_inode_start + (sblock.s_inode_size * cantidad_inodos)
-            inodo = structs.Inodo()
-            file.seek(read_on_i)
-            file.readinto(inodo)
-            dot += f"inodo_{cantidad_inodos} [\n"
-            dot += "    shape=plain\n"
-            dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-            dot += f"        <tr> <td port='i_e' colspan='2' BGCOLOR='{'#f1948a' if inodo.i_type == b'0' else '#f4d03f'}'> <b>Inodo {cantidad_inodos}</b> </td> </tr>\n"
-            dot += f"        <tr> <td>i_uid</td><td>{inodo.i_uid}</td> </tr>\n"
-            dot += f"        <tr> <td>i_gid</td><td port='ss1'>{inodo.i_gid}</td></tr>\n"
-            dot += f"        <tr> <td>i_s</td><td port='ss2'>{inodo.i_s}</td> </tr>\n"
-            dot += f"        <tr> <td>i_type</td><td port='ss2'>{inodo.i_type.decode()}</td> </tr>\n"
-            dot += f"        <tr> <td>i_perm</td><td port='ss2'>{inodo.i_perm}</td> </tr>\n"
-            fecha_hora = datetime.fromtimestamp(inodo.i_atime)
-            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-            dot += f"        <tr> <td>i_atime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
-            fecha_hora = datetime.fromtimestamp(inodo.i_ctime)
-            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-            dot += f"        <tr> <td>i_ctime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
-            fecha_hora = datetime.fromtimestamp(inodo.i_mtime)
-            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
-            dot += f"        <tr> <td>i_ctime</td><td port='ss3'>{fecha_formateada}</td> </tr>\n"
-            for i in range(15):
-                if inodo.i_block[i] != -1:
-                    dot += f"        <tr> <td port='a_u{inodo.i_block[i]}'>ap{i+1}</td><td port='a_s{inodo.i_block[i]}'>{inodo.i_block[i]}</td> </tr>\n"
-                    enlaces += f"inodo_{cantidad_inodos}:a_s{inodo.i_block[i]} -> bloque_{inodo.i_block[i]}:b_e;\n"
-                else:
-                    dot += f"        <tr> <td>ap{i+1}</td><td>{inodo.i_block[i]}</td> </tr>\n"
-            dot += "    </table>>\n"
-            dot += "]\n"
-            
-            read_on += 1
-            file.seek(read_on)
-            bit = file.read(1)
-            cantidad_inodos += 1
-
-        cantidad_bloques = 0
-        read_on = sblock.s_bm_block_start
-        file.seek(read_on)
-        bit = file.read(1)
-
-        while cantidad_bloques < sblock.s_blocks_count:
-            if bit == b'0':
                 cantidad_bloques += 1
-                read_on += 1
-                file.seek(read_on)
-                bit = file.read(1)
-                continue
-            read_on_b = sblock.s_block_start + (sblock.s_block_size * cantidad_bloques)
-            if bit == b'd':
-                bloque_carpeta = structs.BloqueCarpeta()
-                file.seek(read_on_b)
-                file.readinto(bloque_carpeta)
-                dot += f"bloque_{cantidad_bloques} [\n"
-                dot += "    shape=plain\n"
-                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#84b6f4'> <b>  Bloque Carpeta {cantidad_bloques}</b> </td> </tr>\n"
-                dot += f"       <tr><td><font point-size='15' color='#6c3483'>  <b>b_name  </b>  </font></td><td><font point-size='15' color='#6c3483'>  <b>b_inode</b>  </font></td></tr>\n"
-                for i in range(4):
-                    if bloque_carpeta.b_content[i].b_inodo != -1 and bloque_carpeta.b_content[i].b_name.decode() != "." and bloque_carpeta.b_content[i].b_name.decode() != "..":
-                        dot += f"    <tr><td port='a_u{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td port='a_s{bloque_carpeta.b_content[i].b_inodo}'><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
-                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_carpeta.b_content[i].b_inodo} -> inodo_{bloque_carpeta.b_content[i].b_inodo}:i_e;\n"
-                    else:
-                        dot += f"    <tr><td><font point-size='15'>  {bloque_carpeta.b_content[i].b_name.decode()}  </font></td><td><font point-size='15'>{bloque_carpeta.b_content[i].b_inodo}</font></td></tr>\n"
-                dot += "    </table>>\n"
-                dot += "]\n"
-            elif bit == b'f':
-                bloque_archivo = structs.BloqueArchivo()
-                file.seek(read_on_b)
-                file.readinto(bloque_archivo)
-                dot += f"bloque_{cantidad_bloques} [\n"
-                dot += "    shape=plain\n"
-                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-                dot += f"        <tr> <td port='b_e' bgcolor='#fdfd96'> <b>  Bloque Archivo {cantidad_bloques}</b>   </td> </tr>\n"
 
-                nuevo_texto = ""
-                for i in range(0, len(bloque_archivo.b_content), 16):
-                    nuevo_texto += bloque_archivo.b_content[i:i+16].decode() + "<br/>"
-                if len(bloque_archivo.b_content) > 0:
-                    dot += f"    <tr><td><font point-size='15'>  {nuevo_texto}  </font></td></tr>\n"
-                dot += "    </table>>\n"
-                dot += "]\n"
-            elif bit == b's':
-                bloque_apuntador = structs.BloqueApuntadores()
-                file.seek(read_on_b)
-                file.readinto(bloque_apuntador)
-                dot += f"bloque_{cantidad_bloques} [\n"
-                dot += "    shape=plain\n"
-                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#77dd77'> <b>  Bloque Indirecto S {cantidad_bloques}</b>   </td> </tr>\n"
-                for i in range(16):
-                    if bloque_apuntador.b_pointers[i] != -1:
-                        dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
-                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
-                    else:
-                        dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
-                dot += "    </table>>\n"
-                dot += "]\n"
-            elif bit == b'l':
-                bloque_apuntador = structs.BloqueApuntadores()
-                file.seek(read_on_b)
-                file.readinto(bloque_apuntador)
-                dot += f"bloque_{cantidad_bloques} [\n"
-                dot += "    shape=plain\n"
-                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#fdcae1'> <b>  Bloque Indirecto D {cantidad_bloques}</b>   </td> </tr>\n"
-                for i in range(16):
-                    if bloque_apuntador.b_pointers[i] != -1:
-                        dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
-                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
-                    else:
-                        dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
-                dot += "    </table>>\n"
-                dot += "]\n"
-            elif bit == b't':
-                bloque_apuntador = structs.BloqueApuntadores()
-                file.seek(read_on_b)
-                file.readinto(bloque_apuntador)
-                dot += f"bloque_{cantidad_bloques} [\n"
-                dot += "    shape=plain\n"
-                dot += "    label=<<table border='0' cellborder='1' cellspacing='0' cellpadding='0'>\n"
-                dot += f"        <tr> <td port='b_e' colspan='2' bgcolor='#fdcae1'> <b>  Bloque Indirecto T {cantidad_bloques}</b>   </td> </tr>\n"
-                for i in range(16):
-                    if bloque_apuntador.b_pointers[i] != -1:
-                        dot += f"    <tr><td port='a_u{bloque_apuntador.b_pointers[i]}'><font point-size='15'>  b_pointer[{i}]</font></td><td port='a_s{bloque_apuntador.b_pointers[i]}'><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
-                        enlaces += f"bloque_{cantidad_bloques}:a_s{bloque_apuntador.b_pointers[i]} -> bloque_{bloque_apuntador.b_pointers[i]}:b_e;\n"
-                    else:
-                        dot += f"    <tr><td><font point-size='15'>  b_pointer[{i}]  </font></td><td><font point-size='15'>{bloque_apuntador.b_pointers[i]}</font></td></tr>\n"
-                dot += "    </table>>\n"
-                dot += "]\n"
-            
-            read_on += 1
-            file.seek(read_on)
-            bit = file.read(1)
-            cantidad_bloques += 1
-
-        file.close()
-        dot += enlaces
+            file.close()
+            dot += enlaces
         dot += '}'
-
-        with open("./rep.dot", "w") as fich:
-            fich.write(dot)
-            fich.close()
 
         pyperclip.copy(dot)
         grafica = graphviz.Source(dot)
@@ -992,6 +1025,8 @@ class rep:
                         nuevo_texto += content[i:i+30] + "<br/>"
                     if len(content) > 0:
                         dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    else:
+                        dot += f"    <TD></TD>\n"
                     dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
                     dot += f"</TR>\n"
                 elif isinstance(instancia, mkdir):
@@ -1034,6 +1069,13 @@ class rep:
                         dot += f"    <TD><FONT POINT-SIZE='15'>-</FONT></TD>\n"
                         dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
                         dot += f"</TR>\n"
+                    elif(instancia.tipo == 3):
+                        dot += f"<TR>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='18'><b>chgrp</b></FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>/users.txt</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{instancia.grp}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                        dot += f"</TR>\n"
                 elif isinstance(instancia, move):
                     dot += f"<TR>\n"
                     dot += f"    <TD><FONT POINT-SIZE='18'><b>move</b></FONT></TD>\n"
@@ -1054,6 +1096,27 @@ class rep:
                     dot += f"    <TD><FONT POINT-SIZE='15'>{instancia.name}</FONT></TD>\n"
                     dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
                     dot += f"</TR>\n"
+                elif isinstance(instancia, chown):
+                    dot += f"<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>chown</b></FONT></TD>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(instancia.path), 10):
+                        nuevo_texto += instancia.path[i:i+10] + "<br/>"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>-</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"</TR>\n"
+                elif isinstance(instancia, chmod):
+                    dot += f"<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>chmod</b></FONT></TD>\n"
+                    nuevo_texto = ""
+                    for i in range(0, len(instancia.path), 10):
+                        nuevo_texto += instancia.path[i:i+10] + "<br/>"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nuevo_texto}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{instancia.ugo}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"</TR>\n"
+                
                 read_journaling += ctypes.sizeof(structs.Journaling)
 
             
@@ -1069,3 +1132,268 @@ class rep:
                 grafica.render(filename=nombre_archivo, format='jpg')
             elif extension.lower() == '.pdf':
                 grafica.render(filename=nombre_archivo, format='pdf')
+
+    def reporte_ls(self):
+        print("HACER REPORTE LS")
+
+        mounted = find_mounted(self.id)
+        if(mounted == None):
+            print("ID {self.id} no encontrado, verifique su entrada")
+            return
+
+        directorio, archivo_ = os.path.split(self.path)
+        if not os.path.exists(directorio):
+            os.makedirs(directorio)
+
+
+        file = open(mounted.path, "rb+")
+        sblock = structs.SuperBloque()
+        file.seek(mounted.part_start)
+        file.readinto(sblock)
+
+        # indo_carpeta_archivo, i, _, __ = find_carpeta_archivo(sblock, "/", session_inciada)
+        indo_carpeta_archivo = structs.Inodo()
+        file.seek(sblock.s_inode_start)
+        file.readinto(indo_carpeta_archivo)
+        inodo_archivo, i_f = find_file(sblock, "/user.txt", mounted.path, indo_carpeta_archivo)
+        if(i_f == -1):
+            print(f"Error: Ruta especificada '/user.txt' no existe")
+            file.close()
+            return
+
+        usuarios = join_file(sblock, inodo_archivo, mounted.path)
+        lineas = usuarios.split("\n")
+        arreglo_usuarios = []
+        arreglo_grupos = []
+        for i, linea in enumerate(lineas):
+            atributos = linea.split(",")
+            if len(atributos) == 5:
+                arreglo_usuarios.append(atributos[3])
+            elif len(atributos) == 3:
+                arreglo_grupos.append(atributos[2])
+
+
+        inodo, i_d = find_carpeta(sblock, self.ruta, mounted.path)
+
+        dot = 'digraph G {\n'
+        dot += 'label="Reporte del LS";\n'
+        dot += 'labelloc=top;\n'
+        dot += 'edge [ fontname="Courier New", fontsize=20];\n'
+        dot += 'node [ shape="box", fontsize=26];\n'
+        dot += 'tabla_permisos [label=<\n'
+        dot += '<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">\n'
+        dot += "<TR>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Permisos</FONT></TD>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Owner</FONT></TD>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Grupo</FONT></TD>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Size(Bytes)</FONT></TD>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Fecha</FONT></TD>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Tipo</FONT></TD>\n"
+        dot += "    <TD BGCOLOR='#1c2833'><FONT COLOR='white'>Name</FONT></TD>\n"
+        dot += "</TR>\n"
+
+        inodo_archivo = structs.Inodo()
+
+        bcarpeta = structs.BloqueCarpeta()
+
+        for b in range(12):
+            if inodo.i_block[b] == -1:
+                continue
+            read_on_file = sblock.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * inodo.i_block[b])
+            file.seek(read_on_file)
+            file.readinto(bcarpeta)
+            for j in range(4):
+                b_inode = bcarpeta.b_content[j].b_inodo
+                nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                    read_on_archive = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                    file.seek(read_on_archive)
+                    file.readinto(inodo_archivo)
+                    permisos_1 = (inodo_archivo.i_perm // 100) % 10  # El primer dígito
+                    permisos_2 = (inodo_archivo.i_perm // 10) % 10   # El segundo dígito
+                    permisos_3 = inodo_archivo.i_perm % 10            # El tercer dígito
+                    permisos_representacion = (
+                        representacion_permisos(permisos_1) +
+                        representacion_permisos(permisos_2) +
+                        representacion_permisos(permisos_3)
+                    )
+                    owner = arreglo_usuarios[inodo_archivo.i_uid - 1]
+                    group = arreglo_grupos[inodo_archivo.i_gid - 1]
+                    fecha_hora = datetime.fromtimestamp(inodo_archivo.i_ctime)
+                    fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                    dot += "<TR>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='18'><b>{permisos_representacion}</b></FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{owner}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{group}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{inodo_archivo.i_s}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{'Archivo' if inodo_archivo.i_type == 1 else 'Carpeta'}</FONT></TD>\n"
+                    dot += f"    <TD><FONT POINT-SIZE='15'>{nombre_carpeta}</FONT></TD>\n"
+                    dot += "</TR>\n"
+
+        if inodo.i_block[12] != -1:
+            bloque_s_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[12])
+            file.seek(read_on_block)
+            file.readinto(bloque_s_indirecto)
+
+            for s in range(16):
+                if bloque_s_indirecto.b_pointers[s] == -1:
+                    break
+
+                read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                file.seek(read_on_file)
+                file.readinto(bcarpeta)
+
+                for j in range(4):
+                    b_inode = bcarpeta.b_content[j].b_inodo
+                    nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                    if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                        read_on_archive = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                        file.seek(read_on_archive)
+                        file.readinto(inodo_archivo)
+                        permisos_1 = (inodo_archivo.i_perm // 100) % 10  # El primer dígito
+                        permisos_2 = (inodo_archivo.i_perm // 10) % 10   # El segundo dígito
+                        permisos_3 = inodo_archivo.i_perm % 10            # El tercer dígito
+                        permisos_representacion = (
+                            representacion_permisos(permisos_1) +
+                            representacion_permisos(permisos_2) +
+                            representacion_permisos(permisos_3)
+                        )
+                        owner = arreglo_usuarios[inodo_archivo.i_uid - 1]
+                        group = arreglo_grupos[inodo_archivo.i_gid - 1]
+                        fecha_hora = datetime.fromtimestamp(inodo_archivo.i_ctime)
+                        fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                        dot += "<TR>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='18'><b>{permisos_representacion}</b></FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{owner}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{group}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{inodo_archivo.i_s}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{'Archivo' if inodo_archivo.i_type == 1 else 'Carpeta'}</FONT></TD>\n"
+                        dot += f"    <TD><FONT POINT-SIZE='15'>{nombre_carpeta}</FONT></TD>\n"
+                        dot += "</TR>\n"
+
+        if inodo.i_block[13] != -1:
+            bloque_d_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[13])
+            file.seek(read_on_block)
+            file.readinto(bloque_d_indirecto)
+            for d in range(16):
+                if bloque_d_indirecto.b_pointers[d] == -1:
+                    continue
+
+                bloque_s_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+                file.seek(read_on_block)
+                file.readinto(bloque_s_indirecto)
+                for s in range(16):
+                    if bloque_s_indirecto.b_pointers[s] == -1:
+                        continue
+
+                    read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                    file.seek(read_on_file)
+                    file.readinto(bcarpeta)
+
+                    for j in range(4):
+                        b_inode = bcarpeta.b_content[j].b_inodo
+                        nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                        if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                            read_on_archive = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                            file.seek(read_on_archive)
+                            file.readinto(inodo_archivo)
+                            permisos_1 = (inodo_archivo.i_perm // 100) % 10  # El primer dígito
+                            permisos_2 = (inodo_archivo.i_perm // 10) % 10   # El segundo dígito
+                            permisos_3 = inodo_archivo.i_perm % 10            # El tercer dígito
+                            permisos_representacion = (
+                                representacion_permisos(permisos_1) +
+                                representacion_permisos(permisos_2) +
+                                representacion_permisos(permisos_3)
+                            )
+                            owner = arreglo_usuarios[inodo_archivo.i_uid - 1]
+                            group = arreglo_grupos[inodo_archivo.i_gid - 1]
+                            fecha_hora = datetime.fromtimestamp(inodo_archivo.i_ctime)
+                            fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                            dot += "<TR>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='18'><b>{permisos_representacion}</b></FONT></TD>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='15'>{owner}</FONT></TD>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='15'>{group}</FONT></TD>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='15'>{inodo_archivo.i_s}</FONT></TD>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='15'>{'Archivo' if inodo_archivo.i_type == 1 else 'Carpeta'}</FONT></TD>\n"
+                            dot += f"    <TD><FONT POINT-SIZE='15'>{nombre_carpeta}</FONT></TD>\n"
+                            dot += "</TR>\n"
+
+        if inodo.i_block[14] != -1:
+            bloque_t_indirecto = structs.BloqueApuntadores()
+            read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * inodo.i_block[14])
+            file.seek(read_on_block)
+            file.readinto(bloque_t_indirecto)
+
+            for t in range(16):
+                if bloque_t_indirecto.b_pointers[t] == -1:
+                    continue
+
+                bloque_d_indirecto = structs.BloqueApuntadores()
+                read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_t_indirecto.b_pointers[t])
+                file.seek(read_on_block)
+                file.readinto(bloque_d_indirecto)
+                for d in range(16):
+                    if bloque_d_indirecto.b_pointers[d] == -1:
+                        continue
+
+                    bloque_s_indirecto = structs.BloqueApuntadores()
+                    read_on_block = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueApuntadores) * bloque_d_indirecto.b_pointers[d])
+                    file.seek(read_on_block)
+                    file.readinto(bloque_s_indirecto)
+                    for s in range(16):
+                        if bloque_s_indirecto.b_pointers[s] == -1:
+                            continue
+
+                        read_on_file = super_bloque.s_block_start + (ctypes.sizeof(structs.BloqueCarpeta) * bloque_s_indirecto.b_pointers[s])
+                        file.seek(read_on_file)
+                        file.readinto(bcarpeta)
+
+                        for j in range(4):
+                            b_inode = bcarpeta.b_content[j].b_inodo
+                            nombre_carpeta = bcarpeta.b_content[j].b_name.decode()
+                            if b_inode != -1 and nombre_carpeta != "." and nombre_carpeta != "..":
+                                read_on_archive = sblock.s_inode_start + (ctypes.sizeof(structs.Inodo) * bcarpeta.b_content[j].b_inodo)
+                                file.seek(read_on_archive)
+                                file.readinto(inodo_archivo)
+                                permisos_1 = (inodo_archivo.i_perm // 100) % 10  # El primer dígito
+                                permisos_2 = (inodo_archivo.i_perm // 10) % 10   # El segundo dígito
+                                permisos_3 = inodo_archivo.i_perm % 10            # El tercer dígito
+                                permisos_representacion = (
+                                    representacion_permisos(permisos_1) +
+                                    representacion_permisos(permisos_2) +
+                                    representacion_permisos(permisos_3)
+                                )
+                                owner = arreglo_usuarios[inodo_archivo.i_uid - 1]
+                                group = arreglo_grupos[inodo_archivo.i_gid - 1]
+                                fecha_hora = datetime.fromtimestamp(inodo_archivo.i_ctime)
+                                fecha_formateada = fecha_hora.strftime("%d-%m-%Y %H:%M:%S")
+                                dot += "<TR>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='18'><b>{permisos_representacion}</b></FONT></TD>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='15'>{owner}</FONT></TD>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='15'>{group}</FONT></TD>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='15'>{inodo_archivo.i_s}</FONT></TD>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='15'>{fecha_formateada}</FONT></TD>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='15'>{'Archivo' if inodo_archivo.i_type == 1 else 'Carpeta'}</FONT></TD>\n"
+                                dot += f"    <TD><FONT POINT-SIZE='15'>{nombre_carpeta}</FONT></TD>\n"
+                                dot += "</TR>\n"
+
+        dot += '</TABLE>>];\n'
+        dot += '}'
+        pyperclip.copy(dot)
+        grafica = graphviz.Source(dot)
+        nombre_archivo, extension = os.path.splitext(self.path)
+        if extension.lower() == '.png':
+            grafica.render(filename=nombre_archivo, format='png')
+        elif extension.lower() == '.jpg':
+            grafica.render(filename=nombre_archivo, format='jpg')
+        elif extension.lower() == '.pdf':
+            grafica.render(filename=nombre_archivo, format='pdf')
+
+# permisos = 664
+# permisos_representacion = ""
